@@ -77,8 +77,12 @@
 
 .assignment-main {
     padding: 75px 0 100px;
-}
 
+    background: linear-gradient(180deg,
+            #edf2f9 0%,
+            #f2f6fc 50%,
+            #eaf0f8 100%);
+}
 .assignment-section {
     margin-bottom: 75px;
 }
@@ -95,12 +99,12 @@
 .assignment-panel {
     padding: 36px;
 
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: #ffffff;
+    border: 1px solid #bfcee1;
     border-radius: var(--radius);
 
     box-shadow:
-        0 8px 25px rgba(16, 29, 53, 0.04);
+        0 8px 28px rgba(16, 29, 53, 0.08);
 }
 
 .assignment-panel h3 {
@@ -109,10 +113,9 @@
 }
 
 .assignment-panel p {
-    color: var(--muted);
+    color: #52647d;
     line-height: 1.8;
 }
-
 
 /* ==========================================
    4. MATHEMATICAL FORMULAS
