@@ -1,35 +1,193 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistics Homeworks</title>
+
+    <title>Statistics | Giuseppe Sciarrone</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
 
-    <header>
-        <h1>Statistics Homeworks</h1>
-        <p>University Assignments | Sapienza University of Rome</p>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <div class="container nav-content">
+
+            <a href="index.html" class="nav-logo">
+                <span class="logo-icon">S.</span>
+                <span>Statistics</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#homeworks">Homeworks</a>
+                <a href="#about">About</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <div class="container hero-content">
+
+            <span class="hero-label">
+                SAPIENZA UNIVERSITY OF ROME
+            </span>
+
+            <h1>Statistics</h1>
+
+            <p class="hero-subtitle">
+                Master's Degree in Cybersecurity
+            </p>
+
+            <p class="hero-description">
+                A collection of university assignments,
+                practical exercises and interactive projects
+                developed during the Statistics course.
+            </p>
+
+            <div class="student-info">
+                <span class="student-name">
+                    Giuseppe Sciarrone
+                </span>
+
+                <span class="student-id">
+                    Student ID: 2116081
+                </span>
+            </div>
+
+            <a href="#homeworks" class="hero-button">
+                Explore Homeworks &darr;
+            </a>
+
+        </div>
     </header>
 
+    <!-- HOMEWORKS SECTION -->
     <main>
-        <h2>Available Homeworks</h2>
 
-        <section>
-            <h3>Homework 1</h3>
-            <p>Public-Key Cryptography: Elliptic Curves</p>
-            <a href="homeworks/hw1/">View Homework 1</a>
+        <section id="homeworks" class="homeworks-section">
+            <div class="container">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-label">
+                            COURSE ASSIGNMENTS
+                        </span>
+
+                        <h2>Homeworks</h2>
+
+                        <p>
+                            Explore the assignments and
+                            their interactive implementations.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="homework-grid">
+
+                    <!-- HOMEWORK 1 -->
+                    <article class="homework-card">
+
+                        <div class="card-top">
+                            <span class="card-number">01</span>
+                            <span class="card-tag">Cryptography</span>
+                        </div>
+
+                        <div class="card-content">
+                            <h3>Public-Key Cryptography</h3>
+
+                            <p>
+                                Elliptic-curve scalar multiplication
+                                and statistical exploration using
+                                a small toy curve.
+                            </p>
+                        </div>
+
+                        <a href="homeworks/hw1/hw1.html"
+                           class="card-link">
+                            Explore Homework &rarr;
+                        </a>
+
+                    </article>
+
+                    <!-- HOMEWORK 2 -->
+                    <article class="homework-card">
+
+                        <div class="card-top">
+                            <span class="card-number">02</span>
+                            <span class="card-tag">Ethereum</span>
+                        </div>
+
+                        <div class="card-content">
+                            <h3>Ethereum Wallet Derivation</h3>
+
+                            <p>
+                                From mnemonic phrases to Ethereum
+                                addresses: key derivation, hashing
+                                and cryptographic primitives.
+                            </p>
+                        </div>
+
+                        <a href="homeworks/hw2/hw2.html"
+                           class="card-link">
+                            Explore Homework &rarr;
+                        </a>
+
+                    </article>
+
+                </div>
+
+            </div>
         </section>
 
-        <section>
-            <h3>Homework 2</h3>
-            <p>From Wallet Seed to Ethereum Address</p>
-            <a href="homeworks/hw2/">View Homework 2</a>
+        <!-- ABOUT SECTION -->
+        <section id="about" class="about-section">
+            <div class="container about-content">
+
+                <span class="section-label">
+                    ABOUT THIS PROJECT
+                </span>
+
+                <h2>Coursework Collection</h2>
+
+                <p>
+                    This website collects the assignments
+                    developed for the Statistics course
+                    within the Master's Degree in Cybersecurity
+                    at Sapienza University of Rome.
+                </p>
+
+                <p>
+                    Each homework has its own dedicated page
+                    and is implemented using HTML, CSS
+                    and JavaScript.
+                </p>
+
+            </div>
         </section>
+
     </main>
 
-</body>
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-content">
 
+            <p>
+                &copy; 2026 Giuseppe Sciarrone
+                &middot; Student ID 2116081
+            </p>
+
+            <p>
+                Statistics | Sapienza University of Rome
+            </p>
+
+        </div>
+    </footer>
+
+</body>
 </html>

@@ -1,0 +1,187 @@
+
+/* ==========================================
+   STATISTICS HOMEWORKS
+   Shared Homework Stylesheet
+
+   Common styles for HW1, HW2, HW3, ...
+========================================== */
+
+
+/* ==========================================
+   1. HOMEWORK HEADER
+========================================== */
+
+.assignment-header {
+    padding: 55px 0 75px;
+
+    background: linear-gradient(
+        135deg,
+        var(--navy),
+        var(--navy-light)
+    );
+
+    color: white;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 45px;
+
+    color: #b9c9df;
+    font-size: 0.9rem;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.assignment-label {
+    display: block;
+    margin-bottom: 14px;
+
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.assignment-header h1 {
+    max-width: 900px;
+    margin: 0 0 10px;
+
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    letter-spacing: -1.5px;
+    line-height: 1.15;
+}
+
+.assignment-subtitle {
+    margin: 0 0 25px;
+
+    color: var(--accent);
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.assignment-description {
+    max-width: 720px;
+    margin: 0;
+
+    color: #b9c9df;
+    line-height: 1.8;
+}
+
+
+/* ==========================================
+   2. MAIN CONTENT
+========================================== */
+
+.assignment-main {
+    padding: 75px 0 100px;
+}
+
+.assignment-section {
+    margin-bottom: 75px;
+}
+
+.assignment-section:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ==========================================
+   3. CONTENT PANELS
+========================================== */
+
+.assignment-panel {
+    padding: 36px;
+
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    box-shadow:
+        0 8px 25px rgba(16, 29, 53, 0.04);
+}
+
+.assignment-panel h3 {
+    margin: 0 0 20px;
+    font-size: 1.3rem;
+}
+
+.assignment-panel p {
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+
+/* ==========================================
+   4. MATHEMATICAL FORMULAS
+========================================== */
+
+.formula-box {
+    margin: 25px 0;
+    padding: 30px 20px;
+
+    background: #edf4ff;
+    border: 1px solid #d5e5ff;
+    border-radius: 12px;
+
+    color: var(--navy);
+    font-family: Consolas, monospace;
+    font-size: clamp(1.15rem, 4vw, 1.7rem);
+    font-weight: 600;
+    text-align: center;
+}
+
+
+/* ==========================================
+   5. PLACEHOLDERS
+========================================== */
+
+.placeholder-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 220px;
+    padding: 30px;
+
+    background: var(--background);
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.placeholder-box p {
+    max-width: 340px;
+    color: var(--muted);
+}
+
+
+/* ==========================================
+   6. RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 768px) {
+
+    .assignment-header {
+        padding: 40px 0 60px;
+    }
+
+    .back-link {
+        margin-bottom: 35px;
+    }
+
+    .assignment-main {
+        padding: 55px 0 75px;
+    }
+
+    .assignment-section {
+        margin-bottom: 55px;
+    }
+
+    .assignment-panel {
+        padding: 24px;
+    }
+}

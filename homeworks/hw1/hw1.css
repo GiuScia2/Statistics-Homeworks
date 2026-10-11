@@ -1,0 +1,459 @@
+
+/* ==========================================
+   HOMEWORK 1
+   Elliptic-Curve Cryptography
+
+   Calculator, SVG Graph, Animation
+   and Statistical Exploration
+========================================== */
+
+
+/* ==========================================
+   1. SCALAR MULTIPLICATION RESULTS
+========================================== */
+
+#calculation-steps {
+    padding: 24px;
+
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    color: var(--navy);
+    font-family: Consolas, monospace;
+    font-size: 1rem;
+    line-height: 2;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================
+   2. INTERACTIVE CALCULATOR
+========================================== */
+
+.calculator-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 14px;
+    margin: 25px 0;
+}
+
+.calculator-controls label {
+    font-weight: 600;
+}
+
+.calculator-controls input {
+    width: 100px;
+    padding: 11px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    font-size: 1rem;
+}
+
+.calculator-controls button {
+    padding: 12px 20px;
+
+    background: var(--blue);
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+.calculator-controls button:hover {
+    background: #1d4ed8;
+}
+
+.calculator-controls input:focus-visible,
+.calculator-controls button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.assignment-panel .calculator-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+
+/* ==========================================
+   3. ELLIPTIC CURVE VISUALIZATION
+========================================== */
+
+.curve-panel {
+    margin-top: 26px;
+}
+
+#curve-plot {
+    display: block;
+    width: 100%;
+    max-width: 490px;
+    margin: 25px auto;
+}
+
+#curve-plot text {
+    fill: var(--muted);
+    font-size: 12px;
+}
+
+.axis-x text {
+    text-anchor: middle;
+}
+
+.axis-y text {
+    text-anchor: end;
+    dominant-baseline: middle;
+}
+
+
+/* ==========================================
+   4. SCALAR MULTIPLICATION PATH
+========================================== */
+
+#curve-trail {
+    fill: none;
+    stroke: #9333ea;
+    stroke-width: 2.5;
+    stroke-dasharray: 6 4;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    pointer-events: none;
+}
+
+
+/* ==========================================
+   5. CURVE POINTS
+========================================== */
+
+#curve-points circle {
+    fill: #94a3b8;
+    opacity: 0.75;
+
+    transition: fill 0.2s ease;
+}
+
+#curve-points .is-visited {
+    fill: var(--blue);
+    opacity: 1;
+}
+
+#curve-points .is-base {
+    fill: #0891b2;
+    opacity: 1;
+}
+
+#curve-points .is-current {
+    fill: #ea580c;
+    stroke: #ffffff;
+    stroke-width: 2;
+    opacity: 1;
+}
+
+
+/* ==========================================
+   6. GRAPH LEGEND
+========================================== */
+
+.curve-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 18px;
+}
+
+.curve-legend span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.legend-dot {
+    display: inline-block;
+
+    width: 11px;
+    height: 11px;
+
+    border-radius: 50%;
+}
+
+.legend-dot.valid {
+    background: #94a3b8;
+}
+
+.legend-dot.base {
+    background: #0891b2;
+}
+
+.legend-dot.visited {
+    background: var(--blue);
+}
+
+.legend-dot.current {
+    background: #ea580c;
+}
+
+/* Dashed purple line used in the animation */
+
+.legend-line {
+    display: inline-block;
+
+    width: 20px;
+    height: 3px;
+
+    background: repeating-linear-gradient(
+        90deg,
+        #9333ea 0 6px,
+        transparent 6px 9px
+    );
+}
+
+
+/* ==========================================
+   7. ANIMATION CONTROLS
+========================================== */
+
+.playback-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.playback-controls button {
+    padding: 12px 22px;
+
+    background: var(--navy);
+    color: white;
+
+    border: none;
+    border-radius: 9px;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.playback-controls button:hover {
+    background: var(--navy-light);
+}
+
+.playback-controls button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+#playback-status {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+
+/* ==========================================
+   8. STATISTICAL EXPLORATION
+========================================== */
+
+.stats-panel {
+    margin-top: 26px;
+}
+
+
+/* 8.1 SUMMARY METRICS */
+
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(140px, 1fr)
+    );
+
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.stats-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+    padding: 20px 12px;
+
+    background: #edf4ff;
+    border: 1px solid #d5e5ff;
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.stats-metric strong {
+    color: var(--blue);
+    font-size: 1.8rem;
+}
+
+.stats-metric span {
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+
+/* 8.2 DATA TABLES */
+
+.table-scroll {
+    overflow-x: auto;
+    margin: 24px 0;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 14px;
+
+    border-bottom: 1px solid var(--border);
+
+    text-align: left;
+    white-space: nowrap;
+}
+
+.stats-table th {
+    background: #edf4ff;
+    color: var(--navy);
+    font-weight: 700;
+}
+
+.stats-table td {
+    color: var(--text);
+}
+
+.stats-table tbody tr:hover {
+    background: var(--background);
+}
+
+
+/* 8.3 FREQUENCY CHARTS */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 35px;
+    margin: 28px 0;
+}
+
+.stats-grid h4 {
+    margin: 0 0 20px;
+    color: var(--navy);
+}
+
+.histogram {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.stat-row {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) 45px;
+
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+}
+
+.stat-row strong {
+    text-align: right;
+    color: var(--navy);
+}
+
+.stat-track {
+    height: 16px;
+
+    background: #e8eff8;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.stat-bar {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 5px;
+}
+
+.histogram-y .stat-bar {
+    background: #0891b2;
+}
+
+
+/* 8.4 NOTES AND RESULTS */
+
+.assignment-panel .stats-note {
+    margin-top: 20px;
+
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.result-highlight {
+    margin-top: 25px;
+    padding: 22px;
+
+    background: #edf4ff;
+    border-left: 4px solid var(--blue);
+    border-radius: 8px;
+
+    color: var(--navy);
+    line-height: 1.8;
+}
+
+
+/* ==========================================
+   9. RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 768px) {
+
+    .calculator-controls {
+        align-items: flex-start;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .stats-table {
+        font-size: 0.82rem;
+    }
+
+    .stats-table th,
+    .stats-table td {
+        padding: 11px;
+    }
+
+    .playback-controls {
+        flex-direction: column;
+    }
+}

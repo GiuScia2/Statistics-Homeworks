@@ -1,0 +1,65 @@
+
+/* ==========================================
+   HOMEWORK 2
+   Ethereum Wallet Derivation Pipeline
+========================================== */
+
+
+/* 1. WALLET DERIVATION PIPELINE */
+
+.pipeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 12px;
+    padding: 30px 15px;
+}
+
+.pipeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    max-width: 440px;
+    padding: 22px;
+
+    background: #edf4ff;
+    border: 1px solid #d5e5ff;
+    border-radius: 12px;
+
+    text-align: center;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.pipeline-step:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 20px rgba(16, 29, 53, 0.08);
+}
+
+.pipeline-step strong {
+    color: var(--navy);
+    font-size: 1.1rem;
+}
+
+.pipeline-step span {
+    margin-top: 5px;
+
+    color: var(--blue);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.pipeline-arrow {
+    color: var(--blue);
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1;
+}

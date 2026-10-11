@@ -1,0 +1,675 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Homework 01 | Statistics</title>
+
+        <!-- General website styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+
+    <!-- Shared homework styles -->
+    <link rel="stylesheet" href="../../assets/css/homework.css">
+
+    <!-- Homework 1 specific styles -->
+    <link rel="stylesheet" href="hw1.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="container nav-content">
+
+            <a href="../../index.html" class="nav-logo">
+                <span class="logo-icon">S.</span>
+                <span>Statistics</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="../../index.html">Home</a>
+                <a href="../../index.html#homeworks">Homeworks</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- HOMEWORK HEADER -->
+    <header class="assignment-header">
+        <div class="container">
+
+            <a href="../../index.html#homeworks" class="back-link">
+                &larr; Back to Homeworks
+            </a>
+
+            <span class="assignment-label">
+                HOMEWORK 01
+            </span>
+
+            <h1>Public-Key Cryptography</h1>
+
+            <p class="assignment-subtitle">
+                Elliptic-Curve Scalar Multiplication
+            </p>
+
+            <p class="assignment-description">
+                An interactive exploration of private-key
+                to public-key generation using a toy
+                elliptic curve, followed by a statistical
+                analysis of the resulting points.
+            </p>
+
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="assignment-main">
+        <div class="container">
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        01 / INTRODUCTION
+                    </span>
+
+                    <h2>Understanding the Problem</h2>
+
+                    <p>
+                        Before implementing the algorithm,
+                        let's introduce the mathematical
+                        concepts behind elliptic-curve
+                        scalar multiplication.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>The Toy Elliptic Curve</h3>
+
+                    <p>
+                        For this experiment, we use
+                        the following simplified curve:
+                    </p>
+
+                    <div class="formula-box">
+                        y² = x³ + 7 (mod 17)
+                    </div>
+
+                    <p>
+                        The exercise uses the base point
+                        G = (1, 5) and an example
+                        private key k = 6.
+                    </p>
+
+                    <p>
+                        Our objective is to compute
+                        Q = kG through repeated
+                        elliptic-curve point addition.
+                    </p>
+
+                </div>
+            </section>
+
+            <!-- SECTION 2: INTERACTIVE DEMONSTRATION -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        02 / INTERACTIVE DEMONSTRATION
+                    </span>
+
+                    <h2>Scalar Multiplication</h2>
+
+                    <p>
+                        Explore how a private key
+                        generates a public point.
+                    </p>
+                </div>
+
+                <!-- INTERACTIVE CALCULATOR -->
+                <div class="assignment-panel">
+
+                    <h3>Interactive Calculator</h3>
+
+                    <p>
+                        Curve: y² = x³ + 7 (mod 17)<br>
+                        Base point: G = (1, 5)
+                    </p>
+
+                    <div class="calculator-controls">
+
+                        <label for="private-key">
+                            Private key (k):
+                        </label>
+
+                        <input
+                            type="number"
+                            id="private-key"
+                            min="1"
+                            max="30"
+                            step="1"
+                            value="6"
+                        >
+
+                        <button id="calculate-button" type="button">
+                            Calculate kG
+                        </button>
+
+                    </div>
+
+                    <h4>Calculation Steps</h4>
+
+                    <pre id="calculation-steps"
+                         aria-live="polite"></pre>
+
+                    <div class="formula-box">
+                        <strong id="public-key"></strong>
+                    </div>
+
+                    <p class="calculator-note">
+                        This example uses a toy elliptic curve
+                        for educational purposes only.
+                    </p>
+
+                </div>
+
+                <!-- ELLIPTIC CURVE VISUALIZATION -->
+                <div class="assignment-panel curve-panel">
+
+                    <h3>Elliptic Curve Visualization</h3>
+
+                    <p>
+                        The graph displays the finite points
+                        satisfying y² = x³ + 7 (mod 17).
+                        Highlighted points represent the
+                        scalar multiplication steps.
+                    </p>
+
+                    <svg id="curve-plot"
+                         viewBox="0 0 410 405"
+                         role="img"
+                         aria-label="Elliptic curve points over the finite field">
+
+                        <defs>
+                            <pattern id="curve-grid"
+                                     x="45"
+                                     y="35"
+                                     width="20"
+                                     height="20"
+                                     patternUnits="userSpaceOnUse">
+
+                                <path d="M 20 0 H 0 V 20"
+                                      fill="none"
+                                      stroke="#dce5f0"/>
+                            </pattern>
+                        </defs>
+
+                        <!-- GRID -->
+                        <rect x="45"
+                              y="35"
+                              width="320"
+                              height="320"
+                              fill="url(#curve-grid)"
+                              stroke="#cbd5e1"/>
+
+                        <!-- Path connecting successive multiples of G -->
+                        <path id="curve-trail"></path>
+
+                        <!-- Points generated by JavaScript -->
+                        <g id="curve-points"></g>
+
+                        <!-- X AXIS -->
+                        <g class="axis-x">
+                            <text x="45" y="380">0</text>
+                            <text x="125" y="380">4</text>
+                            <text x="205" y="380">8</text>
+                            <text x="285" y="380">12</text>
+                            <text x="365" y="380">16</text>
+                        </g>
+
+                        <!-- Y AXIS -->
+                        <g class="axis-y">
+                            <text x="30" y="355">0</text>
+                            <text x="30" y="275">4</text>
+                            <text x="30" y="195">8</text>
+                            <text x="30" y="115">12</text>
+                            <text x="30" y="35">16</text>
+                        </g>
+
+                        <text x="385" y="380">x</text>
+                        <text x="25" y="20">y</text>
+
+                    </svg>
+
+                    <!-- GRAPH LEGEND -->
+                    <div class="curve-legend">
+
+                        <span>
+                            <i class="legend-dot valid"></i>
+                            Valid points
+                        </span>
+
+                        <span>
+                            <i class="legend-dot base"></i>
+                            Base point
+                        </span>
+
+                        <span>
+                            <i class="legend-dot visited"></i>
+                            Visited points
+                        </span>
+                        <span>
+                            <i class="legend-line"></i>
+                            Calculation path
+                        </span>
+
+                        <span>
+                            <i class="legend-dot current"></i>
+                            Public key
+                        </span>
+
+                    </div>
+
+                    
+                    <!-- OPTIONAL: STEP-BY-STEP ANIMATION -->
+                    <div class="playback-controls">
+
+                        <button id="replay-button" type="button">
+                            &#9654; Replay steps
+                        </button>
+
+                        <span id="playback-status" role="status">
+                            Ready to replay.
+                        </span>
+
+                    </div>
+
+
+                    <p class="calculator-note">
+                        The purple dashed line connects the successive multiples of G, visually illustrating the order in which the points are calculated during elliptic-curve scalar multiplication. It helps track the progression from the base point G to the final public key, but it does not represent the geometric point-addition method used for elliptic curves over the real numbers.
+                        The point at infinity is not displayed, since it does not have finite coordinates and cannot be represented as an ordinary point on the graph.
+                    </p>
+
+                </div>
+
+            </section>
+
+           
+            <!-- SECTION 3: STATISTICAL EXPLORATION -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        03 / STATISTICAL EXPLORATION
+                    </span>
+
+                    <h2>Statistical Analysis</h2>
+
+                    <p>
+                        Exploring the statistical properties of
+                        elliptic-curve scalar multiplication.
+                    </p>
+                </div>
+
+                <!-- DATASET -->
+                <div class="assignment-panel">
+
+                    <h3>Experimental Dataset</h3>
+
+                    <p>
+                        We analyze all nonzero private keys k = 1,...,8
+                        in the subgroup generated by G = (1, 5).
+                        Since G has order 9, the next multiple,
+                        9G, is the point at infinity.
+                    </p>
+
+                    <p>
+                        The full toy curve contains 17 finite points,
+                        but only 8 finite points are generated by
+                        the valid private keys in this subgroup.
+                    </p>
+
+                    <div class="stats-summary">
+                        <div class="stats-metric">
+                            <strong>8</strong>
+                            <span>Private Keys</span>
+                        </div>
+
+                        <div class="stats-metric">
+                            <strong id="unique-x">-</strong>
+                            <span>Distinct X Values</span>
+                        </div>
+
+                        <div class="stats-metric">
+                            <strong id="unique-y">-</strong>
+                            <span>Distinct Y Values</span>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table class="stats-table">
+                            <thead>
+                                <tr>
+                                    <th>k</th>
+                                    <th>Public Key Q</th>
+                                    <th>X (Binary)</th>
+                                    <th>Y (Binary)</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="sample-rows"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <!-- COORDINATE DISTRIBUTIONS -->
+                <div class="assignment-panel stats-panel">
+
+                    <h3>Coordinate Frequency Distribution</h3>
+
+                    <p>
+                        The following charts show how often
+                        each coordinate value appears in the
+                        eight generated public keys.
+                    </p>
+
+                    <div class="stats-grid">
+
+                        <div>
+                            <h4>X Coordinate</h4>
+                            <div id="x-frequency" class="histogram"></div>
+                        </div>
+
+                        <div>
+                            <h4>Y Coordinate</h4>
+                            <div id="y-frequency"
+                                class="histogram histogram-y"></div>
+                        </div>
+
+                    </div>
+
+                    <p class="stats-note">
+                        Only values with nonzero frequency are displayed.
+                        Frequencies are relative to the 8 valid keys.
+                    </p>
+
+                </div>
+
+                <!-- BIT DISTRIBUTION -->
+                <div class="assignment-panel stats-panel">
+
+                    <h3>Bit Distribution</h3>
+
+                    <p>
+                        Since the coordinates range from 0 to 16,
+                        each coordinate can be represented using
+                        5 binary bits. We count how often each
+                        bit is equal to 1.
+                    </p>
+
+                    <div class="table-scroll">
+                        <table class="stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Bit Position</th>
+                                    <th>X: Number of 1s</th>
+                                    <th>Y: Number of 1s</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="bit-rows"></tbody>
+                        </table>
+                    </div>
+
+                    <p class="stats-note">
+                        b4 is the most significant bit;
+                        b0 is the least significant bit.
+                        A balanced bit would appear as 1
+                        approximately half the time.
+                    </p>
+
+                </div>
+
+                <!-- ENTROPY AND CORRELATION -->
+                <div class="assignment-panel stats-panel">
+
+                    <h3>Entropy and Correlations</h3>
+
+                    <p>
+                        Shannon entropy measures the uncertainty
+                        of the observed coordinate distributions.
+                        We also calculate Pearson correlation
+                        between the private key k and each
+                        output coordinate.
+                    </p>
+
+                    <div class="stats-summary">
+                        <div class="stats-metric">
+                            <strong id="entropy-x">-</strong>
+                            <span>H(X), bits</span>
+                        </div>
+
+                        <div class="stats-metric">
+                            <strong id="entropy-y">-</strong>
+                            <span>H(Y), bits</span>
+                        </div>
+
+                        <div class="stats-metric">
+                            <strong id="correlation-x">-</strong>
+                            <span>Correlation k / X</span>
+                        </div>
+
+                        <div class="stats-metric">
+                            <strong id="correlation-y">-</strong>
+                            <span>Correlation k / Y</span>
+                        </div>
+                    </div>
+
+                    <p class="stats-note">
+                        These descriptive measures are calculated
+                        over the complete set of eight valid toy keys.
+                        They do not establish cryptographic security.
+                    </p>
+
+                </div>
+
+                <!-- AVALANCHE-LIKE BEHAVIOUR -->
+                <div class="assignment-panel stats-panel">
+
+                    <h3>Avalanche-like Behaviour</h3>
+
+                    <p>
+                        We compare private keys differing by exactly
+                        one input bit: (2,3), (4,5) and (6,7).
+                        Each output point is encoded using 10 bits:
+                        5 bits for X and 5 bits for Y.
+                    </p>
+
+                    <div class="table-scroll">
+                        <table class="stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Private Keys</th>
+                                    <th>Public Keys</th>
+                                    <th>Changed Bits</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="avalanche-rows"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="result-highlight">
+                        Average changed output bits:
+                        <strong id="avalanche-average">-</strong> / 10
+                    </div>
+
+                    <p class="stats-note">
+                        This experiment is only illustrative.
+                        Cryptographic scalar multiplication does
+                        not require the avalanche property of a
+                        hash function, and three comparisons are
+                        insufficient to establish such a property.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- SECTION 4: DISCUSSION AND CONCLUSIONS -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        04 / DISCUSSION AND CONCLUSIONS
+                    </span>
+
+                    <h2>Discussion and Conclusions</h2>
+
+                    <p>
+                        Interpreting the experimental results
+                        and their cryptographic significance.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>1. Coordinate Distribution</h3>
+
+                    <p>
+                        Scalar multiplication deterministically
+                        maps each valid private key to a distinct
+                        public point within the subgroup generated
+                        by G.
+                    </p>
+
+                    <p>
+                        However, the individual coordinates are not
+                        necessarily uniformly distributed. In our
+                        experiment X takes only four distinct values,
+                        while Y takes eight. Uniformity of the complete
+                        output points does not imply uniformity of
+                        their individual coordinates.
+                    </p>
+
+                    <h3>2. Bit Distribution and Entropy</h3>
+
+                    <p>
+                        The distribution of individual coordinate
+                        bits is not perfectly balanced. This is
+                        influenced by the small finite field and
+                        by the mathematical structure of the curve.
+                    </p>
+
+                    <p>
+                        Entropy describes uncertainty under the
+                        chosen input distribution. It must not be
+                        confused with computational difficulty
+                        or cryptographic security.
+                    </p>
+
+                    <h3>3. Correlation and Avalanche Behaviour</h3>
+
+                    <p>
+                        Pearson correlation can reveal linear
+                        relationships between numerical variables,
+                        but low correlation does not imply
+                        independence or unpredictability.
+                    </p>
+
+                    <p>
+                        Changing one bit of a private key may change
+                        several bits of the encoded public point.
+                        However, the classical avalanche criterion
+                        is primarily associated with cryptographic
+                        hash functions, not elliptic-curve
+                        scalar multiplication.
+                    </p>
+
+                    <h3>4. One-Way Functions vs Hash Functions</h3>
+
+                    <p>
+                        Elliptic-curve scalar multiplication is
+                        efficient in the forward direction:
+                        given k and G, computing Q = kG is easy.
+                        On suitably chosen large curves, recovering
+                        k from Q is computationally difficult because
+                        of the Elliptic Curve Discrete Logarithm
+                        Problem (ECDLP).
+                    </p>
+
+                    <p>
+                        Cryptographic hash functions instead map
+                        inputs of arbitrary length to fixed-length
+                        digests. They are designed to provide
+                        properties such as preimage resistance,
+                        second-preimage resistance and collision
+                        resistance, together with strong diffusion.
+                    </p>
+
+                    <p>
+                        Elliptic-curve scalar multiplication is not
+                        a general-purpose cryptographic hash function.
+                        It produces curve points and preserves an
+                        algebraic group structure.
+                    </p>
+
+                    <h3>5. Security Limitations</h3>
+
+                    <p>
+                        Our toy curve is not cryptographically secure.
+                        Its subgroup contains only nine points,
+                        including the point at infinity, so recovering
+                        a private key by exhaustive search is trivial.
+                    </p>
+
+                    <p>
+                        Real Ethereum uses secp256k1, a much larger
+                        elliptic curve with appropriately chosen
+                        cryptographic parameters.
+                    </p>
+
+                    <div class="result-highlight">
+                        Final conclusion: statistical experiments
+                        help us understand the structure and
+                        behaviour of scalar multiplication,
+                        but they do not prove one-wayness or
+                        cryptographic security.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+    </main>
+    
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-content">
+
+            <p>
+                &copy; 2026 Giuseppe Sciarrone
+                &middot; Student ID 2116081
+            </p>
+
+            <p>
+                Statistics | Sapienza University of Rome
+            </p>
+
+        </div>
+    </footer>
+
+    <!-- HOMEWORK JAVASCRIPT -->
+    <script src="hw1.js"></script>
+    <script src="statistics.js"></script>
+</body>
+</html>

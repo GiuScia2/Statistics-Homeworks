@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Homework 02 | Statistics</title>
+
+    <!-- General website styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+
+    <!-- Shared homework styles -->
+    <link rel="stylesheet" href="../../assets/css/homework.css">
+
+    <!-- Homework 2 specific styles -->
+    <link rel="stylesheet" href="hw2.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="container nav-content">
+
+            <a href="../../index.html" class="nav-logo">
+                <span class="logo-icon">S.</span>
+                <span>Statistics</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="../../index.html">Home</a>
+                <a href="../../index.html#homeworks">Homeworks</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- HOMEWORK HEADER -->
+    <header class="assignment-header">
+        <div class="container">
+
+            <a href="../../index.html#homeworks"
+               class="back-link">
+                &larr; Back to Homeworks
+            </a>
+
+            <span class="assignment-label">
+                HOMEWORK 02
+            </span>
+
+            <h1>From Wallet Seed to Ethereum Address</h1>
+
+            <p class="assignment-subtitle">
+                Hashing, Key Derivation and Cryptographic Primitives
+            </p>
+
+            <p class="assignment-description">
+                An exploration of the cryptographic
+                standards behind Ethereum wallets,
+                from mnemonic phrases to checksummed
+                addresses, including statistical properties.
+            </p>
+
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="assignment-main">
+        <div class="container">
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        01 / INTRODUCTION
+                    </span>
+
+                    <h2>Understanding Ethereum Wallets</h2>
+
+                    <p>
+                        An introduction to the cryptographic
+                        mechanisms involved in Ethereum
+                        wallet generation.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>From Mnemonic to Address</h3>
+
+                    <p>
+                        Ethereum wallets can use multiple
+                        cryptographic standards to derive
+                        private keys and corresponding
+                        public addresses from a mnemonic phrase.
+                    </p>
+
+                    <p>
+                        Each stage of this process has
+                        a different purpose, including
+                        key management, public-key cryptography,
+                        hashing and error detection.
+                    </p>
+
+                </div>
+            </section>
+
+            <!-- SECTION 2: WALLET PIPELINE -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        02 / WALLET DERIVATION
+                    </span>
+
+                    <h2>Ethereum Wallet Pipeline</h2>
+
+                    <p>
+                        Follow the main stages of
+                        the wallet derivation process.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>Cryptographic Pipeline</h3>
+
+                    <div class="pipeline">
+
+                        <div class="pipeline-step">
+                            <strong>Mnemonic Phrase</strong>
+                            <span>BIP-39</span>
+                        </div>
+
+                        <div class="pipeline-arrow">&darr;</div>
+
+                        <div class="pipeline-step">
+                            <strong>Seed</strong>
+                            <span>BIP-32 / BIP-44</span>
+                        </div>
+
+                        <div class="pipeline-arrow">&darr;</div>
+
+                        <div class="pipeline-step">
+                            <strong>Private Key</strong>
+                            <span>secp256k1</span>
+                        </div>
+
+                        <div class="pipeline-arrow">&darr;</div>
+
+                        <div class="pipeline-step">
+                            <strong>Public Key</strong>
+                            <span>Keccak-256</span>
+                        </div>
+
+                        <div class="pipeline-arrow">&darr;</div>
+
+                        <div class="pipeline-step">
+                            <strong>Ethereum Address</strong>
+                            <span>EIP-55</span>
+                        </div>
+
+                        <div class="pipeline-arrow">&darr;</div>
+
+                        <div class="pipeline-step">
+                            <strong>Checksummed Address</strong>
+                            <span>Final Result</span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 3: STANDARDS -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        03 / CRYPTOGRAPHIC STANDARDS
+                    </span>
+
+                    <h2>Standards and Primitives</h2>
+
+                    <p>
+                        Understanding the role of each
+                        technology in the derivation process.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>BIP-39</h3>
+                    <p>
+                        Mnemonic sentences and seed generation
+                        using PBKDF2-HMAC-SHA512.
+                    </p>
+
+                    <h3>BIP-32</h3>
+                    <p>
+                        Hierarchical deterministic key
+                        derivation from a master seed.
+                    </p>
+
+                    <h3>BIP-44</h3>
+                    <p>
+                        Standard derivation paths for
+                        multi-account HD wallets.
+                    </p>
+
+                    <h3>secp256k1</h3>
+                    <p>
+                        Elliptic-curve cryptography for
+                        public-key generation and signatures.
+                    </p>
+
+                    <h3>Keccak-256</h3>
+                    <p>
+                        Cryptographic hashing used in
+                        Ethereum address derivation.
+                    </p>
+
+                    <h3>EIP-55</h3>
+                    <p>
+                        Mixed-case checksum encoding
+                        for Ethereum addresses.
+                    </p>
+
+                </div>
+            </section>
+
+            <!-- SECTION 4: HISTORY -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        04 / HISTORICAL CONTEXT
+                    </span>
+
+                    <h2>Cryptographic Timeline</h2>
+
+                    <p>
+                        The historical development of
+                        the main standards and techniques.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>Historical Evolution</h3>
+
+                    <div class="placeholder-box">
+                        <p>
+                            An interactive or graphical
+                            timeline will appear here.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 5: STATISTICS -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        05 / STATISTICAL EXPLORATION
+                    </span>
+
+                    <h2>Statistical Properties</h2>
+
+                    <p>
+                        Investigating the behaviour
+                        and statistical characteristics
+                        of cryptographic outputs.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>Statistical Analysis</h3>
+
+                    <div class="placeholder-box">
+                        <p>
+                            Statistical experiments,
+                            charts and observations
+                            will appear here.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 6: CONCLUSIONS -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        06 / DISCUSSION
+                    </span>
+
+                    <h2>Discussion and Conclusions</h2>
+
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>Different Cryptographic Roles</h3>
+
+                    <p>
+                        This section will explain the
+                        differences between key generation,
+                        key derivation, public-key cryptography,
+                        hashing, checksums and encoding.
+                    </p>
+
+                    <h3>SHA-2 vs Keccak / SHA-3</h3>
+
+                    <p>
+                        We will compare the relevant
+                        cryptographic hash functions
+                        and clarify why Ethereum uses
+                        Keccak-256 rather than SHA3-256.
+                    </p>
+
+                    <h3>Final Observations</h3>
+
+                    <p>
+                        The final discussion will explain
+                        why the Ethereum wallet pipeline
+                        combines several cryptographic
+                        techniques instead of relying
+                        on a single algorithm.
+                    </p>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-content">
+
+            <p>
+                &copy; 2026 Giuseppe Sciarrone
+                &middot; Student ID 2116081
+            </p>
+
+            <p>
+                Statistics | Sapienza University of Rome
+            </p>
+
+        </div>
+    </footer>
+
+</body>
+</html>
