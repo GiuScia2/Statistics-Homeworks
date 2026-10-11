@@ -57,9 +57,727 @@
     font-weight: 600;
 }
 
+
 .pipeline-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+
     color: var(--blue);
     font-size: 1.7rem;
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.2;
+}
+
+.pipeline-arrow small {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-align: center;
+}
+/* ==========================================
+   2. BIP-39 SEED DERIVATION
+========================================== */
+
+.seed-panel {
+    margin-top: 26px;
+}
+
+.seed-example {
+    padding: 24px;
+    margin: 24px 0;
+
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.seed-example h4 {
+    margin: 0 0 10px;
+    color: var(--navy);
+}
+
+.seed-example code {
+    display: block;
+    margin-bottom: 22px;
+    color: var(--text);
+
+    font-size: 0.95rem;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.seed-example code:last-child {
+    margin-bottom: 0;
+}
+
+#derive-seed-button {
+    padding: 12px 22px;
+
+    background: var(--blue);
+    color: white;
+
+    border: none;
+    border-radius: 9px;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#derive-seed-button:hover {
+    background: #1d4ed8;
+}
+
+#derive-seed-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.seed-output {
+    padding: 22px;
+    margin-top: 15px;
+
+    background: #edf4ff;
+    border: 1px solid #d5e5ff;
+    border-radius: 12px;
+
+    overflow-wrap: anywhere;
+    font-family: Consolas, monospace;
+    line-height: 1.8;
+}
+
+#seed-status {
+    color: var(--blue);
+    font-weight: 600;
+}
+
+.assignment-panel .seed-warning {
+    margin-top: 24px;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+#derive-seed-button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   3. BIP-32 MASTER KEY DERIVATION
+========================================== */
+
+.master-panel {
+    margin-top: 26px;
+}
+
+#derive-master-button {
+    padding: 12px 22px;
+
+    background: var(--blue);
+    color: white;
+
+    border: none;
+    border-radius: 9px;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#derive-master-button:hover {
+    background: #1d4ed8;
+}
+
+#derive-master-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#derive-master-button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+#master-status {
+    color: var(--blue);
+    font-weight: 600;
+}
+/* ==========================================
+   4. BIP-44 ETHEREUM KEY DERIVATION
+========================================== */
+
+.derivation-panel {
+    margin-top: 26px;
+}
+
+.path-levels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,
+            minmax(120px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.path-levels div {
+    padding: 18px 12px;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.path-levels code {
+    display: block;
+    color: var(--blue);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.path-levels span {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+#derive-ethereum-button {
+    padding: 12px 22px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#derive-ethereum-button:hover {
+    background: #1d4ed8;
+}
+
+#derive-ethereum-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#derive-ethereum-button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+#ethereum-derivation-status {
+    color: var(--blue);
+    font-weight: 600;
+}
+
+/* ==========================================
+   5. SECP256K1 PUBLIC KEY GENERATION
+========================================== */
+
+.public-panel {
+    margin-top: 26px;
+}
+
+#derive-public-button {
+    padding: 12px 22px;
+
+    background: var(--blue);
+    color: white;
+
+    border: none;
+    border-radius: 9px;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#derive-public-button:hover {
+    background: #1d4ed8;
+}
+
+#derive-public-button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+#public-key-status {
+    color: var(--blue);
+    font-weight: 600;
+}
+
+/* ==========================================
+   6. ETHEREUM ADDRESS GENERATION
+========================================== */
+
+.address-panel {
+    margin-top: 26px;
+}
+
+#derive-address-button {
+    padding: 12px 22px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#derive-address-button:hover {
+    background: #1d4ed8;
+}
+
+#derive-address-button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+#address-status {
+    color: var(--blue);
+    font-weight: 600;
+}
+
+/* ==========================================
+   7. EIP-55 ADDRESS CHECKSUM
+========================================== */
+
+.checksum-panel {
+    margin-top: 26px;
+}
+
+#derive-checksum-button {
+    padding: 12px 22px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#derive-checksum-button:hover {
+    background: #1d4ed8;
+}
+
+#derive-checksum-button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+#checksum-status {
+    color: var(--blue);
+    font-weight: 600;
+}
+
+/* ==========================================
+   8. CRYPTOGRAPHIC STANDARDS
+========================================== */
+
+.standards-panel {
+    margin-top: 26px;
+}
+
+/* Standards cards */
+
+.standards-grid,
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 26px;
+}
+
+.standard-card,
+.role-card {
+    padding: 24px;
+
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.standard-card h4,
+.role-card h4 {
+    margin: 8px 0 12px;
+    color: var(--navy);
+    font-size: 1.1rem;
+}
+
+.standard-card p,
+.role-card p {
+    margin: 0 0 12px;
+    font-size: 0.9rem;
+}
+
+.standard-card p:last-child,
+.role-card p:last-child {
+    margin-bottom: 0;
+}
+
+.standard-label {
+    color: var(--blue);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.standard-card code {
+    display: block;
+    margin: 14px 0;
+    color: var(--blue);
+
+    font-family: Consolas, monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    overflow-wrap: anywhere;
+}
+
+/* Hash function comparison */
+
+.hash-note {
+    margin-top: 28px;
+    padding: 24px;
+
+    background: #edf4ff;
+    border-left: 4px solid var(--blue);
+    border-radius: 10px;
+}
+
+.hash-note h4 {
+    margin: 0 0 12px;
+    color: var(--navy);
+}
+
+.hash-note p:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive layout */
+
+@media (max-width: 768px) {
+
+    .standards-grid,
+    .roles-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .standard-card,
+    .role-card,
+    .hash-note {
+        padding: 20px;
+    }
+}
+
+/* ==========================================
+   9. CRYPTOGRAPHIC TIMELINE
+========================================== */
+
+.crypto-timeline {
+    position: relative;
+    list-style: none;
+
+    margin: 35px 0;
+    padding: 0;
+}
+
+/* Vertical timeline line */
+
+.crypto-timeline::before {
+    content: "";
+    position: absolute;
+
+    top: 16px;
+    bottom: 16px;
+    left: 66px;
+
+    width: 2px;
+    background: var(--border);
+}
+
+/* Timeline events */
+
+.timeline-item {
+    position: relative;
+    display: grid;
+
+    grid-template-columns: 105px minmax(0, 1fr);
+    gap: 18px;
+
+    margin-bottom: 22px;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Timeline dots */
+
+.timeline-item::before {
+    content: "";
+    position: absolute;
+
+    top: 22px;
+    left: 60px;
+
+    width: 14px;
+    height: 14px;
+
+    background: var(--blue);
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--border);
+
+    z-index: 1;
+}
+
+/* Year label */
+
+.timeline-year {
+    align-self: start;
+    padding-top: 17px;
+
+    color: var(--blue);
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+/* Event content */
+
+.timeline-content {
+    padding: 24px;
+
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.timeline-type {
+    color: var(--blue);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.timeline-content h4 {
+    margin: 8px 0 12px;
+    color: var(--navy);
+    font-size: 1.2rem;
+}
+
+.timeline-content p {
+    margin: 0;
+    line-height: 1.8;
+}
+
+/* Historical clarification and references */
+
+.assignment-panel .timeline-note {
+    padding: 18px;
+    background: #edf4ff;
+    border-radius: 10px;
+
+    font-size: 0.88rem;
+    line-height: 1.8;
+}
+
+.timeline-references {
+    margin-top: 25px;
+}
+
+.timeline-references h4 {
+    margin: 0 0 8px;
+    color: var(--navy);
+}
+
+.timeline-references a {
+    color: var(--blue);
+    font-weight: 600;
+}
+
+.timeline-references a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+
+    .crypto-timeline::before {
+        left: 10px;
+    }
+
+    .timeline-item {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+        padding-left: 30px;
+    }
+
+    .timeline-item::before {
+        top: 8px;
+        left: 4px;
+    }
+
+    .timeline-year {
+        padding-top: 0;
+    }
+
+    .timeline-content {
+        padding: 20px;
+    }
+}
+
+/* ==========================================
+   10. STATISTICAL EXPLORATION
+========================================== */
+
+.statistics-panel {
+    margin-top: 26px;
+}
+
+#run-statistics-button {
+    padding: 12px 22px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#run-statistics-button:hover {
+    background: #1d4ed8;
+}
+
+#run-statistics-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#run-statistics-button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+#statistics-status {
+    margin-top: 16px;
+    color: var(--blue);
+    font-weight: 600;
+}
+
+/* Metric cards */
+
+.statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 26px;
+}
+
+.statistics-metric {
+    padding: 22px;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.statistics-metric span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.statistics-metric strong {
+    display: block;
+    margin: 12px 0;
+
+    color: var(--blue);
+    font-size: 1.65rem;
+    overflow-wrap: anywhere;
+}
+
+.statistics-metric small {
+    display: block;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+/* Hamming distance histogram */
+
+.statistics-histogram {
+    display: grid;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.statistics-histogram-row {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr) 32px;
+    align-items: center;
+    gap: 14px;
+}
+
+.statistics-histogram-row span {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.statistics-histogram-row strong {
+    color: var(--navy);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.statistics-bar-track {
+    height: 18px;
+    background: #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.statistics-bar-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 6px;
+}
+
+.statistics-note {
+    margin-top: 24px;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+/* Responsive layout */
+
+@media (max-width: 600px) {
+    .statistics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .statistics-metric {
+        padding: 18px;
+    }
+
+    .statistics-histogram-row {
+        grid-template-columns: 66px minmax(0, 1fr) 24px;
+        gap: 8px;
+    }
+}
+
+/* ==========================================
+   11. DISCUSSION AND CONCLUSIONS
+========================================== */
+
+.discussion-panel {
+    margin-top: 26px;
+}
+
+.discussion-panel h4 {
+    margin: 24px 0 10px;
+    color: var(--navy);
+    font-size: 1.05rem;
+}
+
+.discussion-panel h4:first-of-type {
+    margin-top: 18px;
 }

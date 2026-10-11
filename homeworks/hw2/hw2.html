@@ -72,41 +72,88 @@
 
             <!-- SECTION 1: INTRODUCTION -->
             <section class="assignment-section">
-
+            
                 <div class="section-heading">
                     <span class="section-label">
                         01 / INTRODUCTION
                     </span>
-
+            
                     <h2>Understanding Ethereum Wallets</h2>
-
+            
                     <p>
-                        An introduction to the cryptographic
-                        mechanisms involved in Ethereum
-                        wallet generation.
+                        From human-readable recovery words to
+                        cryptographic keys and Ethereum addresses.
                     </p>
                 </div>
-
+            
                 <div class="assignment-panel">
-
-                    <h3>From Mnemonic to Address</h3>
-
+            
+                    <h3>Introduction and Objectives</h3>
+            
                     <p>
-                        Ethereum wallets can use multiple
-                        cryptographic standards to derive
-                        private keys and corresponding
-                        public addresses from a mnemonic phrase.
+                        Modern cryptocurrency wallets rely on
+                        multiple cryptographic standards to manage
+                        secret keys and generate blockchain addresses.
+                        Rather than storing an unrelated private key
+                        for every account, hierarchical deterministic
+                        wallets can derive many keys from a single
+                        initial seed.
                     </p>
-
+            
                     <p>
-                        Each stage of this process has
-                        a different purpose, including
-                        key management, public-key cryptography,
-                        hashing and error detection.
+                        This homework explores the complete process
+                        of deriving an Ethereum address from a
+                        BIP-39 mnemonic phrase. The demonstration
+                        connects key derivation, elliptic-curve
+                        cryptography, cryptographic hashing and
+                        address checksum encoding.
                     </p>
-
+            
+                    <p>
+                        Particular attention is given to the
+                        distinction between generating secret
+                        material, deriving keys, calculating public
+                        keys, hashing data and encoding addresses.
+                        These operations use different mathematical
+                        techniques and serve different purposes.
+                    </p>
+            
+                    <h3>Experimental Approach</h3>
+            
+                    <p>
+                        The interactive demonstration uses a public
+                        BIP-39 test mnemonic and the test passphrase
+                        TREZOR. All results are deterministic and
+                        can be checked against reference values.
+                    </p>
+            
+                    <p>
+                        The wallet derivation is implemented using
+                        the browser Web Crypto API and ethers.js.
+                        A separate statistical experiment examines
+                        the avalanche behavior of Keccak-256
+                        by modifying one input bit at a time.
+                    </p>
+            
+                    <p>
+                        The historical timeline and technical
+                        discussion place these operations within
+                        the broader development of cryptographic
+                        standards.
+                    </p>
+            
+                    <p class="seed-warning">
+                        This is an educational experiment using
+                        publicly known test credentials. The
+                        displayed secret keys must never be used
+                        to hold real cryptocurrency. Never enter
+                        a real wallet recovery phrase into this page.
+                    </p>
+            
                 </div>
+            
             </section>
+
 
             <!-- SECTION 2: WALLET PIPELINE -->
             <section class="assignment-section">
@@ -123,221 +170,1246 @@
                         the wallet derivation process.
                     </p>
                 </div>
-
                 <div class="assignment-panel">
 
                     <h3>Cryptographic Pipeline</h3>
 
+                    
                     <div class="pipeline">
 
                         <div class="pipeline-step">
                             <strong>Mnemonic Phrase</strong>
-                            <span>BIP-39</span>
+                            <span>BIP-39 — Human-readable recovery words</span>
                         </div>
 
-                        <div class="pipeline-arrow">&darr;</div>
+                        <div class="pipeline-arrow">
+                            <small>PBKDF2-HMAC-SHA512 · 2048 iterations</small>
+                            &darr;
+                        </div>
 
                         <div class="pipeline-step">
                             <strong>Seed</strong>
-                            <span>BIP-32 / BIP-44</span>
+                            <span>512 bits (64 bytes)</span>
                         </div>
 
-                        <div class="pipeline-arrow">&darr;</div>
+                        <div class="pipeline-arrow">
+                            <small>BIP-32 · HMAC-SHA512</small>
+                            &darr;
+                        </div>
 
                         <div class="pipeline-step">
-                            <strong>Private Key</strong>
-                            <span>secp256k1</span>
+                            <strong>Master Extended Private Key</strong>
+                            <span>Master private key + chain code</span>
                         </div>
 
-                        <div class="pipeline-arrow">&darr;</div>
+                        <div class="pipeline-arrow">
+                            <small>BIP-44 · m/44'/60'/0'/0/0</small>
+                            &darr;
+                        </div>
+
+                        <div class="pipeline-step">
+                            <strong>Derived Private Key</strong>
+                            <span>256-bit scalar</span>
+                        </div>
+
+                        <div class="pipeline-arrow">
+                            <small>secp256k1 · Q = kG</small>
+                            &darr;
+                        </div>
 
                         <div class="pipeline-step">
                             <strong>Public Key</strong>
-                            <span>Keccak-256</span>
+                            <span>Elliptic-curve point (X, Y)</span>
                         </div>
 
-                        <div class="pipeline-arrow">&darr;</div>
+                        <div class="pipeline-arrow">
+                            <small>Keccak-256 · Last 20 bytes</small>
+                            &darr;
+                        </div>
 
                         <div class="pipeline-step">
                             <strong>Ethereum Address</strong>
-                            <span>EIP-55</span>
+                            <span>20 bytes · Lowercase hexadecimal</span>
                         </div>
 
-                        <div class="pipeline-arrow">&darr;</div>
+                        <div class="pipeline-arrow">
+                            <small>EIP-55 · Mixed-case checksum</small>
+                            &darr;
+                        </div>
 
                         <div class="pipeline-step">
                             <strong>Checksummed Address</strong>
-                            <span>Final Result</span>
+                            <span>Final Ethereum address representation</span>
                         </div>
 
                     </div>
 
+
                 </div>
+                <!-- BIP-39 SEED DERIVATION DEMONSTRATION -->
+                <div class="assignment-panel seed-panel">
+                
+                    <h3>Step 1 — Mnemonic to Seed</h3>
+                    
+                
+                    <p>
+                        BIP-39 converts a mnemonic phrase into a
+                        512-bit seed using PBKDF2-HMAC-SHA512
+                        with 2048 iterations.
+                    </p>
+                
+                    <div class="seed-example">
+                
+                        <h4>Test Mnemonic (BIP-39)</h4>
+                
+                        <code id="test-mnemonic">
+                            abandon abandon abandon abandon
+                            abandon abandon abandon abandon
+                            abandon abandon abandon about
+                        </code>
+                
+                        <h4>Passphrase</h4>
+                
+                        <code id="test-passphrase">TREZOR</code>
+                
+                    </div>
+                
+                    <button id="derive-seed-button" type="button">
+                        Derive Seed
+                    </button>
+                
+                    <h4>Generated Seed (512 bits)</h4>
+                
+                    <div class="seed-output">
+                        <code id="seed-output">
+                            Click "Derive Seed" to compute the seed.
+                        </code>
+                    </div>
+                
+                    <p id="seed-status" role="status"></p>
+                
+                    <p class="seed-warning">
+                        Educational demonstration using a public
+                        test vector. Never enter or reuse real wallet
+                        recovery phrases in this application.
+                    </p>
+
+                
+                </div>
+
+                <!-- BIP-32 MASTER KEY DERIVATION -->
+                <div class="assignment-panel master-panel">
+                
+                    <h3>Step 2 — Seed to Master Key</h3>
+                
+                    <p>
+                        BIP-32 uses HMAC-SHA512 to derive a master
+                        extended private key from the seed.
+                        The 512-bit result is divided into two
+                        256-bit values.
+                    </p>
+                
+                    <button id="derive-master-button" type="button">
+                        Derive Master Key
+                    </button>
+                
+                    <h4>Master Private Key (256 bits)</h4>
+                
+                    <div class="seed-output">
+                        <code id="master-key-output">
+                            Derive the seed first.
+                        </code>
+                    </div>
+                
+                    <h4>Master Chain Code (256 bits)</h4>
+                
+                    <div class="seed-output">
+                        <code id="chain-code-output">
+                            Derive the seed first.
+                        </code>
+                    </div>
+                
+                    <p id="master-status" role="status"></p>
+                
+                    <p class="seed-warning">
+                        Both values are derived from the public
+                        test vector. Never expose real wallet
+                        private keys or recovery secrets.
+                    </p>
+                
+                </div>
+
+                <!-- BIP-44 ETHEREUM KEY DERIVATION -->
+                <div class="assignment-panel derivation-panel">
+                
+                    <h3>Step 3 — Ethereum Private Key Derivation</h3>
+                
+                    <p>
+                        BIP-44 defines a hierarchical path for deriving
+                        wallet keys. We use BIP-32 child derivation
+                        to obtain the first Ethereum private key.
+                    </p>
+                
+                    <div class="formula-box">
+                        m/44'/60'/0'/0/0
+                    </div>
+                
+                    <div class="path-levels">
+                        <div>
+                            <code>44'</code>
+                            <span>BIP-44 Purpose</span>
+                        </div>
+                
+                        <div>
+                            <code>60'</code>
+                            <span>Ethereum</span>
+                        </div>
+                
+                        <div>
+                            <code>0'</code>
+                            <span>Account 0</span>
+                        </div>
+                
+                        <div>
+                            <code>0</code>
+                            <span>External Chain</span>
+                        </div>
+                
+                        <div>
+                            <code>0</code>
+                            <span>Address Index</span>
+                        </div>
+                    </div>
+                
+                    <button id="derive-ethereum-button" type="button">
+                        Derive Ethereum Private Key
+                    </button>
+                
+                    <h4>Derived Private Key (256 bits)</h4>
+                
+                    <div class="seed-output">
+                        <code id="derived-private-output">
+                            Derive the master key first.
+                        </code>
+                    </div>
+                
+                    <h4>Derived Chain Code (256 bits)</h4>
+                
+                    <div class="seed-output">
+                        <code id="derived-chain-output">
+                            Derive the master key first.
+                        </code>
+                    </div>
+                
+                    <p id="ethereum-derivation-status" role="status"></p>
+                
+                    <p class="seed-warning">
+                        These values are derived from a public test mnemonic.
+                        They must never be used to manage real funds.
+                    </p>
+                
+                </div>
+
+                <!-- SECP256K1 PUBLIC KEY GENERATION -->
+                <div class="assignment-panel public-panel">
+                
+                    <h3>Step 4 — Public Key Generation</h3>
+                
+                    <p>
+                        The derived Ethereum private key is used
+                        for elliptic-curve scalar multiplication
+                        on secp256k1. The resulting public key
+                        is a point Q = kG with coordinates X and Y.
+                    </p>
+                
+                    <div class="formula-box">
+                        Q = kG
+                    </div>
+                
+                    <button id="derive-public-button" type="button">
+                        Generate Public Key
+                    </button>
+                
+                    <h4>Public Key — Uncompressed (65 bytes)</h4>
+                
+                    <div class="seed-output">
+                        <code id="public-key-output">
+                            Derive the Ethereum private key first.
+                        </code>
+                    </div>
+                
+                    <h4>X Coordinate (256 bits)</h4>
+                
+                    <div class="seed-output">
+                        <code id="public-x-output">-</code>
+                    </div>
+                
+                    <h4>Y Coordinate (256 bits)</h4>
+                
+                    <div class="seed-output">
+                        <code id="public-y-output">-</code>
+                    </div>
+                
+                    <p id="public-key-status" role="status"></p>
+                
+                    <p class="seed-warning">
+                        The uncompressed public key begins with 04,
+                        followed by the 32-byte X and Y coordinates.
+                        The prefix is excluded when deriving an
+                        Ethereum address.
+                    </p>
+                
+                </div>
+
+                <!-- ETHEREUM ADDRESS GENERATION -->
+                <div class="assignment-panel address-panel">
+                
+                    <h3>Step 5 — Ethereum Address Generation</h3>
+                
+                    <p>
+                        Ethereum addresses are derived by hashing
+                        the 64-byte public key (X and Y coordinates)
+                        with Keccak-256, excluding the initial 04 prefix.
+                        The last 20 bytes of the hash form the address.
+                    </p>
+                
+                    <button id="derive-address-button" type="button">
+                        Generate Ethereum Address
+                    </button>
+                
+                    <h4>Public Key Without Prefix (64 bytes)</h4>
+                
+                    <div class="seed-output">
+                        <code id="address-input-output">
+                            Generate the public key first.
+                        </code>
+                    </div>
+                
+                    <h4>Keccak-256 Hash (32 bytes)</h4>
+                
+                    <div class="seed-output">
+                        <code id="keccak-output">-</code>
+                    </div>
+                
+                    <h4>Ethereum Address (20 bytes)</h4>
+                
+                    <div class="seed-output">
+                        <code id="ethereum-address-output">-</code>
+                    </div>
+                
+                    <p id="address-status" role="status"></p>
+                
+                    <p class="seed-warning">
+                        The address is displayed in lowercase.
+                        The EIP-55 mixed-case checksum will be
+                        applied in the next step.
+                    </p>
+                
+                </div>
+
+                <!-- EIP-55 CHECKSUM ENCODING -->
+                <div class="assignment-panel checksum-panel">
+                
+                    <h3>Step 6 — EIP-55 Address Checksum</h3>
+                
+                    <p>
+                        EIP-55 uses Keccak-256 to determine the
+                        capitalization of hexadecimal letters
+                        in an Ethereum address. This provides
+                        an additional error-detection mechanism
+                        without changing the underlying 20 bytes.
+                    </p>
+                
+                    <button id="derive-checksum-button" type="button">
+                        Apply EIP-55 Checksum
+                    </button>
+                
+                    <h4>Lowercase Ethereum Address</h4>
+                
+                    <div class="seed-output">
+                        <code id="checksum-input-output">
+                            Generate the Ethereum address first.
+                        </code>
+                    </div>
+                
+                    <h4>EIP-55 Checksum Hash (32 bytes)</h4>
+                
+                    <div class="seed-output">
+                        <code id="checksum-hash-output">-</code>
+                    </div>
+                
+                    <h4>Final Checksummed Address</h4>
+                
+                    <div class="seed-output">
+                        <code id="checksummed-address-output">-</code>
+                    </div>
+                
+                    <p id="checksum-status" role="status"></p>
+                
+                    <p class="seed-warning">
+                        EIP-55 changes only letter capitalization.
+                        The checksummed address represents the
+                        same 20-byte Ethereum address and can help
+                        detect accidental typing errors.
+                    </p>
+                
+                </div>
+
+
             </section>
 
-            <!-- SECTION 3: STANDARDS -->
+            <!-- SECTION 3: CRYPTOGRAPHIC STANDARDS -->
             <section class="assignment-section">
-
+            
                 <div class="section-heading">
                     <span class="section-label">
                         03 / CRYPTOGRAPHIC STANDARDS
                     </span>
-
+            
                     <h2>Standards and Primitives</h2>
-
+            
                     <p>
-                        Understanding the role of each
-                        technology in the derivation process.
+                        Understanding the standards and cryptographic
+                        operations behind Ethereum wallet derivation.
                     </p>
                 </div>
-
+            
+                <!-- STANDARDS EXPLANATION -->
                 <div class="assignment-panel">
-
-                    <h3>BIP-39</h3>
+            
+                    <h3>Technologies Behind the Pipeline</h3>
+            
                     <p>
-                        Mnemonic sentences and seed generation
-                        using PBKDF2-HMAC-SHA512.
+                        Ethereum wallet derivation combines several
+                        standards and cryptographic primitives.
+                        Each component has a specific purpose,
+                        from representing secret information to
+                        deriving keys and generating addresses.
                     </p>
-
-                    <h3>BIP-32</h3>
-                    <p>
-                        Hierarchical deterministic key
-                        derivation from a master seed.
-                    </p>
-
-                    <h3>BIP-44</h3>
-                    <p>
-                        Standard derivation paths for
-                        multi-account HD wallets.
-                    </p>
-
-                    <h3>secp256k1</h3>
-                    <p>
-                        Elliptic-curve cryptography for
-                        public-key generation and signatures.
-                    </p>
-
-                    <h3>Keccak-256</h3>
-                    <p>
-                        Cryptographic hashing used in
-                        Ethereum address derivation.
-                    </p>
-
-                    <h3>EIP-55</h3>
-                    <p>
-                        Mixed-case checksum encoding
-                        for Ethereum addresses.
-                    </p>
-
+            
+                    <div class="standards-grid">
+            
+                        <article class="standard-card">
+                            <span class="standard-label">MNEMONIC & SEED</span>
+                            <h4>BIP-39</h4>
+            
+                            <p>
+                                BIP-39 represents random entropy and
+                                checksum bits as a mnemonic phrase.
+                                The mnemonic and an optional passphrase
+                                are processed using PBKDF2-HMAC-SHA512
+                                with 2048 iterations.
+                            </p>
+            
+                            <p>
+                                The result is a deterministic 512-bit
+                                seed used to initialize the wallet.
+                            </p>
+                        </article>
+            
+                        <article class="standard-card">
+                            <span class="standard-label">HD KEY DERIVATION</span>
+                            <h4>BIP-32</h4>
+            
+                            <p>
+                                BIP-32 defines hierarchical deterministic
+                                wallets, allowing many related keys
+                                to be derived from a single seed.
+                            </p>
+            
+                            <p>
+                                HMAC-SHA512 generates the master private
+                                key and a 256-bit chain code.
+                                Child keys can then be derived through
+                                hardened or non-hardened derivation.
+                            </p>
+                        </article>
+            
+                        <article class="standard-card">
+                            <span class="standard-label">WALLET ORGANIZATION</span>
+                            <h4>BIP-44</h4>
+            
+                            <p>
+                                BIP-44 defines a standard hierarchy
+                                for organizing derived wallet keys.
+                                Our Ethereum example uses:
+                            </p>
+            
+                            <code>m/44'/60'/0'/0/0</code>
+            
+                            <p>
+                                The value 60 identifies Ethereum.
+                                The apostrophe indicates a hardened
+                                derivation step.
+                            </p>
+                        </article>
+            
+                        <article class="standard-card">
+                            <span class="standard-label">PUBLIC-KEY CRYPTOGRAPHY</span>
+                            <h4>secp256k1</h4>
+            
+                            <p>
+                                secp256k1 defines the elliptic curve
+                                used to calculate a public key from
+                                a private key through scalar
+                                multiplication:
+                            </p>
+            
+                            <code>Q = kG</code>
+            
+                            <p>
+                                The resulting public key is a curve
+                                point with coordinates X and Y.
+                                The same key pair can also be used
+                                for ECDSA digital signatures.
+                            </p>
+                        </article>
+            
+                        <article class="standard-card">
+                            <span class="standard-label">CRYPTOGRAPHIC HASHING</span>
+                            <h4>Keccak-256</h4>
+            
+                            <p>
+                                Keccak-256 is a cryptographic hash
+                                function producing a 256-bit digest.
+                            </p>
+            
+                            <p>
+                                Ethereum hashes the 64-byte public
+                                key coordinates, excluding the initial
+                                04 prefix of the uncompressed key.
+                                The last 20 bytes form the address.
+                            </p>
+                        </article>
+            
+                        <article class="standard-card">
+                            <span class="standard-label">ERROR DETECTION</span>
+                            <h4>EIP-55</h4>
+            
+                            <p>
+                                EIP-55 defines a mixed-case checksum
+                                representation of Ethereum addresses.
+                            </p>
+            
+                            <p>
+                                It hashes the lowercase hexadecimal
+                                address as text and uses the hash
+                                to determine letter capitalization.
+                                The underlying 20-byte address
+                                remains unchanged.
+                            </p>
+                        </article>
+            
+                    </div>
+            
                 </div>
+            
+                <!-- CRYPTOGRAPHIC ROLES -->
+                <div class="assignment-panel standards-panel">
+            
+                    <h3>Different Cryptographic Operations</h3>
+            
+                    <p>
+                        Although these technologies appear in the
+                        same wallet pipeline, they perform different
+                        operations and provide different properties.
+                    </p>
+            
+                    <div class="roles-grid">
+            
+                        <div class="role-card">
+                            <h4>Key Generation</h4>
+                            <p>
+                                Creates new secret material from
+                                cryptographically secure randomness.
+                                Our demonstration starts from a fixed
+                                public test mnemonic instead.
+                            </p>
+                        </div>
+            
+                        <div class="role-card">
+                            <h4>Key Derivation</h4>
+                            <p>
+                                Deterministically produces seed or
+                                key material from existing inputs.
+                                BIP-39, BIP-32 and BIP-44 participate
+                                in different parts of this process.
+                            </p>
+                        </div>
+            
+                        <div class="role-card">
+                            <h4>Public-Key Computation</h4>
+                            <p>
+                                Calculates a public key from a private
+                                scalar using elliptic-curve multiplication.
+                                It is the same mathematical operation
+                                explored in Homework 1.
+                            </p>
+                        </div>
+            
+                        <div class="role-card">
+                            <h4>Hashing</h4>
+                            <p>
+                                Converts data into a fixed-length digest.
+                                Keccak-256 is used to calculate Ethereum
+                                addresses and EIP-55 checksums.
+                            </p>
+                        </div>
+            
+                        <div class="role-card">
+                            <h4>Digital Signing</h4>
+                            <p>
+                                Uses a private key to authenticate data
+                                through a digital signature, such as
+                                ECDSA. Signing is not required to
+                                generate an Ethereum address.
+                            </p>
+                        </div>
+            
+                        <div class="role-card">
+                            <h4>Encoding</h4>
+                            <p>
+                                Represents information in another form,
+                                such as mnemonic words or hexadecimal
+                                characters. Encoding is not encryption
+                                and does not provide secrecy.
+                            </p>
+                        </div>
+            
+                        <div class="role-card">
+                            <h4>Checksum</h4>
+                            <p>
+                                Adds information for detecting accidental
+                                errors. BIP-39 uses checksum bits in
+                                mnemonic generation, while EIP-55
+                                uses address capitalization.
+                            </p>
+                        </div>
+            
+                    </div>
+            
+                    <!-- HASH FUNCTION DISTINCTIONS -->
+                    <div class="hash-note">
+            
+                        <h4>SHA-2, Keccak-256 and SHA3-256</h4>
+            
+                        <p>
+                            SHA-512 belongs to the SHA-2 family and
+                            is used within HMAC and PBKDF2 in our
+                            seed and key derivation steps.
+                        </p>
+            
+                        <p>
+                            Keccak-256 is used by Ethereum for address
+                            generation. Although related to SHA3-256,
+                            the two functions use different domain
+                            separation and padding conventions,
+                            producing different digests for the
+                            same input.
+                        </p>
+            
+                        <p>
+                            Therefore, SHA3-256 cannot simply replace
+                            Keccak-256 in Ethereum address derivation.
+                        </p>
+            
+                    </div>
+            
+                </div>
+            
             </section>
 
-            <!-- SECTION 4: HISTORY -->
-            <section class="assignment-section">
 
+            <!-- SECTION 4: HISTORICAL CONTEXT -->
+            <section class="assignment-section">
+            
                 <div class="section-heading">
                     <span class="section-label">
                         04 / HISTORICAL CONTEXT
                     </span>
-
+            
                     <h2>Cryptographic Timeline</h2>
-
+            
                     <p>
-                        The historical development of
-                        the main standards and techniques.
+                        The evolution of public-key cryptography,
+                        hash functions and wallet standards.
                     </p>
                 </div>
-
+            
                 <div class="assignment-panel">
-
+            
                     <h3>Historical Evolution</h3>
-
-                    <div class="placeholder-box">
+            
+                    <p>
+                        Modern Ethereum wallets combine cryptographic
+                        techniques developed over several decades.
+                        This timeline highlights the most important
+                        milestones behind the technologies used
+                        in our experiment.
+                    </p>
+            
+                    <ol class="crypto-timeline">
+            
+                        <!-- 1977 -->
+                        <li class="timeline-item">
+                            <span class="timeline-year">1977</span>
+            
+                            <div class="timeline-content">
+                                <span class="timeline-type">
+                                    PUBLIC-KEY CRYPTOGRAPHY
+                                </span>
+            
+                                <h4>RSA</h4>
+            
+                                <p>
+                                    Rivest, Shamir and Adleman introduce
+                                    RSA, a major milestone in public-key
+                                    cryptography. It demonstrates how
+                                    public and private keys can support
+                                    encryption and digital signatures.
+                                </p>
+                            </div>
+                        </li>
+            
+                        <!-- 2001 -->
+                        <li class="timeline-item">
+                            <span class="timeline-year">2001</span>
+            
+                            <div class="timeline-content">
+                                <span class="timeline-type">
+                                    CRYPTOGRAPHIC HASHING
+                                </span>
+            
+                                <h4>SHA-2 Family</h4>
+            
+                                <p>
+                                    The SHA-2 family introduces hash
+                                    functions such as SHA-256 and
+                                    SHA-512. SHA-512 is later used
+                                    within HMAC and PBKDF2 for
+                                    wallet seed and key derivation.
+                                </p>
+                            </div>
+                        </li>
+            
+                        <!-- 2012 -->
+                        <li class="timeline-item">
+                            <span class="timeline-year">2012</span>
+            
+                            <div class="timeline-content">
+                                <span class="timeline-type">
+                                    DETERMINISTIC WALLETS
+                                </span>
+            
+                                <h4>BIP-32</h4>
+            
+                                <p>
+                                    BIP-32 introduces hierarchical
+                                    deterministic wallets, allowing
+                                    many related keys to be derived
+                                    from a single master seed.
+                                </p>
+                            </div>
+                        </li>
+            
+                        <!-- 2013 -->
+                        <li class="timeline-item">
+                            <span class="timeline-year">2013</span>
+            
+                            <div class="timeline-content">
+                                <span class="timeline-type">
+                                    MNEMONIC PHRASES
+                                </span>
+            
+                                <h4>BIP-39</h4>
+            
+                                <p>
+                                    BIP-39 defines mnemonic sentences
+                                    that represent entropy in a
+                                    human-readable form and specifies
+                                    how to derive a binary seed
+                                    using PBKDF2-HMAC-SHA512.
+                                </p>
+                            </div>
+                        </li>
+            
+                        <!-- 2014 -->
+                        <li class="timeline-item">
+                            <span class="timeline-year">2014</span>
+            
+                            <div class="timeline-content">
+                                <span class="timeline-type">
+                                    WALLET ORGANIZATION
+                                </span>
+            
+                                <h4>BIP-44</h4>
+            
+                                <p>
+                                    BIP-44 standardizes a multi-account
+                                    hierarchy for deterministic wallets,
+                                    including purpose, coin type,
+                                    account, change and address index.
+                                </p>
+                            </div>
+                        </li>
+            
+                        <!-- 2015 -->
+                        <li class="timeline-item">
+                            <span class="timeline-year">2015</span>
+            
+                            <div class="timeline-content">
+                                <span class="timeline-type">
+                                    HASH STANDARDIZATION
+                                </span>
+            
+                                <h4>SHA-3 Standard</h4>
+            
+                                <p>
+                                    NIST standardizes SHA-3 in FIPS 202,
+                                    based on the Keccak design selected
+                                    in 2012. Ethereum uses Keccak-256,
+                                    which differs from standardized
+                                    SHA3-256 in its padding conventions.
+                                </p>
+                            </div>
+                        </li>
+            
+                        <!-- 2016 -->
+                        <li class="timeline-item">
+                            <span class="timeline-year">2016</span>
+            
+                            <div class="timeline-content">
+                                <span class="timeline-type">
+                                    ETHEREUM ADDRESS CHECKSUM
+                                </span>
+            
+                                <h4>EIP-55</h4>
+            
+                                <p>
+                                    EIP-55 introduces mixed-case
+                                    checksum encoding for Ethereum
+                                    addresses, improving the detection
+                                    of accidental typing errors without
+                                    changing the underlying address.
+                                </p>
+                            </div>
+                        </li>
+            
+                    </ol>
+            
+                    <p class="timeline-note">
+                        Historical note: RSA is included as an early
+                        public-key cryptography milestone, not as
+                        part of Ethereum wallet derivation.
+                        SHA-2 appeared in 2001 and was standardized
+                        by NIST in FIPS 180-2 in 2002.
+                    </p>
+            
+                    <div class="timeline-references">
+                        <h4>References</h4>
+            
                         <p>
-                            An interactive or graphical
-                            timeline will appear here.
+                            <a href="https://dspace.mit.edu/entities/publication/a2e09fea-6f05-48a5-9ce9-5073dfcde567"
+                                target="_blank" rel="noopener noreferrer">
+                                MIT — RSA
+                            </a>
+                            &middot;
+                            <a href="https://csrc.nist.gov/nist-cyber-history/cryptography/chapter" target="_blank"
+                                rel="noopener noreferrer">
+                                NIST — SHA Standards
+                            </a>
+                            &middot;
+                            <a href="https://bips.dev/32/" target="_blank" rel="noopener noreferrer">
+                                BIP-32
+                            </a>
+                            &middot;
+                            <a href="https://bips.dev/39/" target="_blank" rel="noopener noreferrer">
+                                BIP-39
+                            </a>
+                            &middot;
+                            <a href="https://bips.dev/44/" target="_blank" rel="noopener noreferrer">
+                                BIP-44
+                            </a>
+                            &middot;
+                            <a href="https://eips.ethereum.org/EIPS/eip-55" target="_blank" rel="noopener noreferrer">
+                                EIP-55
+                            </a>
                         </p>
                     </div>
-
+            
                 </div>
+            
             </section>
 
-            <!-- SECTION 5: STATISTICS -->
-            <section class="assignment-section">
 
+            <!-- SECTION 5: STATISTICAL EXPLORATION -->
+            <section class="assignment-section">
+            
                 <div class="section-heading">
                     <span class="section-label">
                         05 / STATISTICAL EXPLORATION
                     </span>
-
+            
                     <h2>Statistical Properties</h2>
-
+            
                     <p>
-                        Investigating the behaviour
-                        and statistical characteristics
-                        of cryptographic outputs.
+                        Exploring the avalanche behavior and
+                        statistical properties of Keccak-256.
                     </p>
                 </div>
-
+            
                 <div class="assignment-panel">
-
-                    <h3>Statistical Analysis</h3>
-
-                    <div class="placeholder-box">
-                        <p>
-                            Statistical experiments,
-                            charts and observations
-                            will appear here.
-                        </p>
+            
+                    <h3>Keccak-256 Avalanche Experiment</h3>
+            
+                    <p>
+                        A desirable property of cryptographic hash
+                        functions is that a small change in the
+                        input causes substantial changes in the
+                        resulting digest.
+                    </p>
+            
+                    <p>
+                        This experiment performs 64 deterministic
+                        trials. In each trial, exactly one input
+                        bit is flipped before computing Keccak-256.
+                        The modified digest is compared with
+                        the original digest.
+                    </p>
+            
+                    <div class="formula-box">
+                        Hamming Distance = Number of differing bits
                     </div>
-
+            
+                    <button id="run-statistics-button" type="button">
+                        Run Statistical Experiment
+                    </button>
+            
+                    <p id="statistics-status" role="status"></p>
+            
+                    <div class="statistics-grid">
+            
+                        <div class="statistics-metric">
+                            <span>Average Hash Hamming Distance</span>
+                            <strong id="stat-hamming-256">—</strong>
+                            <small>Out of 256 bits · Expected ≈ 128</small>
+                        </div>
+            
+                        <div class="statistics-metric">
+                            <span>Average 160-bit Suffix Distance</span>
+                            <strong id="stat-hamming-160">—</strong>
+                            <small>Out of 160 bits · Expected ≈ 80</small>
+                        </div>
+            
+                        <div class="statistics-metric">
+                            <span>Bit Balance</span>
+                            <strong id="stat-bit-balance">—</strong>
+                            <small>Percentage of 1 bits · Expected ≈ 50%</small>
+                        </div>
+            
+                        <div class="statistics-metric">
+                            <span>Empirical Binary Entropy</span>
+                            <strong id="stat-entropy">—</strong>
+                            <small>Bits per bit · Maximum = 1</small>
+                        </div>
+            
+                    </div>
+            
                 </div>
+            
+                <div class="assignment-panel statistics-panel">
+            
+                    <h3>Distribution of Hamming Distances</h3>
+            
+                    <p>
+                        The histogram groups the 64 experiments
+                        according to how many of the 256 hash
+                        bits changed. For an ideal avalanche
+                        behavior, the results should be
+                        concentrated around 128 changed bits.
+                    </p>
+            
+                    <div id="statistics-histogram" class="statistics-histogram" role="group"
+                        aria-label="Hamming distance histogram">
+            
+                        <p>Run the experiment to display the distribution.</p>
+            
+                    </div>
+            
+                    <p class="statistics-note">
+                        The experiment modifies raw hash inputs.
+                        Modified inputs are not guaranteed to be
+                        valid secp256k1 public keys. Their 160-bit
+                        hash suffixes are not independently
+                        generated Ethereum wallet addresses.
+                    </p>
+            
+                </div>
+            
+                <div class="assignment-panel statistics-panel">
+            
+                    <h3>Interpreting the Results</h3>
+            
+                    <p>
+                        If Keccak-256 exhibits the expected
+                        avalanche behavior, changing one input
+                        bit should change approximately half
+                        of the output bits on average.
+                    </p>
+            
+                    <p>
+                        A balanced number of zero and one bits
+                        also produces an empirical binary Shannon
+                        entropy close to 1 bit per bit.
+                    </p>
+            
+                    <p>
+                        However, this entropy measures only
+                        the observed proportion of zeros and ones.
+                        It does not measure private-key entropy
+                        or establish the unpredictability of
+                        individual hash outputs.
+                    </p>
+            
+                    <p>
+                        Because the experiment uses only 64
+                        related inputs, its results are descriptive.
+                        They illustrate expected statistical
+                        behavior but cannot prove cryptographic
+                        security or collision resistance.
+                    </p>
+            
+                </div>
+            
             </section>
 
-            <!-- SECTION 6: CONCLUSIONS -->
-            <section class="assignment-section">
 
+            <!-- SECTION 6: DISCUSSION AND CONCLUSIONS -->
+            <section class="assignment-section">
+            
                 <div class="section-heading">
                     <span class="section-label">
                         06 / DISCUSSION
                     </span>
-
+            
                     <h2>Discussion and Conclusions</h2>
-
+            
+                    <p>
+                        Interpreting the cryptographic pipeline,
+                        experimental results and security implications.
+                    </p>
                 </div>
-
+            
+                <!-- WALLET DERIVATION DISCUSSION -->
                 <div class="assignment-panel">
-
-                    <h3>Different Cryptographic Roles</h3>
-
+            
+                    <h3>Understanding the Complete Pipeline</h3>
+            
                     <p>
-                        This section will explain the
-                        differences between key generation,
-                        key derivation, public-key cryptography,
-                        hashing, checksums and encoding.
+                        The experiment demonstrates how a single
+                        mnemonic phrase can deterministically
+                        produce an Ethereum address through
+                        multiple cryptographic operations.
                     </p>
-
-                    <h3>SHA-2 vs Keccak / SHA-3</h3>
-
+            
                     <p>
-                        We will compare the relevant
-                        cryptographic hash functions
-                        and clarify why Ethereum uses
-                        Keccak-256 rather than SHA3-256.
+                        BIP-39 transforms the mnemonic and
+                        passphrase into a 512-bit seed through
+                        PBKDF2-HMAC-SHA512. BIP-32 then derives
+                        a master private key and chain code.
+                        BIP-44 specifies the hierarchical path
+                        used to select the first Ethereum
+                        account's private key.
                     </p>
-
-                    <h3>Final Observations</h3>
-
+            
                     <p>
-                        The final discussion will explain
-                        why the Ethereum wallet pipeline
-                        combines several cryptographic
-                        techniques instead of relying
-                        on a single algorithm.
+                        The public key is calculated using
+                        elliptic-curve scalar multiplication
+                        on secp256k1. Keccak-256 hashes its
+                        64-byte coordinate representation,
+                        and the final 20 bytes become the
+                        Ethereum address.
                     </p>
-
+            
+                    <p>
+                        Finally, EIP-55 determines a mixed-case
+                        checksum representation of the address.
+                        This final operation does not create
+                        another address or change its bytes.
+                    </p>
+            
                 </div>
+            
+                <!-- STATISTICAL FINDINGS -->
+                <div class="assignment-panel discussion-panel">
+            
+                    <h3>Statistical Findings</h3>
+            
+                    <p>
+                        The avalanche experiment performed
+                        64 deterministic one-bit input modifications
+                        and compared the resulting Keccak-256
+                        digests against the original digest.
+                    </p>
+            
+                    <p>
+                        For the selected test vector, the average
+                        Hamming distance was 127.63 out of 256 bits.
+                        This is close to the ideal reference
+                        value of 128 changed bits.
+                    </p>
+            
+                    <p>
+                        Considering only the last 160 bits of
+                        each digest, the average Hamming distance
+                        was 79.69 out of 160 bits, also close
+                        to the theoretical reference of 80.
+                    </p>
+            
+                    <p>
+                        Across the 64 modified digests,
+                        49.19% of output bits were equal to 1.
+                        The corresponding empirical binary
+                        Shannon entropy was approximately
+                        0.9998 bits per bit.
+                    </p>
+            
+                    <p>
+                        These results are consistent with
+                        the expected avalanche behavior and
+                        approximately balanced output bits.
+                        The histogram also shows that most
+                        Hamming distances are concentrated
+                        around half the digest length.
+                    </p>
+            
+                </div>
+            
+                <!-- INTERPRETATION AND LIMITATIONS -->
+                <div class="assignment-panel discussion-panel">
+            
+                    <h3>Security Implications and Limitations</h3>
+            
+                    <h4>Deterministic Derivation</h4>
+            
+                    <p>
+                        The same mnemonic, passphrase and
+                        derivation path produce the same keys
+                        and address. This is useful for wallet
+                        recovery, but it also means that
+                        anyone who knows the recovery secrets
+                        can reproduce the wallet's private keys.
+                    </p>
+            
+                    <h4>Hashing and Digital Signatures</h4>
+            
+                    <p>
+                        Hashing is used to derive the address
+                        representation, whereas digital
+                        signatures are used to authenticate
+                        transactions. Ethereum's traditional
+                        externally owned accounts use ECDSA
+                        signatures based on secp256k1.
+                        No digital signature is needed to
+                        generate an address.
+                    </p>
+            
+                    <h4>Hash Function Differences</h4>
+            
+                    <p>
+                        SHA-512 is used within the HMAC and PBKDF2
+                        constructions in the derivation process.
+                        Ethereum address generation instead
+                        requires Keccak-256.
+                    </p>
+            
+                    <p>
+                        Although Keccak-256 and standardized
+                        SHA3-256 are closely related, their
+                        domain separation and padding conventions
+                        differ. They cannot be substituted
+                        for one another in this pipeline.
+                    </p>
+            
+                    <h4>Limits of the Statistical Analysis</h4>
+            
+                    <p>
+                        The experiment evaluates only 64
+                        related hash inputs derived from
+                        one public-key byte sequence.
+                        The observed bit balance and Hamming
+                        distances describe this particular
+                        sample and do not prove collision
+                        resistance or other security guarantees.
+                    </p>
+            
+                    <p>
+                        The reported binary entropy measures
+                        the empirical frequency of zero and
+                        one bits in the sampled digests.
+                        It must not be interpreted as the
+                        entropy of a wallet's private key
+                        or as a proof of hash unpredictability.
+                    </p>
+            
+                    <p>
+                        Furthermore, a modified input to
+                        Keccak-256 does not necessarily
+                        represent a valid elliptic-curve
+                        public key. The statistical experiment
+                        therefore analyzes the hash function,
+                        rather than generating independent
+                        Ethereum wallets.
+                    </p>
+            
+                </div>
+            
+                <!-- FINAL CONCLUSION -->
+                <div class="assignment-panel discussion-panel">
+            
+                    <h3>Final Conclusions</h3>
+            
+                    <p>
+                        This homework illustrates how Ethereum
+                        wallet derivation combines standards
+                        for mnemonic representation,
+                        deterministic key derivation,
+                        elliptic-curve public-key computation,
+                        hashing and checksum encoding.
+                    </p>
+            
+                    <p>
+                        The interactive pipeline successfully
+                        derives an Ethereum address from a
+                        publicly known BIP-39 test vector,
+                        with intermediate values checked
+                        against reference results.
+                    </p>
+            
+                    <p>
+                        The statistical experiment provides
+                        a quantitative illustration of the
+                        avalanche behavior of Keccak-256.
+                        Its results are compatible with the
+                        expected diffusion properties of a
+                        cryptographic hash function, while
+                        remaining limited to a small,
+                        deterministic sample.
+                    </p>
+            
+                    <p>
+                        Together, the practical demonstration
+                        and statistical analysis highlight
+                        an essential principle of applied
+                        cryptography: secure systems combine
+                        different primitives, each designed
+                        for a specific task.
+                    </p>
+            
+                </div>
+            
             </section>
+
 
         </div>
     </main>
@@ -357,6 +1429,11 @@
 
         </div>
     </footer>
+    <!-- Ethereum cryptographic library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.15.0/ethers.umd.min.js"></script>
+    
+    <!-- Homework 2 JavaScript -->
+    <script src="hw2.js"></script>
 
 </body>
 </html>
