@@ -384,6 +384,78 @@ a:focus-visible {
     transform: translateX(5px);
 }
 
+/* Homework with multiple exercises */
+
+.homework-card--multi {
+    grid-column: 1 / -1;
+}
+
+.exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,
+            minmax(min(100%, 280px), 1fr));
+    gap: 18px;
+}
+
+.exercise-link {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    padding: 24px;
+    min-height: 215px;
+
+    background: #f1f5fb;
+    border: 1px solid #c5d3e5;
+    border-radius: 12px;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.exercise-link:hover {
+    background: #e8f1ff;
+    border-color: var(--blue);
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 20px rgba(16, 29, 53, 0.07);
+}
+
+.exercise-number {
+    color: var(--blue);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.exercise-title {
+    color: var(--navy);
+    font-size: 1.12rem;
+    line-height: 1.4;
+}
+
+.exercise-description {
+    color: #52647d;
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.exercise-action {
+    display: inline-flex;
+    align-items: center;
+
+    margin-top: auto;
+    padding-top: 8px;
+
+    color: var(--blue);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
 
 /* 7. ABOUT SECTION */
 
