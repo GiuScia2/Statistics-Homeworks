@@ -292,7 +292,7 @@ a:focus-visible {
     display: flex;
     flex-direction: column;
 
-    min-height: 320px;
+    height: 320px;
     padding: 32px;
 
     background: var(--surface);
@@ -527,7 +527,8 @@ a:focus-visible {
     }
 
     .homework-card {
-        min-height: 290px;
+        height: auto;
+        min-height: 320px;
     }
 
     .about-section {
