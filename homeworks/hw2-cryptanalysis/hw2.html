@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Homework 02 | Statistics</title>
+
+    <!-- General website styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+
+    <!-- Shared homework styles -->
+    <link rel="stylesheet" href="../../assets/css/homework.css">
+
+    <!-- Homework 2 specific styles -->
+    <link rel="stylesheet" href="hw2.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="container nav-content">
+
+            <a href="../../index.html" class="nav-logo">
+                <span class="logo-icon">S.</span>
+                <span>Statistics</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="../../index.html">Home</a>
+                <a href="../../index.html#homeworks">
+                    Homeworks
+                </a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- HOMEWORK HEADER -->
+    <header class="assignment-header">
+        <div class="container">
+
+            <a href="../../index.html#homeworks" class="back-link">
+                &larr; Back to Homeworks
+            </a>
+
+            <span class="assignment-label">
+                HOMEWORK 02
+            </span>
+
+            <h1>Encryption &amp; Cryptanalysis</h1>
+
+            <p class="assignment-subtitle">
+                Elliptic-Curve Encryption and Caesar Cipher
+            </p>
+
+            <p class="assignment-description">
+                An interactive comparison of two encryption
+                schemes, including statistical cryptanalysis,
+                key recovery and the security implications
+                of restricted key spaces.
+            </p>
+
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="assignment-main">
+        <div class="container">
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        01 / INTRODUCTION
+                    </span>
+
+                    <h2>Understanding Encryption</h2>
+
+                    <p>
+                        Exploring how different cryptographic
+                        schemes protect messages and how
+                        their weaknesses can be exploited.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+                    <h3>Introduction and Objectives</h3>
+
+                    <p>
+                        This homework compares a simplified
+                        elliptic-curve encryption scheme
+                        based on secp256k1 with the
+                        classical Caesar cipher.
+                    </p>
+
+                    <p>
+                        Both schemes will encrypt and decrypt
+                        the same message, allowing a direct
+                        comparison of their algorithms,
+                        key spaces and security properties.
+                    </p>
+
+                    <p>
+                        The project also investigates two
+                        attacks: statistical key recovery
+                        against the Caesar cipher and
+                        exhaustive private-key search
+                        against an intentionally weakened
+                        elliptic-curve scheme.
+                    </p>
+                </div>
+
+            </section>
+
+        <!-- SECTION 2: ECC ENCRYPTION -->
+        <section class="assignment-section">
+            <div class="section-heading">
+                <span class="section-label">02 / ELLIPTIC-CURVE ENCRYPTION</span>
+                <h2>Encrypting with secp256k1</h2>
+                <p>Encrypt and decrypt a message using a simplified ECIES-inspired scheme.</p>
+            </div>
+        
+            <div class="assignment-panel">
+                <h3>ECC Encryption and Decryption</h3>
+        
+                <p>
+                    The receiver selects a private key <strong>d</strong> and computes
+                    the public key <strong>Q = dG</strong>. The sender chooses a fresh
+                    random value <strong>r</strong>, publishes <strong>R = rG</strong>,
+                    and computes the shared point <strong>S = rQ</strong>.
+                    The receiver recovers the same point using <strong>S = dR</strong>.
+                </p>
+        
+                <div class="formula-box">
+                    Q = dG &nbsp; | &nbsp; R = rG &nbsp; | &nbsp; rQ = dR
+                </div>
+        
+                <p>
+                    A SHA-256-based keystream is derived from the shared point and R,
+                    then XORed with the UTF-8 message. This is an
+                    <strong>educational construction</strong>, not a secure or
+                    authenticated ECIES implementation.
+                </p>
+        
+                <div class="hw2-controls">
+                    <div class="hw2-field">
+                        <label for="hw2-message">
+                            Message (also used for the Caesar cipher)
+                        </label>
+        
+                        <textarea id="hw2-message" class="hw2-input" maxlength="400">STATISTICS AND CRYPTOGRAPHY</textarea>
+                    </div>
+        
+                    <div class="hw2-field">
+                        <label for="hw2-private-key">
+                            Receiver's private key d (1–4096)
+                        </label>
+        
+                        <input id="hw2-private-key" class="hw2-input" type="number" min="1" max="4096" step="1" value="157">
+        
+                        <p class="hw2-field-hint">
+                            Intentionally restricted for the key-recovery attack.
+                        </p>
+                    </div>
+                </div>
+        
+                <div class="hw2-actions">
+                    <button type="button" id="hw2-encrypt" class="hw2-button">
+                        Encrypt message
+                    </button>
+        
+                    <button type="button" id="hw2-decrypt" class="hw2-button hw2-button-secondary" disabled>
+                        Decrypt ciphertext
+                    </button>
+                </div>
+        
+                <p id="hw2-ecc-status" class="hw2-status" role="status" aria-live="polite">
+                    Enter a message and select Encrypt message.
+                </p>
+        
+                <div id="hw2-ecc-result" class="hw2-ecc-result" hidden>
+                    <div class="hw2-result-item">
+                        <strong>
+                            Receiver public key Q (compressed hexadecimal)
+                        </strong>
+                        <code id="hw2-public-key" class="hw2-result-value"></code>
+                    </div>
+        
+                    <div class="hw2-result-item">
+                        <strong>
+                            Ephemeral public point R (compressed hexadecimal)
+                        </strong>
+                        <code id="hw2-ephemeral-key" class="hw2-result-value"></code>
+                    </div>
+        
+                    <div class="hw2-result-item">
+                        <strong>Ciphertext (hexadecimal)</strong>
+                        <code id="hw2-ciphertext" class="hw2-result-value"></code>
+                    </div>
+        
+                    <div class="hw2-result-item">
+                        <strong>Decrypted message</strong>
+                        <code id="hw2-plaintext" class="hw2-result-value">—</code>
+                    </div>
+                </div>
+        
+                <p class="hw2-note">
+                    Every encryption uses a fresh random ephemeral key.
+                    The private key is deliberately small (only 4096 possible values),
+                    while the ephemeral key is sampled from the full secp256k1
+                    scalar range. This demo provides no ciphertext authentication
+                    and must not be used for real secrets.
+                </p>
+            </div>
+        </section>
+
+
+            <!-- SECTION 3: CAESAR CIPHER -->
+            <section class="assignment-section">
+            
+                <div class="section-heading">
+                    <span class="section-label">
+                        03 / CAESAR CIPHER
+                    </span>
+            
+                    <h2>Classical Encryption</h2>
+            
+                    <p>
+                        Encrypt and decrypt the same message using
+                        a classical substitution cipher.
+                    </p>
+                </div>
+            
+                <div class="assignment-panel">
+            
+                    <h3>Caesar Encryption and Decryption</h3>
+            
+                    <p>
+                        The Caesar cipher replaces each alphabetic
+                        character with another letter shifted by
+                        a fixed number of positions.
+                    </p>
+            
+                    <div class="formula-box">
+                        E(x) = (x + k) mod 26
+                    </div>
+            
+                    <div class="formula-box">
+                        D(y) = (y - k) mod 26
+                    </div>
+            
+                    <p>
+                        The key space contains 26 possible shifts,
+                        from 0 to 25. Non-alphabetic characters
+                        are preserved, and letter case is maintained.
+                    </p>
+            
+                    <!-- CAESAR INPUTS -->
+                    <div class="hw2-controls">
+            
+                        <div class="hw2-field">
+            
+                            <label>
+                                Shared message
+                            </label>
+            
+                            <div id="hw2-caesar-preview" class="hw2-caesar-preview"></div>
+            
+                            <a href="#hw2-message" class="hw2-caesar-edit">
+                                &uarr; Edit the message in Section 02
+                            </a>
+            
+                        </div>
+            
+                        <div class="hw2-field">
+            
+                            <label for="hw2-caesar-key">
+                                Caesar shift key (0–25)
+                            </label>
+            
+                            <input type="number" id="hw2-caesar-key" class="hw2-input" min="0" max="25" step="1" value="3">
+            
+                            <p class="hw2-field-hint">
+                                The same key is used for encryption
+                                and decryption.
+                            </p>
+            
+                        </div>
+            
+                    </div>
+            
+                    <!-- CAESAR ACTIONS -->
+                    <div class="hw2-actions">
+            
+                        <button type="button" id="hw2-caesar-encrypt" class="hw2-button">
+                            Encrypt message
+                        </button>
+            
+                        <button type="button" id="hw2-caesar-decrypt" class="hw2-button hw2-button-secondary" disabled>
+                            Decrypt ciphertext
+                        </button>
+            
+                    </div>
+            
+                    <!-- STATUS -->
+                    <p id="hw2-caesar-status" class="hw2-status" role="status" aria-live="polite">
+                        Select a shift key and encrypt the message.
+                    </p>
+            
+                    <!-- RESULTS -->
+                    <div id="hw2-caesar-result" class="hw2-ecc-result" hidden>
+            
+                        <div class="hw2-result-item">
+            
+                            <strong>
+                                Original message
+                            </strong>
+            
+                            <code id="hw2-caesar-original" class="hw2-result-value"></code>
+            
+                        </div>
+            
+                        <div class="hw2-result-item">
+            
+                            <strong>
+                                Caesar ciphertext
+                            </strong>
+            
+                            <code id="hw2-caesar-ciphertext" class="hw2-result-value"></code>
+            
+                        </div>
+            
+                        <div class="hw2-result-item">
+            
+                            <strong>
+                                Decrypted message
+                            </strong>
+            
+                            <code id="hw2-caesar-plaintext" class="hw2-result-value">—</code>
+            
+                        </div>
+            
+                        <div class="hw2-result-item">
+            
+                            <strong>
+                                Encryption key
+                            </strong>
+            
+                            <code id="hw2-caesar-used-key" class="hw2-result-value"></code>
+            
+                        </div>
+            
+                    </div>
+            
+                    <p class="hw2-note">
+                        The Caesar cipher is not secure for modern
+                        communication. Its small key space and
+                        preserved letter-frequency distribution
+                        make cryptanalysis straightforward.
+                    </p>
+            
+                </div>
+            
+            </section>
+
+
+            <!-- SECTION 4: CRYPTOGRAPHIC COMPARISON -->
+            <section class="assignment-section">
+            
+                <div class="section-heading">
+                    <span class="section-label">
+                        04 / CRYPTOGRAPHIC COMPARISON
+                    </span>
+            
+                    <h2>Comparing the Two Schemes</h2>
+            
+                    <p>
+                        A comparison of encryption, decryption, key spaces
+                        and statistical characteristics.
+                    </p>
+                </div>
+            
+                <div class="assignment-panel">
+            
+                    <h3>ECC vs. Caesar Cipher</h3>
+            
+                    <p>
+                        Both schemes transform a plaintext into a ciphertext
+                        and allow an authorized receiver to recover the
+                        original message. However, their cryptographic
+                        principles and security properties differ substantially.
+                    </p>
+            
+                    <div class="hw2-comparison-wrapper">
+            
+                        <table class="hw2-comparison-table">
+            
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>ECC Toy Scheme</th>
+                                    <th>Caesar Cipher</th>
+                                </tr>
+                            </thead>
+            
+                            <tbody>
+            
+                                <tr>
+                                    <th>Cryptographic model</th>
+                                    <td>
+                                        Asymmetric encryption using
+                                        elliptic-curve key agreement.
+                                    </td>
+                                    <td>
+                                        Symmetric substitution cipher.
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <th>Encryption</th>
+                                    <td>
+                                        Uses the receiver's public key,
+                                        an ephemeral scalar and a derived
+                                        XOR keystream.
+                                    </td>
+                                    <td>
+                                        Shifts each alphabetic character
+                                        by a fixed number of positions.
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <th>Decryption</th>
+                                    <td>
+                                        Uses the receiver's private key
+                                        to reconstruct the shared secret.
+                                    </td>
+                                    <td>
+                                        Reverses the shift using the same key.
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <th>Key types</th>
+                                    <td>
+                                        Private key d, public key Q = dG,
+                                        and fresh ephemeral scalar r.
+                                    </td>
+                                    <td>
+                                        One secret shift key k.
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <th>Key space in this experiment</th>
+                                    <td>
+                                        4,096 possible receiver private keys.
+                                    </td>
+                                    <td>
+                                        26 possible shifts, including
+                                        the identity shift k = 0.
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <th>Full-size key space</th>
+                                    <td>
+                                        Approximately 2^256 possible
+                                        private scalars for secp256k1.
+                                    </td>
+                                    <td>
+                                        Only 26 possible shifts.
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <th>Repeated encryption</th>
+                                    <td>
+                                        A fresh ephemeral scalar normally
+                                        produces a different ciphertext.
+                                    </td>
+                                    <td>
+                                        The same message and key always
+                                        produce the same ciphertext.
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <th>Statistical properties</th>
+                                    <td>
+                                        The SHA-256-derived keystream masks
+                                        direct plaintext letter frequencies.
+                                    </td>
+                                    <td>
+                                        Letter frequencies are preserved
+                                        but shifted within the alphabet.
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <th>Attack in this homework</th>
+                                    <td>
+                                        Exhaustive search over the restricted
+                                        private-key interval.
+                                    </td>
+                                    <td>
+                                        Letter-frequency analysis and
+                                        exhaustive evaluation of 26 shifts.
+                                    </td>
+                                </tr>
+            
+                                <tr>
+                                    <th>Authentication</th>
+                                    <td>
+                                        Not provided by this educational
+                                        construction.
+                                    </td>
+                                    <td>
+                                        Not provided.
+                                    </td>
+                                </tr>
+            
+                            </tbody>
+            
+                        </table>
+            
+                    </div>
+            
+                    <div class="hw2-comparison-note">
+            
+                        <strong>Security observation</strong>
+            
+                        <p>
+                            The underlying secp256k1 curve supports a very
+                            large private-key space, but this experiment
+                            deliberately limits the receiver's private key
+                            to 4,096 possibilities. This restriction makes
+                            exhaustive recovery feasible.
+                        </p>
+            
+                        <p>
+                            The ECC demonstration is not a complete,
+                            authenticated ECIES implementation and must
+                            not be used to protect real data.
+                        </p>
+            
+                    </div>
+            
+                </div>
+            
+            </section>
+            
+            
+            <!-- SECTION 5: STATISTICAL CRYPTANALYSIS -->
+            <section class="assignment-section">
+            
+                <div class="section-heading">
+            
+                    <span class="section-label">
+                        05 / STATISTICAL CRYPTANALYSIS
+                    </span>
+            
+                    <h2>Recovering the Caesar Key</h2>
+            
+                    <p>
+                        Recover a Caesar cipher key using English
+                        letter-frequency analysis and evaluate
+                        the effect of ciphertext length.
+                    </p>
+            
+                </div>
+            
+                <!-- ATTACK INTERFACE -->
+                <div class="assignment-panel">
+            
+                    <h3>Automatic Key Recovery</h3>
+            
+                    <p>
+                        The attack evaluates all 26 possible Caesar keys.
+                        For each candidate, it compares the recovered
+                        letter distribution with a reference English
+                        distribution using the chi-squared statistic.
+                        The lowest-scoring candidate is selected.
+                    </p>
+            
+                    <div class="formula-box">
+                        chi² = Σ (Observed - Expected)² / Expected
+                    </div>
+            
+                    <div class="hw2-attack-grid">
+            
+                        <div class="hw2-field">
+            
+                            <label for="hw2-attack-ciphertext">
+                                Ciphertext to analyze
+                            </label>
+            
+                            <textarea id="hw2-attack-ciphertext" class="hw2-input hw2-attack-input"
+                                maxlength="20000">VWDWLVWLFV DQG FUBSWRJUDSKB</textarea>
+            
+                            <p class="hw2-field-hint">
+                                Paste an encrypted English message or
+                                import the ciphertext from Section 03.
+                            </p>
+            
+                        </div>
+            
+                        <div class="hw2-field">
+            
+                            <label for="hw2-reference-corpus">
+                                Custom English reference corpus (optional)
+                            </label>
+            
+                            <textarea id="hw2-reference-corpus" class="hw2-input hw2-attack-input"
+                                placeholder="Paste a sufficiently large English corpus here..."></textarea>
+            
+                            <p class="hw2-field-hint">
+                                By default, standard English letter
+                                frequencies are used. To estimate the
+                                distribution from your own corpus,
+                                provide at least 1,000 A–Z letters;
+                                5,000 or more are recommended.
+                            </p>
+            
+                        </div>
+            
+                    </div>
+            
+                    <div class="hw2-actions">
+            
+                        <button type="button" id="hw2-use-caesar" class="hw2-button hw2-button-secondary">
+                            Use Caesar ciphertext
+                        </button>
+            
+                        <button type="button" id="hw2-long-sample" class="hw2-button hw2-button-secondary">
+                            Generate longer ciphertext
+                        </button>
+            
+                        <button type="button" id="hw2-run-attack" class="hw2-button">
+                            Recover Caesar key
+                        </button>
+            
+                    </div>
+            
+                    <p id="hw2-attack-status" class="hw2-status" role="status" aria-live="polite">
+                        Select a ciphertext and run the statistical attack.
+                    </p>
+            
+                    <!-- ATTACK RESULTS -->
+                    <div id="hw2-attack-result" hidden>
+            
+                        <div class="hw2-attack-summary">
+            
+                            <div class="hw2-attack-metric">
+                                <span>Recovered key</span>
+                                <strong id="hw2-recovered-key">—</strong>
+                            </div>
+            
+                            <div class="hw2-attack-metric">
+                                <span>Analyzed letters</span>
+                                <strong id="hw2-attack-length">—</strong>
+                            </div>
+            
+                        </div>
+            
+                        <p class="hw2-reference-label">
+                            Reference:
+                            <span id="hw2-attack-reference"></span>
+                        </p>
+            
+                        <div class="hw2-result-item">
+            
+                            <strong>
+                                Recovered plaintext (best candidate)
+                            </strong>
+            
+                            <code id="hw2-attack-plaintext" class="hw2-result-value"></code>
+            
+                        </div>
+            
+                        <h4 class="hw2-results-heading">
+                            Five Best Key Candidates
+                        </h4>
+            
+                        <div class="hw2-attack-scroll">
+            
+                            <table class="hw2-analysis-table">
+            
+                                <thead>
+                                    <tr>
+                                        <th>Key</th>
+                                        <th>Chi-squared</th>
+                                        <th>Decrypted text preview</th>
+                                    </tr>
+                                </thead>
+            
+                                <tbody id="hw2-top-candidates"></tbody>
+            
+                            </table>
+            
+                        </div>
+            
+                        <details class="hw2-attack-details">
+            
+                            <summary>
+                                Show all 26 key candidates
+                            </summary>
+            
+                            <div class="hw2-attack-scroll">
+            
+                                <table class="hw2-analysis-table">
+            
+                                    <thead>
+                                        <tr>
+                                            <th>Key</th>
+                                            <th>Chi-squared</th>
+                                            <th>Decrypted text preview</th>
+                                        </tr>
+                                    </thead>
+            
+                                    <tbody id="hw2-all-candidates"></tbody>
+            
+                                </table>
+            
+                            </div>
+            
+                        </details>
+            
+                        <details class="hw2-attack-details">
+            
+                            <summary>
+                                Show recovered letter frequencies
+                            </summary>
+            
+                            <div class="hw2-attack-scroll">
+            
+                                <table class="hw2-analysis-table">
+            
+                                    <thead>
+                                        <tr>
+                                            <th>Letter</th>
+                                            <th>Reference</th>
+                                            <th>Recovered text</th>
+                                        </tr>
+                                    </thead>
+            
+                                    <tbody id="hw2-frequency-rows"></tbody>
+            
+                                </table>
+            
+                            </div>
+            
+                        </details>
+            
+                    </div>
+            
+                </div>
+            
+                <!-- CIPHERTEXT LENGTH EXPERIMENT -->
+                <div class="assignment-panel hw2-length-panel">
+            
+                    <h3>Effect of Ciphertext Length</h3>
+            
+                    <p>
+                        The attack is tested on English ciphertexts
+                        containing different numbers of letters.
+                        Each length is evaluated through 50 trials
+                        with different message samples and randomly
+                        selected Caesar keys.
+                    </p>
+            
+                    <p>
+                        The test passages are separate from the
+                        default reference distribution. A trial
+                        succeeds when the highest-ranked candidate
+                        matches the original encryption key.
+                    </p>
+            
+                    <div class="hw2-actions">
+            
+                        <button type="button" id="hw2-run-length-tests" class="hw2-button">
+                            Run length experiment
+                        </button>
+            
+                    </div>
+            
+                    <p id="hw2-length-status" class="hw2-status" role="status" aria-live="polite">
+                        Run the experiment to compare recovery success rates.
+                    </p>
+            
+                    <div id="hw2-length-results" hidden>
+            
+                        <h4 class="hw2-results-heading">
+                            Successful Key Recoveries
+                        </h4>
+            
+                        <div id="hw2-length-bars" class="hw2-length-bars"></div>
+            
+                        <div class="hw2-attack-scroll">
+            
+                            <table class="hw2-analysis-table">
+            
+                                <thead>
+                                    <tr>
+                                        <th>Ciphertext letters</th>
+                                        <th>Successful trials</th>
+                                        <th>Success rate</th>
+                                    </tr>
+                                </thead>
+            
+                                <tbody id="hw2-length-rows"></tbody>
+            
+                            </table>
+            
+                        </div>
+            
+                        <p class="hw2-note">
+                            These success rates describe this fixed
+                            experimental setup, not a universal guarantee.
+                            Short texts, unusual vocabulary, a mismatched
+                            reference corpus and non-English plaintext
+                            may significantly affect the results.
+                        </p>
+            
+                    </div>
+            
+                </div>
+            
+            </section>
+
+
+        <!-- SECTION 6: ECC PRIVATE-KEY RECOVERY -->
+        <section class="assignment-section">
+        
+            <div class="section-heading">
+        
+                <span class="section-label">
+                    06 / RESTRICTED-KEY ATTACK
+                </span>
+        
+                <h2>Recovering the ECC Private Key</h2>
+        
+                <p>
+                    Recover a private key by exploiting the
+                    intentionally restricted key space of
+                    the educational secp256k1 scheme.
+                </p>
+        
+            </div>
+        
+            <div class="assignment-panel">
+        
+                <h3>Exhaustive Private-Key Search</h3>
+        
+                <p>
+                    The attack uses the receiver's public key
+                    Q = dG and tests candidate private keys
+                    until the corresponding public key matches.
+                </p>
+        
+                <p>
+                    In this experiment, d belongs to the
+                    restricted interval [1, 4096]. The attacker
+                    does not need to know the original message,
+                    the ephemeral scalar or the private key.
+                </p>
+        
+                <div class="formula-box">
+                    Find d such that Q = dG, with 1 &le; d &le; 4096
+                </div>
+        
+                <!-- ATTACK CONTROLS -->
+                <div class="hw2-controls">
+        
+                    <div class="hw2-field">
+        
+                        <label for="hw2-ecc-attack-target">
+                            Target public key Q (compressed hexadecimal)
+                        </label>
+        
+                        <textarea id="hw2-ecc-attack-target" class="hw2-input hw2-ecc-target-input" maxlength="66"
+                            spellcheck="false" placeholder="Import the public key from Section 02..."></textarea>
+        
+                        <p class="hw2-field-hint">
+                            Import the public key generated during
+                            the ECC encryption experiment.
+                        </p>
+        
+                    </div>
+        
+                    <div class="hw2-field">
+        
+                        <label for="hw2-ecc-attack-limit">
+                            Maximum number of candidate keys
+                        </label>
+        
+                        <select id="hw2-ecc-attack-limit" class="hw2-input">
+                            <option value="128">128 keys</option>
+                            <option value="512">512 keys</option>
+                            <option value="1024">1,024 keys</option>
+                            <option value="4096" selected>
+                                4,096 keys (full toy range)
+                            </option>
+                        </select>
+        
+                        <p class="hw2-field-hint">
+                            A smaller search interval may not
+                            contain the correct private key.
+                        </p>
+        
+                    </div>
+        
+                </div>
+        
+                <!-- ATTACK BUTTONS -->
+                <div class="hw2-actions">
+        
+                    <button type="button" id="hw2-load-ecc-public-key" class="hw2-button hw2-button-secondary">
+                        Use public key from Section 02
+                    </button>
+        
+                    <button type="button" id="hw2-run-ecc-attack" class="hw2-button">
+                        Recover private key
+                    </button>
+        
+                </div>
+        
+                <p id="hw2-ecc-attack-status" class="hw2-status" role="status" aria-live="polite">
+                    Import a public key and start the attack.
+                </p>
+        
+                <!-- SEARCH PROGRESS -->
+                <div id="hw2-ecc-attack-progress" hidden>
+        
+                    <div id="hw2-ecc-progress-track" class="hw2-ecc-progress-track" role="progressbar"
+                        aria-label="Private-key search progress" aria-valuemin="0" aria-valuemax="4096" aria-valuenow="0">
+        
+                        <div id="hw2-ecc-progress-fill" class="hw2-ecc-progress-fill"></div>
+        
+                    </div>
+        
+                    <p id="hw2-ecc-progress-label" class="hw2-ecc-progress-label"></p>
+        
+                </div>
+        
+                <!-- ATTACK RESULTS -->
+                <div id="hw2-ecc-attack-result" hidden>
+        
+                    <div class="hw2-attack-summary">
+        
+                        <div class="hw2-attack-metric">
+        
+                            <span>Recovered private key</span>
+        
+                            <strong id="hw2-ecc-recovered-key">
+                                —
+                            </strong>
+        
+                        </div>
+        
+                        <div class="hw2-attack-metric">
+        
+                            <span>Keys tested</span>
+        
+                            <strong id="hw2-ecc-attempts">
+                                —
+                            </strong>
+        
+                        </div>
+        
+                        <div class="hw2-attack-metric">
+        
+                            <span>Execution time</span>
+        
+                            <strong id="hw2-ecc-attack-time">
+                                —
+                            </strong>
+        
+                        </div>
+        
+                        <div class="hw2-attack-metric">
+        
+                            <span>Search coverage</span>
+        
+                            <strong id="hw2-ecc-coverage">
+                                —
+                            </strong>
+        
+                        </div>
+        
+                    </div>
+        
+                    <div class="hw2-result-item hw2-ecc-verification">
+        
+                        <strong>
+                            Public-key verification
+                        </strong>
+        
+                        <code id="hw2-ecc-attack-verification" class="hw2-result-value"></code>
+        
+                    </div>
+        
+                    <p id="hw2-ecc-attack-observation" class="hw2-note"></p>
+        
+                </div>
+        
+            </div>
+        
+            <div class="assignment-panel hw2-ecc-security-panel">
+        
+                <h3>Restricted vs. Full Key Space</h3>
+        
+                <div class="hw2-security-grid">
+        
+                    <div class="hw2-security-card">
+        
+                        <span>Educational private-key space</span>
+        
+                        <strong>2<sup>12</sup></strong>
+        
+                        <p>
+                            4,096 candidate keys.
+                            Exhaustive recovery is feasible.
+                        </p>
+        
+                    </div>
+        
+                    <div class="hw2-security-card">
+        
+                        <span>Full secp256k1 scalar space</span>
+        
+                        <strong>≈ 2<sup>256</sup></strong>
+        
+                        <p>
+                            Exhaustive private-key search
+                            is computationally infeasible.
+                        </p>
+        
+                    </div>
+        
+                </div>
+        
+                <p class="hw2-note">
+                    More advanced generic discrete-logarithm
+                    algorithms can perform better than naive
+                    exhaustive search, but properly generated
+                    full-size secp256k1 keys remain computationally
+                    infeasible to recover with known classical attacks.
+                </p>
+        
+            </div>
+        
+        </section>
+        
+        
+        <!-- SECTION 7: DISCUSSION AND CONCLUSIONS -->
+        <section class="assignment-section">
+        
+            <div class="section-heading">
+        
+                <span class="section-label">
+                    07 / DISCUSSION AND CONCLUSIONS
+                </span>
+        
+                <h2>Security and Statistical Insights</h2>
+        
+                <p>
+                    Comparing the effectiveness, assumptions
+                    and limitations of the cryptanalytic attacks.
+                </p>
+        
+            </div>
+        
+            <!-- ATTACK COMPARISON -->
+            <div class="assignment-panel">
+        
+                <h3>Comparison of the Two Attacks</h3>
+        
+                <p>
+                    The experiments illustrate two different
+                    cryptanalytic strategies: exploiting
+                    linguistic statistics and searching
+                    a restricted private-key space.
+                </p>
+        
+                <div class="hw2-comparison-wrapper">
+        
+                    <table class="hw2-comparison-table">
+        
+                        <thead>
+        
+                            <tr>
+                                <th>Property</th>
+                                <th>Caesar Cryptanalysis</th>
+                                <th>ECC Key Recovery</th>
+                            </tr>
+        
+                        </thead>
+        
+                        <tbody>
+        
+                            <tr>
+        
+                                <th>Attack type</th>
+        
+                                <td>
+                                    Statistical frequency analysis,
+                                    evaluating all possible shifts.
+                                </td>
+        
+                                <td>
+                                    Exhaustive private-key search
+                                    using the public key.
+                                </td>
+        
+                            </tr>
+        
+                            <tr>
+        
+                                <th>Information required</th>
+        
+                                <td>
+                                    Ciphertext and a reference
+                                    language distribution.
+                                </td>
+        
+                                <td>
+                                    Receiver's public key and
+                                    knowledge of the restricted
+                                    private-key interval.
+                                </td>
+        
+                            </tr>
+        
+                            <tr>
+        
+                                <th>Search space</th>
+        
+                                <td>
+                                    26 possible shift values.
+                                </td>
+        
+                                <td>
+                                    4,096 possible private keys
+                                    in the toy experiment.
+                                </td>
+        
+                            </tr>
+        
+                            <tr>
+        
+                                <th>Source of weakness</th>
+        
+                                <td>
+                                    Small key space and preservation
+                                    of plaintext letter frequencies.
+                                </td>
+        
+                                <td>
+                                    Deliberately restricted
+                                    private-key space.
+                                </td>
+        
+                            </tr>
+        
+                            <tr>
+        
+                                <th>Influence of message length</th>
+        
+                                <td>
+                                    Longer English ciphertexts
+                                    generally provide more reliable
+                                    frequency estimates.
+                                </td>
+        
+                                <td>
+                                    Public-key search does not
+                                    depend on ciphertext length.
+                                </td>
+        
+                            </tr>
+        
+                            <tr>
+        
+                                <th>Recovery guarantee</th>
+        
+                                <td>
+                                    The best statistical guess is
+                                    not guaranteed to be correct,
+                                    especially for short texts.
+                                </td>
+        
+                                <td>
+                                    A matching key is guaranteed
+                                    to be found if it lies in the
+                                    fully searched interval.
+                                </td>
+        
+                            </tr>
+        
+                            <tr>
+        
+                                <th>Real-world implications</th>
+        
+                                <td>
+                                    Caesar encryption remains weak
+                                    regardless of key selection.
+                                </td>
+        
+                                <td>
+                                    Properly generated full-size
+                                    secp256k1 keys resist this
+                                    exhaustive-search approach.
+                                </td>
+        
+                            </tr>
+        
+                        </tbody>
+        
+                    </table>
+        
+                </div>
+        
+            </div>
+        
+            <!-- LIMITATIONS -->
+            <div class="assignment-panel hw2-conclusion-panel">
+        
+                <h3>Effectiveness and Limitations</h3>
+        
+                <div class="hw2-conclusion-grid">
+        
+                    <div class="hw2-conclusion-item">
+        
+                        <h4>Caesar Cipher</h4>
+        
+                        <p>
+                            Letter-frequency analysis exploits
+                            the statistical structure of
+                            natural language. Its effectiveness
+                            generally improves with the amount
+                            of representative ciphertext.
+                        </p>
+        
+                        <p>
+                            Short texts, unusual vocabulary,
+                            non-English messages and unsuitable
+                            reference corpora may lead to
+                            incorrect key rankings.
+                        </p>
+        
+                        <p>
+                            Exhaustively testing all 26 shifts
+                            is also practical, although
+                            identifying meaningful plaintext
+                            may require additional linguistic
+                            information.
+                        </p>
+        
+                    </div>
+        
+                    <div class="hw2-conclusion-item">
+        
+                        <h4>Elliptic-Curve Scheme</h4>
+        
+                        <p>
+                            The restricted private-key interval
+                            makes it practical to reconstruct
+                            the receiver's secret key from
+                            its public key.
+                        </p>
+        
+                        <p>
+                            This weakness is introduced by
+                            the experimental key-generation
+                            constraint, not by the mathematical
+                            definition of secp256k1 itself.
+                        </p>
+        
+                        <p>
+                            Separately, the toy encryption
+                            construction lacks ciphertext
+                            authentication and is vulnerable
+                            to undetected modifications.
+                            It must not be treated as a
+                            secure ECIES implementation.
+                        </p>
+        
+                    </div>
+        
+                </div>
+        
+            </div>
+        
+            <!-- DYNAMIC EXPERIMENT SUMMARY -->
+            <div class="assignment-panel hw2-final-panel">
+        
+                <h3>Experimental Results Summary</h3>
+        
+                <p>
+                    Collect the results of the previous experiments
+                    to compare statistical key recovery with
+                    exhaustive elliptic-curve key search.
+                </p>
+        
+                <div class="hw2-actions">
+        
+                    <button type="button" id="hw2-update-summary" class="hw2-button">
+                        Update experiment summary
+                    </button>
+        
+                </div>
+        
+                <div id="hw2-final-summary" hidden>
+        
+                    <div class="hw2-final-grid">
+        
+                        <div class="hw2-final-result">
+        
+                            <span>
+                                Caesar key recovery
+                            </span>
+        
+                            <strong id="hw2-summary-caesar-key">
+                                —
+                            </strong>
+        
+                            <p id="hw2-summary-caesar-detail"></p>
+        
+                        </div>
+        
+                        <div class="hw2-final-result">
+        
+                            <span>
+                                ECC private-key recovery
+                            </span>
+        
+                            <strong id="hw2-summary-ecc-key">
+                                —
+                            </strong>
+        
+                            <p id="hw2-summary-ecc-detail"></p>
+        
+                        </div>
+        
+                        <div class="hw2-final-result">
+        
+                            <span>
+                                Ciphertext-length experiment
+                            </span>
+        
+                            <strong id="hw2-summary-length">
+                                —
+                            </strong>
+        
+                            <p id="hw2-summary-length-detail"></p>
+        
+                        </div>
+        
+                    </div>
+        
+                </div>
+        
+            </div>
+        
+            <!-- FINAL CONCLUSION -->
+            <div class="assignment-panel hw2-final-conclusion">
+        
+                <h3>Final Conclusion</h3>
+        
+                <p>
+                    The Caesar cipher is vulnerable because
+                    its limited key space and deterministic
+                    substitution preserve linguistic patterns.
+                    Statistical cryptanalysis exploits these
+                    patterns, particularly when sufficient
+                    ciphertext is available.
+                </p>
+        
+                <p>
+                    The educational elliptic-curve scheme
+                    demonstrates a different weakness:
+                    restricting private keys to a small
+                    interval makes exhaustive recovery
+                    computationally practical even when
+                    using a well-known cryptographic curve.
+                </p>
+        
+                <p>
+                    Overall, these experiments show that
+                    cryptographic security depends not only
+                    on the underlying mathematical algorithm,
+                    but also on key generation, implementation
+                    choices, available information and
+                    the size of the search space.
+                </p>
+        
+            </div>
+        
+        </section>
+
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-content">
+
+            <p>
+                &copy; 2026 Giuseppe Sciarrone
+                &middot; Student ID: 2116081
+            </p>
+
+            <p>
+                Statistics | Sapienza University of Rome
+            </p>
+
+        </div>
+    </footer>
+
+    <!-- Homework 2 JavaScript -->
+    <script src="hw2.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,552 @@
+/* Homework 2 — ECC interactive demonstration */
+
+.hw2-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(200px, 1fr);
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.hw2-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hw2-field label {
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 0.92rem;
+}
+
+.hw2-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #bdcde1;
+    border-radius: 10px;
+    background: #f8fbff;
+    color: var(--text);
+    font: inherit;
+}
+
+textarea.hw2-input {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.hw2-input:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+}
+
+.hw2-field-hint,
+.hw2-note {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.hw2-field-hint {
+    margin: 0;
+}
+
+.hw2-note {
+    margin-top: 20px;
+}
+
+.hw2-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.hw2-button {
+    border: 1px solid var(--blue);
+    border-radius: 10px;
+    padding: 12px 18px;
+    background: var(--blue);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.hw2-button-secondary {
+    background: #fff;
+    color: var(--blue);
+}
+
+.hw2-button:hover:not(:disabled) {
+    filter: brightness(0.93);
+}
+
+.hw2-button:disabled {
+    opacity: 0.48;
+    cursor: not-allowed;
+}
+
+.hw2-status {
+    min-height: 24px;
+    margin-top: 16px;
+    color: #17603c;
+    font-weight: 600;
+}
+
+.hw2-status.hw2-error {
+    color: #b42318;
+}
+
+.hw2-ecc-result {
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.hw2-ecc-result[hidden] {
+    display: none;
+}
+
+.hw2-result-item {
+    padding: 14px;
+    border: 1px solid #c6d5e7;
+    border-radius: 10px;
+    background: #f1f5fb;
+}
+
+.hw2-result-item strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--navy);
+    font-size: 0.85rem;
+}
+
+.hw2-result-value {
+    display: block;
+    color: #1e4f9d;
+    font-size: 0.83rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 700px) {
+    .hw2-controls {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================
+   SECTION 03 — CAESAR CIPHER
+   ========================================= */
+
+.hw2-caesar-preview {
+    min-height: 110px;
+    padding: 14px;
+    border: 1px solid #bdcde1;
+    border-radius: 10px;
+    background: #f8fbff;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.hw2-caesar-edit {
+    width: fit-content;
+    color: var(--blue);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.hw2-caesar-edit:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+   SECTION 04 — CRYPTOGRAPHIC COMPARISON
+   ========================================= */
+
+.hw2-comparison-wrapper,
+.hw2-attack-scroll {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.hw2-comparison-table,
+.hw2-analysis-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.hw2-comparison-table {
+    min-width: 650px;
+}
+
+.hw2-comparison-table th,
+.hw2-comparison-table td,
+.hw2-analysis-table th,
+.hw2-analysis-table td {
+    padding: 13px 15px;
+    border-bottom: 1px solid #dce5f0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    vertical-align: top;
+}
+
+.hw2-comparison-table thead,
+.hw2-analysis-table thead {
+    background: #e8f0fc;
+    color: var(--navy);
+}
+
+.hw2-comparison-table tbody th {
+    color: var(--navy);
+    font-weight: 700;
+    width: 21%;
+}
+
+.hw2-comparison-table tbody tr:nth-child(even),
+.hw2-analysis-table tbody tr:nth-child(even) {
+    background: #f7f9fd;
+}
+
+.hw2-comparison-note {
+    margin-top: 24px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--blue);
+    border-radius: 8px;
+    background: #edf4ff;
+}
+
+.hw2-comparison-note strong {
+    color: var(--navy);
+}
+
+.hw2-comparison-note p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   SECTION 05 — STATISTICAL CRYPTANALYSIS
+   ========================================= */
+
+.hw2-attack-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.hw2-attack-input {
+    min-height: 160px !important;
+}
+
+.hw2-attack-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 24px;
+}
+
+.hw2-attack-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    border: 1px solid #bdd1eb;
+    border-radius: 12px;
+    background: #eef5ff;
+}
+
+.hw2-attack-metric span {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.hw2-attack-metric strong {
+    color: var(--blue);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.hw2-reference-label {
+    margin: 16px 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.hw2-results-heading {
+    margin-top: 26px;
+    color: var(--navy);
+    font-size: 1.05rem;
+}
+
+.hw2-analysis-table {
+    min-width: 480px;
+}
+
+.hw2-analysis-table td:last-child {
+    overflow-wrap: anywhere;
+    max-width: 400px;
+}
+
+.hw2-attack-details {
+    margin-top: 18px;
+    border: 1px solid #d0dceb;
+    border-radius: 10px;
+    padding: 14px 16px;
+    background: #f8fbff;
+}
+
+.hw2-attack-details summary {
+    color: var(--blue);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.hw2-length-panel {
+    margin-top: 24px;
+}
+
+.hw2-length-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 22px;
+    margin-bottom: 22px;
+}
+
+.hw2-length-bar-row {
+    display: grid;
+    grid-template-columns: 85px minmax(0, 1fr) 48px;
+    align-items: center;
+    gap: 14px;
+}
+
+.hw2-length-bar-row span {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.hw2-length-bar-row strong {
+    color: var(--navy);
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+.hw2-length-bar-track {
+    height: 16px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #dce6f5;
+}
+
+.hw2-length-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg,
+            #2563eb,
+            #55d6e9);
+    transition: width 0.3s ease;
+}
+
+#hw2-attack-result[hidden],
+#hw2-length-results[hidden] {
+    display: none;
+}
+
+@media (max-width: 700px) {
+
+    .hw2-attack-grid,
+    .hw2-attack-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .hw2-length-bar-row {
+        grid-template-columns: 75px minmax(0, 1fr) 42px;
+        gap: 8px;
+    }
+}
+
+/* =========================================
+   SECTION 06 — ECC PRIVATE-KEY RECOVERY
+   ========================================= */
+
+.hw2-ecc-target-input {
+    min-height: 110px !important;
+    font-family: monospace;
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+}
+
+.hw2-ecc-progress-track {
+    height: 18px;
+    margin-top: 22px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #dce6f5;
+}
+
+.hw2-ecc-progress-fill {
+    width: 0%;
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg,
+            #2563eb,
+            #55d6e9);
+    transition: width 0.15s ease;
+}
+
+.hw2-ecc-progress-label {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.hw2-ecc-verification {
+    margin-top: 20px;
+}
+
+.hw2-ecc-security-panel,
+.hw2-conclusion-panel,
+.hw2-final-panel,
+.hw2-final-conclusion {
+    margin-top: 24px;
+}
+
+.hw2-security-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.hw2-security-card {
+    padding: 22px;
+    border: 1px solid #bdd1eb;
+    border-radius: 12px;
+    background: #eef5ff;
+}
+
+.hw2-security-card span,
+.hw2-final-result span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.hw2-security-card strong {
+    display: block;
+    margin: 14px 0;
+    color: var(--blue);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.hw2-security-card p {
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+#hw2-ecc-attack-progress[hidden],
+#hw2-ecc-attack-result[hidden] {
+    display: none;
+}
+
+
+/* =========================================
+   SECTION 07 — DISCUSSION AND CONCLUSIONS
+   ========================================= */
+
+.hw2-conclusion-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.hw2-conclusion-item {
+    padding: 22px;
+    border: 1px solid #c5d3e5;
+    border-radius: 12px;
+    background: #f1f5fb;
+}
+
+.hw2-conclusion-item h4 {
+    margin-bottom: 14px;
+    color: var(--navy);
+    font-size: 1.05rem;
+}
+
+.hw2-conclusion-item p {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.hw2-final-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.hw2-final-result {
+    padding: 20px;
+    border: 1px solid #bdd1eb;
+    border-radius: 12px;
+    background: #eef5ff;
+}
+
+.hw2-final-result strong {
+    display: block;
+    margin: 12px 0;
+    color: var(--blue);
+    font-size: 1.45rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.hw2-final-result p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.hw2-final-conclusion {
+    border-left: 4px solid var(--blue);
+}
+
+.hw2-final-conclusion p {
+    margin-top: 14px;
+    line-height: 1.8;
+}
+
+#hw2-final-summary[hidden] {
+    display: none;
+}
+
+@media (max-width: 700px) {
+
+    .hw2-security-grid,
+    .hw2-conclusion-grid,
+    .hw2-final-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
