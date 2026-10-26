@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Homework 03 | Statistics</title>
+
+    <!-- Shared website styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/homework.css">
+
+    <!-- Homework 3 styles -->
+    <link rel="stylesheet" href="hw3.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="container nav-content">
+
+            <a href="../../index.html" class="nav-logo">
+                <span class="logo-icon">S.</span>
+                <span>Statistics</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="../../index.html">Home</a>
+                <a href="../../index.html#homeworks">Homeworks</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- HOMEWORK HEADER -->
+    <header class="assignment-header">
+        <div class="container">
+
+            <a href="../../index.html#homeworks" class="back-link">
+                &larr; Back to Homeworks
+            </a>
+
+            <span class="assignment-label">
+                HOMEWORK 03
+            </span>
+
+            <h1>Stochastic Penetration Processes</h1>
+
+            <p class="assignment-subtitle">
+                Bernoulli &amp; Rademacher Models
+            </p>
+
+            <p class="assignment-description">
+                An interactive statistical investigation
+                of penetration scores across multiple
+                systems and attackers, exploring sample
+                trajectories, score distributions,
+                the Law of Large Numbers and the
+                Central Limit Theorem.
+            </p>
+
+        </div>
+    </header>
+
+    <main class="assignment-main">
+        <div class="container">
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+                    <span class="section-label">
+                        01 / INTRODUCTION
+                    </span>
+
+                    <h2>Modeling Penetration Attempts</h2>
+
+                    <p>
+                        Representing the penetration process
+                        through independent and identically
+                        distributed random increments.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>Stochastic Model</h3>
+
+                    <p>
+                        Consider n systems and m independent
+                        attackers. Each attacker attempts
+                        to penetrate the n systems, receiving
+                        a random score X at every step.
+                    </p>
+
+                    <p>
+                        The accumulated score after n steps
+                        is modeled as a sum of independent
+                        and identically distributed increments.
+                    </p>
+
+                    <div class="hw3-model-grid">
+
+                        <div class="hw3-model-card">
+
+                            <span class="hw3-model-label">
+                                MODEL A
+                            </span>
+
+                            <h4>Bernoulli</h4>
+
+                            <div class="hw3-formula">
+                                X ∈ {0, 1}
+                            </div>
+
+                            <p>
+                                A successful penetration
+                                receives a score of 1,
+                                with probability p.
+                                Otherwise, the score is 0.
+                            </p>
+
+                        </div>
+
+                        <div class="hw3-model-card">
+
+                            <span class="hw3-model-label">
+                                MODEL B
+                            </span>
+
+                            <h4>Rademacher</h4>
+
+                            <div class="hw3-formula">
+                                X ∈ {-1, +1}
+                            </div>
+
+                            <p>
+                                Positive and negative
+                                increments occur with
+                                equal probability, producing
+                                a symmetric zero-mean model.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <h3 class="hw3-subheading">
+                        Quantities Under Investigation
+                    </h3>
+
+                    <div class="hw3-quantities">
+
+                        <div class="hw3-quantity">
+                            <span>Total score</span>
+                            <strong>Sₙ = Σ Xᵢ</strong>
+                        </div>
+
+                        <div class="hw3-quantity">
+                            <span>Average score</span>
+                            <strong>Sₙ / n</strong>
+                        </div>
+
+                        <div class="hw3-quantity">
+                            <span>Normalized total</span>
+                            <strong>Sₙ / √n</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 2: SIMULATION -->
+            <section class="assignment-section">
+
+                <div class="section-heading">
+
+                    <span class="section-label">
+                        02 / STOCHASTIC SIMULATION
+                    </span>
+
+                    <h2>Sample Trajectories</h2>
+
+                    <p>
+                        Generate independent penetration
+                        trajectories and observe how their
+                        behavior changes with the model,
+                        the number of systems and attackers.
+                    </p>
+
+                </div>
+
+                <div class="assignment-panel">
+
+                    <h3>Simulation Parameters</h3>
+
+                    <form id="hw3-simulation-form">
+
+                        <div class="hw3-controls">
+
+                            <div class="hw3-field">
+
+                                <label for="hw3-model">
+                                    Probability model
+                                </label>
+
+                                <select id="hw3-model" class="hw3-input">
+                                    <option value="bernoulli">
+                                        Bernoulli
+                                    </option>
+
+                                    <option value="rademacher">
+                                        Rademacher
+                                    </option>
+                                </select>
+
+                            </div>
+
+                            <div class="hw3-field">
+
+                                <label for="hw3-n">
+                                    Number of systems (n)
+                                </label>
+
+                                <input id="hw3-n" class="hw3-input" type="number" min="10" max="2000" step="1"
+                                    value="100" required>
+
+                            </div>
+
+                            <div class="hw3-field">
+
+                                <label for="hw3-m">
+                                    Number of attackers (m)
+                                </label>
+
+                                <input id="hw3-m" class="hw3-input" type="number" min="20" max="2000" step="1"
+                                    value="300" required>
+
+                            </div>
+
+                            <div class="hw3-field">
+
+                                <label for="hw3-p">
+                                    Success probability (p)
+                                </label>
+
+                                <input id="hw3-p" class="hw3-input" type="number" min="0" max="1" step="0.05"
+                                    value="0.4" required>
+
+                            </div>
+
+                            <div class="hw3-field">
+
+                                <label for="hw3-seed">
+                                    Random seed
+                                </label>
+
+                                <input id="hw3-seed" class="hw3-input" type="number" min="0" max="4294967295" step="1"
+                                    value="2026" required>
+
+                            </div>
+
+                        </div>
+
+                        <div class="hw3-actions">
+
+                            <button type="submit" id="hw3-run" class="hw3-button">
+                                Run Simulation
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                    <p id="hw3-status" class="hw3-status" role="status" aria-live="polite">
+                        Ready to simulate.
+                    </p>
+
+                    <p class="hw3-note">
+                        Each attacker generates one independent
+                        trajectory across n systems. The
+                        random seed makes the experiment
+                        reproducible. Charts display up to
+                        30 trajectories, while statistics
+                        use all m attackers.
+                    </p>
+
+                </div>
+
+                <!-- TRAJECTORY CHARTS -->
+                <div id="hw3-trajectory-results">
+
+                    <div class="assignment-panel hw3-chart-panel">
+
+                        <div class="hw3-chart-heading">
+                            <h3>Total Score</h3>
+                            <span>Sₜ</span>
+                        </div>
+
+                        <p>
+                            Accumulated penetration score
+                            after each system.
+                        </p>
+
+                        <canvas id="hw3-total-chart" class="hw3-chart" role="img"
+                            aria-label="Total score trajectories"></canvas>
+
+                    </div>
+
+                    <div class="assignment-panel hw3-chart-panel">
+
+                        <div class="hw3-chart-heading">
+                            <h3>Average Score</h3>
+                            <span>Sₜ / t</span>
+                        </div>
+
+                        <p>
+                            Average penetration score
+                            after t attempted systems.
+                        </p>
+
+                        <canvas id="hw3-average-chart" class="hw3-chart" role="img"
+                            aria-label="Average score trajectories"></canvas>
+
+                    </div>
+
+                    <div class="assignment-panel hw3-chart-panel">
+
+                        <div class="hw3-chart-heading">
+                            <h3>Normalized Total Score</h3>
+                            <span>Sₜ / √t</span>
+                        </div>
+
+                        <p>
+                            Accumulated score normalized
+                            by the square root of the
+                            number of attempted systems.
+                        </p>
+
+                        <canvas id="hw3-normalized-chart" class="hw3-chart" role="img"
+                            aria-label="Normalized score trajectories"></canvas>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- SECTION 3: SCORE DISTRIBUTIONS -->
+            <section class="assignment-section">
+            
+                <div class="section-heading">
+                    <span class="section-label">03 / SCORE DISTRIBUTIONS</span>
+                    <h2>Score Distributions</h2>
+                    <p>
+                        Analyze the final score distributions across all
+                        m attackers and compare empirical statistics
+                        with theoretical predictions.
+                    </p>
+                </div>
+            
+                <div class="assignment-panel">
+                    <h3>Empirical vs. Theoretical Statistics</h3>
+            
+                    <p>
+                        The statistics are computed using the final
+                        scores of all independent attacker trajectories.
+                    </p>
+            
+                    <div class="hw3-table-wrapper">
+                        <table class="hw3-table">
+                            <thead>
+                                <tr>
+                                    <th>Quantity</th>
+                                    <th>Sample mean</th>
+                                    <th>Expected mean</th>
+                                    <th>Sample variance</th>
+                                    <th>Theoretical variance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hw3-stats-body"></tbody>
+                        </table>
+                    </div>
+            
+                    <p id="hw3-theory-summary" class="hw3-note"></p>
+                </div>
+            
+                <div class="assignment-panel hw3-chart-panel">
+                    <h3>Empirical Score Distributions</h3>
+            
+                    <p>
+                        Histograms of the final total, average and
+                        square-root-normalized scores.
+                    </p>
+            
+                    <div class="hw3-hist-grid">
+            
+                        <div class="hw3-mini-panel">
+                            <h4>Total Score</h4>
+                            <span>Sₙ</span>
+                            <canvas id="hw3-hist-total" class="hw3-chart" role="img"
+                                aria-label="Histogram of total scores"></canvas>
+                        </div>
+            
+                        <div class="hw3-mini-panel">
+                            <h4>Average Score</h4>
+                            <span>Sₙ / n</span>
+                            <canvas id="hw3-hist-average" class="hw3-chart" role="img"
+                                aria-label="Histogram of average scores"></canvas>
+                        </div>
+            
+                        <div class="hw3-mini-panel">
+                            <h4>Normalized Total</h4>
+                            <span>Sₙ / √n</span>
+                            <canvas id="hw3-hist-normalized" class="hw3-chart" role="img"
+                                aria-label="Histogram of normalized scores"></canvas>
+                        </div>
+            
+                    </div>
+            
+                    <p id="hw3-hist-note" class="hw3-note"></p>
+                </div>
+            
+            </section>
+            
+            
+            <!-- SECTION 4: LAW OF LARGE NUMBERS -->
+            <section class="assignment-section">
+            
+                <div class="section-heading">
+                    <span class="section-label">
+                        04 / LAW OF LARGE NUMBERS
+                    </span>
+            
+                    <h2>Convergence in Probability</h2>
+            
+                    <p>
+                        Investigating how the average penetration
+                        score approaches its expected value as
+                        the number of systems increases.
+                    </p>
+                </div>
+            
+                <div class="assignment-panel">
+            
+                    <h3>Law of Large Numbers</h3>
+            
+                    <p>
+                        According to the Law of Large Numbers,
+                        the average of independent and identically
+                        distributed increments converges in
+                        probability to their expected value.
+                    </p>
+            
+                    <div class="formula-box">
+                        Sₙ / n → E[X] in probability
+                    </div>
+            
+                    <p>
+                        We estimate the probability that the average
+                        score differs from its expected value by
+                        more than ε = 0.15.
+                    </p>
+            
+                    <div class="formula-box">
+                        P(|Sₙ/n − E[X]| &gt; 0.15)
+                    </div>
+            
+                    <h3 class="hw3-subheading">
+                        Probability of Significant Deviation
+                    </h3>
+            
+                    <canvas id="hw3-lln-chart" class="hw3-chart" role="img"
+                        aria-label="Convergence in probability across n"></canvas>
+            
+                    <div class="hw3-legend">
+                        <span class="hw3-legend-blue">
+                            Empirical deviation probability
+                        </span>
+                        <span class="hw3-legend-orange">
+                            Chebyshev upper bound
+                        </span>
+                    </div>
+            
+                    <p class="hw3-note">
+                        The Chebyshev bound provides a theoretical
+                        upper limit for the deviation probability.
+                        Empirical values can fluctuate because
+                        only finitely many attackers are simulated.
+                    </p>
+            
+                    <h3 class="hw3-subheading">
+                        Convergence Results
+                    </h3>
+            
+                    <div class="hw3-table-wrapper">
+                        <table class="hw3-table">
+                            <thead>
+                                <tr>
+                                    <th>Systems (n)</th>
+                                    <th>Average mean</th>
+                                    <th>Empirical variance</th>
+                                    <th>Theoretical variance</th>
+                                    <th>Deviation probability</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hw3-lln-rows"></tbody>
+                        </table>
+                    </div>
+            
+                    <p id="hw3-lln-note" class="hw3-note"></p>
+            
+                </div>
+            
+                <div class="assignment-panel hw3-chart-panel">
+            
+                    <h3>Variance Under Different Normalizations</h3>
+            
+                    <p>
+                        The theoretical variance behaves differently
+                        for the three score quantities as n increases.
+                    </p>
+            
+                    <div class="hw3-formula-list">
+                        <div>Var(Sₙ) = n Var(X)</div>
+                        <div>Var(Sₙ/n) = Var(X)/n</div>
+                        <div>Var(Sₙ/√n) = Var(X)</div>
+                    </div>
+            
+                    <canvas id="hw3-variance-chart" class="hw3-chart" role="img" aria-label="Variance scaling across n"></canvas>
+            
+                    <div class="hw3-legend">
+                        <span class="hw3-legend-blue">Var(Sₙ)</span>
+                        <span class="hw3-legend-orange">Var(Sₙ/n)</span>
+                        <span class="hw3-legend-green">Var(Sₙ/√n)</span>
+                    </div>
+            
+                    <p class="hw3-note">
+                        Both axes use logarithmic scales when
+                        the increment variance is positive.
+                    </p>
+            
+                </div>
+            
+            </section>
+            
+            
+            <!-- SECTION 5: CENTRAL LIMIT THEOREM -->
+            <section class="assignment-section">
+            
+                <div class="section-heading">
+                    <span class="section-label">
+                        05 / CENTRAL LIMIT THEOREM
+                    </span>
+            
+                    <h2>Convergence to the Normal Distribution</h2>
+            
+                    <p>
+                        Compare the empirical distribution of
+                        normalized penetration scores with
+                        a standard normal distribution.
+                    </p>
+                </div>
+            
+                <div class="assignment-panel">
+            
+                    <h3>Central Limit Theorem</h3>
+            
+                    <p>
+                        In the Rademacher model, the increments have
+                        zero mean and unit variance. As n increases,
+                        the normalized total converges in distribution
+                        to the standard normal distribution.
+                    </p>
+            
+                    <div class="formula-box">
+                        Sₙ / √n → N(0,1) in distribution
+                    </div>
+            
+                    <p>
+                        In the non-degenerate Bernoulli model,
+                        standardization also requires subtracting
+                        the mean and dividing by the standard deviation.
+                    </p>
+            
+                    <div class="formula-box">
+                        (Sₙ − np) / √(np(1−p)) → N(0,1)
+                    </div>
+            
+                    <h3 class="hw3-subheading">
+                        Empirical CDF vs. Standard Normal CDF
+                    </h3>
+            
+                    <p>
+                        The colored curves represent empirical
+                        cumulative distribution functions at
+                        different system sizes. The dashed curve
+                        represents the standard normal distribution.
+                    </p>
+            
+                    <canvas id="hw3-clt-chart" class="hw3-chart" role="img"
+                        aria-label="Empirical and standard normal CDF comparison"></canvas>
+            
+                    <div id="hw3-clt-legend" class="hw3-legend"></div>
+            
+                    <h3 class="hw3-subheading">
+                        Normal Approximation Results
+                    </h3>
+            
+                    <div class="hw3-table-wrapper">
+                        <table class="hw3-table">
+                            <thead>
+                                <tr>
+                                    <th>Systems (n)</th>
+                                    <th>Attackers (m)</th>
+                                    <th>Kolmogorov distance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hw3-clt-rows"></tbody>
+                        </table>
+                    </div>
+            
+                    <p id="hw3-clt-note" class="hw3-note"></p>
+            
+                </div>
+            
+            </section>
+            
+            
+            <!-- SECTION 6: DISCUSSION AND CONCLUSIONS -->
+            <section class="assignment-section">
+            
+                <div class="section-heading">
+                    <span class="section-label">
+                        06 / RESULTS AND CONCLUSIONS
+                    </span>
+            
+                    <h2>Interpreting the Simulations</h2>
+            
+                    <p>
+                        Understanding the influence of system size,
+                        attacker population and normalization.
+                    </p>
+                </div>
+            
+                <div class="assignment-panel">
+            
+                    <h3>Interpretation of the Results</h3>
+            
+                    <div class="hw3-conclusion-grid">
+            
+                        <div class="hw3-conclusion-item">
+                            <h4>Increasing the Number of Systems</h4>
+                            <p>
+                                The accumulated score becomes more
+                                variable in absolute terms, while
+                                the average score concentrates around
+                                the expected increment.
+                            </p>
+                        </div>
+            
+                        <div class="hw3-conclusion-item">
+                            <h4>Increasing the Number of Attackers</h4>
+                            <p>
+                                More attackers provide more independent
+                                observations. This improves the precision
+                                of the empirical distributions and
+                                statistics without changing the
+                                theoretical distribution of one attacker.
+                            </p>
+                        </div>
+            
+                        <div class="hw3-conclusion-item">
+                            <h4>Bernoulli Model</h4>
+                            <p>
+                                The average score converges to p.
+                                The expected total increases linearly
+                                with n when p is positive.
+                            </p>
+                        </div>
+            
+                        <div class="hw3-conclusion-item">
+                            <h4>Rademacher Model</h4>
+                            <p>
+                                Positive and negative increments
+                                balance in expectation. The average
+                                converges to zero and the normalized
+                                total approaches the standard normal law.
+                            </p>
+                        </div>
+            
+                    </div>
+            
+                </div>
+            
+                <div class="assignment-panel hw3-chart-panel">
+            
+                    <h3>Current Experiment Summary</h3>
+            
+                    <p id="hw3-final-insight" class="hw3-final-insight">
+                        Run the simulation to display the final
+                        interpretation.
+                    </p>
+            
+                    <h3 class="hw3-subheading">Final Conclusion</h3>
+            
+                    <p>
+                        The simulations demonstrate that the
+                        normalization of a stochastic process
+                        determines its asymptotic behavior.
+                    </p>
+            
+                    <p>
+                        The Law of Large Numbers explains the
+                        convergence of the average penetration
+                        score, while the Central Limit Theorem
+                        characterizes the distribution of
+                        properly standardized fluctuations.
+                    </p>
+            
+                    <p>
+                        Increasing n changes the theoretical
+                        behavior of the scores. Increasing m
+                        makes the empirical approximation more
+                        reliable by providing more trajectories.
+                    </p>
+            
+                </div>
+            
+            </section>
+
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-content">
+
+            <p>
+                &copy; 2026 Giuseppe Sciarrone
+                &middot; Student ID 2116081
+            </p>
+
+            <p>
+                Statistics | Sapienza University of Rome
+            </p>
+
+        </div>
+    </footer>
+
+    <script src="hw3.js"></script>
+
+</body>
+
+</html>

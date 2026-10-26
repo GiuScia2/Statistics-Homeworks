@@ -1,0 +1,408 @@
+/* ==========================================
+   HOMEWORK 03 — STOCHASTIC PROCESSES
+   ========================================== */
+
+/* INTRODUCTION */
+
+.hw3-model-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.hw3-model-card {
+    padding: 22px;
+    border: 1px solid #c5d3e5;
+    border-radius: 12px;
+    background: #f1f5fb;
+}
+
+.hw3-model-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--blue);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.hw3-model-card h4 {
+    margin: 0 0 15px;
+    color: var(--navy);
+    font-size: 1.15rem;
+}
+
+.hw3-model-card p {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.hw3-formula {
+    padding: 15px;
+    border-radius: 9px;
+    background: #e3edfb;
+    color: var(--navy);
+    font-family: Consolas, monospace;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.hw3-subheading {
+    margin-top: 32px !important;
+}
+
+.hw3-quantities {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.hw3-quantity {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px;
+    border: 1px solid #c5d3e5;
+    border-radius: 10px;
+    background: #eef5ff;
+}
+
+.hw3-quantity span {
+    color: var(--muted);
+    font-size: 0.83rem;
+    font-weight: 600;
+}
+
+.hw3-quantity strong {
+    color: var(--blue);
+    font-size: 1.25rem;
+}
+
+
+/* SIMULATION CONTROLS */
+
+.hw3-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.hw3-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hw3-field label {
+    color: var(--navy);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.hw3-input {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid #bdcde1;
+    border-radius: 10px;
+    background: #f8fbff;
+    color: var(--text);
+    font: inherit;
+}
+
+.hw3-input:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+}
+
+.hw3-input:disabled {
+    background: #e9eef5;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.hw3-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.hw3-button {
+    padding: 12px 22px;
+    border: 1px solid var(--blue);
+    border-radius: 10px;
+    background: var(--blue);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.hw3-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.hw3-status {
+    margin-top: 18px;
+    color: #17603c;
+    font-weight: 600;
+}
+
+.hw3-status.hw3-error {
+    color: #b42318;
+}
+
+.hw3-note {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.7;
+}
+
+
+/* TRAJECTORY CHARTS */
+
+.hw3-chart-panel {
+    margin-top: 24px;
+}
+
+.hw3-chart-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.hw3-chart-heading h3 {
+    margin-bottom: 8px;
+}
+
+.hw3-chart-heading span {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #e8f0fc;
+    color: var(--blue);
+    font-weight: 700;
+}
+
+.hw3-chart {
+    display: block;
+    width: 100%;
+    height: 270px;
+    margin-top: 20px;
+    border: 1px solid #d6e2f1;
+    border-radius: 10px;
+    background: #fbfdff;
+}
+
+
+/* STATISTICS TABLE */
+
+.hw3-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 22px;
+}
+
+.hw3-table {
+    width: 100%;
+    min-width: 750px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.hw3-table th,
+.hw3-table td {
+    padding: 14px;
+    border-bottom: 1px solid #dce5f0;
+    font-size: 0.86rem;
+    white-space: nowrap;
+}
+
+.hw3-table thead {
+    background: #e8f0fc;
+    color: var(--navy);
+}
+
+.hw3-table tbody tr:nth-child(even) {
+    background: #f7f9fd;
+}
+
+.hw3-table tbody td:first-child {
+    color: var(--navy);
+    font-weight: 700;
+}
+
+.hw3-table td:not(:first-child) {
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+    .hw3-controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+
+    .hw3-model-grid,
+    .hw3-quantities,
+    .hw3-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .hw3-chart {
+        height: 240px;
+    }
+
+    .hw3-chart-heading {
+        align-items: flex-start;
+    }
+}
+/* ==========================================
+   SECTIONS 03–06 — DISTRIBUTIONS, LLN, CLT
+   ========================================== */
+
+.hw3-hist-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 25px;
+}
+
+.hw3-mini-panel {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid #c5d3e5;
+    border-radius: 12px;
+    background: #f1f5fb;
+}
+
+.hw3-mini-panel h4 {
+    margin: 0 0 5px;
+    color: var(--navy);
+    font-size: 0.95rem;
+}
+
+.hw3-mini-panel>span {
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 0.86rem;
+}
+
+.hw3-mini-panel .hw3-chart {
+    margin-top: 14px;
+}
+
+.hw3-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.hw3-legend span::before {
+    content: "";
+    display: inline-block;
+    width: 19px;
+    height: 4px;
+    margin-right: 7px;
+    vertical-align: middle;
+    border-radius: 4px;
+    background: var(--legend-color, #2563eb);
+}
+
+.hw3-legend-blue {
+    --legend-color: #2563eb;
+}
+
+.hw3-legend-orange {
+    --legend-color: #ea580c;
+}
+
+.hw3-legend-green {
+    --legend-color: #059669;
+}
+
+.hw3-formula-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.hw3-formula-list>div {
+    padding: 16px 10px;
+    border: 1px solid #c5d3e5;
+    border-radius: 10px;
+    background: #eef5ff;
+    color: var(--navy);
+    font-family: Consolas, monospace;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.hw3-legend-item::before {
+    background: var(--legend-color);
+}
+
+.hw3-conclusion-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.hw3-conclusion-item {
+    padding: 20px;
+    border: 1px solid #c5d3e5;
+    border-radius: 12px;
+    background: #f1f5fb;
+}
+
+.hw3-conclusion-item h4 {
+    margin: 0 0 12px;
+    color: var(--navy);
+}
+
+.hw3-conclusion-item p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.hw3-final-insight {
+    padding: 20px;
+    border-left: 4px solid var(--blue);
+    border-radius: 8px;
+    background: #eef5ff;
+    color: var(--navy) !important;
+    font-weight: 500;
+}
+
+@media (max-width: 1000px) {
+    .hw3-hist-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 650px) {
+
+    .hw3-formula-list,
+    .hw3-conclusion-grid {
+        grid-template-columns: 1fr;
+    }
+}
