@@ -1274,6 +1274,20 @@ function renderAdvanced(data) {
             renderStatistics(currentSimulation);
             renderAdvanced(currentSimulation);
 
+            if (window.ChartMotion) {
+                ChartMotion.playMany([
+                    ["hw3-total-chart", "line"],
+                    ["hw3-average-chart", "line"],
+                    ["hw3-normalized-chart", "line"],
+                    ["hw3-hist-total", "bars"],
+                    ["hw3-hist-average", "bars"],
+                    ["hw3-hist-normalized", "bars"],
+                    ["hw3-lln-chart", "line"],
+                    ["hw3-variance-chart", "line"],
+                    ["hw3-clt-chart", "line"]
+                ]);
+            }
+
             statusOutput.classList.remove("hw3-error");
 
             statusOutput.textContent =
@@ -1304,6 +1318,7 @@ function renderAdvanced(data) {
 
     window.addEventListener("resize", () => {
         if (currentSimulation) {
+            if (window.ChartMotion) ChartMotion.finishAll();
             renderCharts(currentSimulation);
             renderAdvanced(currentSimulation);
         }

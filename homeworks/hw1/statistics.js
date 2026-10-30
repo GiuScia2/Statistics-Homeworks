@@ -252,3 +252,11 @@ document.getElementById("calculate-button")
         curveTrail.setAttribute("d", "");
         playbackStatus.textContent = "Ready to replay.";
     });
+
+
+// Motion affects presentation only; computed statistics are unchanged.
+if (window.ChartMotion) {
+    ChartMotion.observeSvgPoints(document.getElementById("curve-points"));
+    ChartMotion.observeBars(document.getElementById("x-frequency"), ".stat-bar");
+    ChartMotion.observeBars(document.getElementById("y-frequency"), ".stat-bar");
+}

@@ -575,6 +575,10 @@ function renderHammingHistogram(distances) {
         row.append(label, track, count);
         histogramOutput.appendChild(row);
     });
+
+    if (window.ChartMotion) {
+        ChartMotion.observeBars(histogramOutput, ".statistics-bar-fill", 75);
+    }
 }
 
 // Run 64 one-bit modification experiments

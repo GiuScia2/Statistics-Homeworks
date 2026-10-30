@@ -1135,6 +1135,10 @@
 
             testPanel.hidden = false;
 
+            if (window.ChartMotion) {
+                ChartMotion.observeBars(bars, ".hw2-length-bar-fill", 90);
+            }
+
             setStatus(
                 testsStatus,
                 "Completed 50 trials per length using " +

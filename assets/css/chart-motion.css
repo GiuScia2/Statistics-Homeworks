@@ -1,0 +1,33 @@
+/* Shared, performance-friendly presentation animations.
+   Calculated values and the final graph remain unchanged. */
+@keyframes chart-motion-grow-x {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+@keyframes chart-motion-point-pop {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.17); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.chart-motion-pending { transform: scaleX(0); transform-origin: left center; }
+.chart-motion-grow {
+    transform-origin: left center;
+    animation: chart-motion-grow-x 850ms cubic-bezier(.22, 1, .36, 1) both;
+    animation-delay: var(--chart-motion-delay, 0ms);
+}
+.chart-motion-points circle {
+    transform: scale(0);
+    transform-box: fill-box;
+    transform-origin: center;
+}
+.chart-motion-points.chart-motion-visible circle {
+    animation: chart-motion-point-pop 560ms cubic-bezier(.22, 1, .36, 1) both;
+    animation-delay: var(--chart-motion-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+    .chart-motion-pending, .chart-motion-grow,
+    .chart-motion-points circle, .chart-motion-points.chart-motion-visible circle {
+        animation: none !important;
+        transform: none !important;
+    }
+}

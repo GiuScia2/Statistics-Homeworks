@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework 04 | Statistics</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/homework.css">
+    <link rel="stylesheet" href="../../assets/css/chart-motion.css">
+    <link rel="stylesheet" href="hw4.css">
+</head>
+
+<body>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="container nav-content">
+            <a href="../../index.html" class="nav-logo">
+                <span class="logo-icon">S.</span><span>Statistics</span>
+            </a>
+            <div class="nav-links">
+                <a href="../../index.html">Home</a>
+                <a href="../../index.html#homeworks">Homeworks</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HOMEWORK HEADER -->
+    <header class="assignment-header">
+        <div class="container">
+            <a href="../../index.html#homeworks" class="back-link">&larr; Back to Homeworks</a>
+            <span class="assignment-label">HOMEWORK 04 · EXERCISES 1 &amp; 2</span>
+            <h1>Welford &amp; Sampling Statistics</h1>
+            <p class="assignment-subtitle">Online Mean, Variance and Statistical Inference</p>
+            <p class="assignment-description">
+                Derive and implement Welford's recurrence formulas, then study sampling
+                means and variances across independent hackers and increasing system sizes.
+            </p>
+        </div>
+    </header>
+
+    <main class="assignment-main">
+        <div class="container">
+
+            <!-- SECTION 01 -->
+            <section class="assignment-section">
+                <div class="section-heading">
+                    <span class="section-label">01 / INTRODUCTION</span>
+                    <h2>From Observations to Estimators</h2>
+                    <p>One assignment, two connected exercises: an online algorithm and a sampling experiment.</p>
+                </div>
+                <div class="assignment-panel">
+                    <h3>Problem Setup</h3>
+                    <p>
+                        Consider <strong>m independent hackers</strong> attempting to penetrate
+                        <strong>n systems each</strong>. Every attempt generates an independent
+                        score between 0 and 10. We estimate the mean and variance from each
+                        hacker's observations, then compare the estimates across hackers.
+                    </p>
+                    <div class="hw4-facts">
+                        <div><span>Chosen distribution</span><strong>Uniform integers {0, …, 10}</strong></div>
+                        <div><span>Theoretical mean (μ)</span><strong>5</strong></div>
+                        <div><span>Theoretical variance (σ²)</span><strong>10</strong></div>
+                    </div>
+                    <p class="hw4-muted">
+                        Each of the eleven scores has probability 1/11.
+                        The same distribution is used in every experiment.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 02 -->
+            <section class="assignment-section">
+                <div class="section-heading">
+                    <span class="section-label">02 / EXERCISE 1</span>
+                    <h2>Welford's Recurrence Formulas</h2>
+                    <p>Update the mean and sum of squares one observation at a time, without storing previous data.</p>
+                </div>
+                <div class="assignment-panel">
+                    <h3>Derivation</h3>
+                    <p>
+                        Let μ<sub>k</sub> be the mean after k observations, and let
+                        SS<sub>k</sub> = Σ(x<sub>i</sub> − μ<sub>k</sub>)².
+                        Starting from Knuth's mean update, define δ = x<sub>k</sub> − μ<sub>k−1</sub>.
+                    </p>
+                    <div class="hw4-equations">
+                        <div><small>Mean update</small><strong>μₖ = μₖ₋₁ + δ/k</strong></div>
+                        <div><small>Sum-of-squares update</small><strong>SSₖ = SSₖ₋₁ + δ(xₖ − μₖ)</strong></div>
+                        <div><small>Sample variance (k ≥ 2)</small><strong>s²ₖ = SSₖ/(k − 1)</strong></div>
+                    </div>
+                    <p>
+                        To derive the second recurrence, rewrite the old deviations around
+                        the new mean. Their cross term vanishes because
+                        Σ(x<sub>i</sub> − μ<sub>k−1</sub>) = 0. Simplifying the remaining
+                        terms gives SS<sub>k</sub> = SS<sub>k−1</sub> + δ(x<sub>k</sub> − μ<sub>k</sub>).
+                        Consequently, for k ≥ 3:
+                    </p>
+                    <div class="hw4-equation-single">
+                        s²ₖ = [(k − 2)s²ₖ₋₁ + δ(xₖ − μₖ)]/(k − 1)
+                    </div>
+                    <p class="hw4-muted">
+                        For k = 1 the sample variance is undefined; for k = 2 it is SS₂.
+                        The denominator k − 1 provides Bessel's correction.
+                    </p>
+                    <h3 class="hw4-subheading">Three-Line Core</h3>
+                    <pre class="hw4-code"><code>const delta = x - mean;
+mean += delta / k;
+SS += delta * (x - mean);</code></pre>
+                    <p class="hw4-muted">Increment k before these three lines. Initialize mean = 0 and SS = 0.</p>
+                </div>
+
+                <div class="assignment-panel hw4-spaced">
+                    <h3>Interactive Step-by-Step Verification</h3>
+                    <form id="hw4-demo-form">
+                        <label for="hw4-values">Observation sequence (comma-separated scores)</label>
+                        <div class="hw4-inline-form">
+                            <input id="hw4-values" class="hw4-input" type="text" value="3, 5, 7, 2, 10, 0, 6" required>
+                            <button class="hw4-button" type="submit">Calculate Steps</button>
+                        </div>
+                    </form>
+                    <p id="hw4-demo-status" class="hw4-status" role="status"></p>
+                    <div class="hw4-metrics hw4-metrics-three">
+                        <div><span>Final mean</span><strong id="hw4-demo-mean">—</strong></div>
+                        <div><span>Final SS</span><strong id="hw4-demo-ss">—</strong></div>
+                        <div><span>Sample variance</span><strong id="hw4-demo-variance">—</strong></div>
+                    </div>
+                    <div class="hw4-table-scroll">
+                        <table class="hw4-table">
+                            <thead>
+                                <tr>
+                                    <th>k</th>
+                                    <th>Score xₖ</th>
+                                    <th>Running mean</th>
+                                    <th>SSₖ</th>
+                                    <th>Sample variance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hw4-demo-rows"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 03 -->
+            <section class="assignment-section">
+                <div class="section-heading">
+                    <span class="section-label">03 / EXERCISE 2</span>
+                    <h2>Sampling Simulation</h2>
+                    <p>Generate n scores per hacker and calculate each hacker's sampling statistics using Welford.</p>
+                </div>
+                <div class="assignment-panel">
+                    <h3>Simulation Parameters</h3>
+                    <form id="hw4-simulation-form">
+                        <div class="hw4-control-grid">
+                            <div><label for="hw4-n">Systems per hacker (n)</label><input id="hw4-n" class="hw4-input"
+                                    type="number" min="2" max="1000" step="1" value="100" required></div>
+                            <div><label for="hw4-m">Number of hackers (m)</label><input id="hw4-m" class="hw4-input"
+                                    type="number" min="50" max="2000" step="1" value="500" required></div>
+                            <div><label for="hw4-seed">Random seed</label><input id="hw4-seed" class="hw4-input"
+                                    type="number" min="0" max="4294967295" step="1" value="2026" required></div>
+                        </div>
+                        <button class="hw4-button hw4-run" type="submit">Run Simulation</button>
+                    </form>
+                    <p id="hw4-simulation-status" class="hw4-status" role="status"></p>
+                    <p class="hw4-muted">A fixed random seed makes the simulation reproducible. All m hackers contribute
+                        to the statistics; up to 12 trajectories are drawn.</p>
+                </div>
+                <div class="assignment-panel hw4-spaced">
+                    <h3>Running Sampling Means</h3>
+                    <p>Each line shows one hacker's running mean. The dashed orange line marks μ = 5.</p>
+                    <canvas id="hw4-trajectory-chart" class="hw4-chart" role="img"
+                        aria-label="Running sample means for up to twelve hackers"></canvas>
+                </div>
+            </section>
+
+            <!-- SECTION 04 -->
+            <section class="assignment-section">
+                <div class="section-heading">
+                    <span class="section-label">04 / STATISTICAL COMPARISON</span>
+                    <h2>Empirical vs. Theoretical Values</h2>
+                    <p>Aggregate the m individual estimates and examine their distributions.</p>
+                </div>
+                <div class="assignment-panel">
+                    <h3>Results Across All Hackers</h3>
+                    <div class="hw4-metrics">
+                        <div><span>Average of sampling means</span><strong id="hw4-avg-means">—</strong><small>Target: μ
+                                = 5</small></div>
+                        <div><span>Average of sampling variances</span><strong
+                                id="hw4-avg-variances">—</strong><small>Target: σ² = 10</small></div>
+                        <div><span>SD of sampling means</span><strong id="hw4-sd-means">—</strong><small>Spread between
+                                hackers</small></div>
+                        <div><span>SD of sampling variances</span><strong id="hw4-sd-variances">—</strong><small>Spread
+                                between hackers</small></div>
+                    </div>
+                    <p id="hw4-single-description" class="hw4-muted"></p>
+                    <p id="hw4-single-interpretation" class="hw4-interpretation"></p>
+                </div>
+                <div class="hw4-two-charts">
+                    <div class="assignment-panel hw4-spaced">
+                        <h3>Distribution of Sampling Means</h3>
+                        <p>The orange dashed marker indicates μ = 5.</p>
+                        <canvas id="hw4-mean-histogram" class="hw4-chart" role="img"
+                            aria-label="Distribution of hacker sample means"></canvas>
+                    </div>
+                    <div class="assignment-panel hw4-spaced">
+                        <h3>Distribution of Sampling Variances</h3>
+                        <p>The orange dashed marker indicates σ² = 10.</p>
+                        <canvas id="hw4-variance-histogram" class="hw4-chart" role="img"
+                            aria-label="Distribution of hacker sample variances"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 05 -->
+            <section class="assignment-section">
+                <div class="section-heading">
+                    <span class="section-label">05 / SAMPLE SIZE &amp; CONCLUSIONS</span>
+                    <h2>What Changes When n Increases?</h2>
+                    <p>Repeat the experiment at multiple system sizes while keeping m fixed.</p>
+                </div>
+                <div class="assignment-panel">
+                    <h3>Sample-Size Experiment</h3>
+                    <p>Compare n = 5, 10, 30, 100, 300, 1000, plus the currently selected n. Each experiment uses the
+                        current number of hackers.</p>
+                    <button id="hw4-compare-button" class="hw4-button" type="button">Compare Sample Sizes</button>
+                    <p id="hw4-comparison-status" class="hw4-status" role="status"></p>
+                    <div class="hw4-table-scroll">
+                        <table class="hw4-table">
+                            <thead>
+                                <tr>
+                                    <th>n</th>
+                                    <th>Avg. means</th>
+                                    <th>Avg. variances</th>
+                                    <th>SD(means)</th>
+                                    <th>Theory SD(means)</th>
+                                    <th>SD(variances)</th>
+                                    <th>Theory SD(variances)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hw4-comparison-rows"></tbody>
+                        </table>
+                    </div>
+                    <p id="hw4-experiment-note" class="hw4-muted"></p>
+                </div>
+                <div class="hw4-two-charts">
+                    <div class="assignment-panel hw4-spaced">
+                        <h3>Variability of Sampling Means</h3>
+                        <canvas id="hw4-mean-spread-chart" class="hw4-chart" role="img"
+                            aria-label="Empirical and theoretical standard deviation of sample means"></canvas>
+                    </div>
+                    <div class="assignment-panel hw4-spaced">
+                        <h3>Variability of Sampling Variances</h3>
+                        <canvas id="hw4-variance-spread-chart" class="hw4-chart" role="img"
+                            aria-label="Empirical and theoretical standard deviation of sample variances"></canvas>
+                    </div>
+                </div>
+                <p class="hw4-chart-legend"><span class="hw4-blue-mark">Empirical SD</span><span
+                        class="hw4-orange-mark">Theoretical SD (dashed)</span></p>
+                <div class="assignment-panel hw4-spaced">
+                    <h3>Statistical Interpretation</h3>
+                    <p>
+                        The sample mean and sample variance are unbiased estimators of μ and σ².
+                        Thus, their averages across many hackers tend to be close to 5 and 10.
+                        Increasing n reduces the variability of the individual estimates:
+                        Var(sample mean) = σ²/n = 10/n, and the variability of the sample
+                        variance also decreases. Increasing m makes the aggregated averages
+                        and displayed distributions more stable.
+                    </p>
+                    <p>
+                        <strong>Why is this useful?</strong> Inferential statistics uses finite
+                        samples to estimate unknown population parameters. Welford provides a
+                        numerically stable, memory-efficient way to update those estimates as
+                        observations arrive, without storing the entire sample.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 Giuseppe Sciarrone &middot; Student ID 2116081</p>
+            <p>Statistics | Sapienza University of Rome</p>
+        </div>
+    </footer>
+    <script src="../../assets/js/chart-motion.js"></script>
+    <script src="hw4.js"></script>
+</body>
+
+</html>
