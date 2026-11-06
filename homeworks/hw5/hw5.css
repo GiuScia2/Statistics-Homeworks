@@ -1,0 +1,45 @@
+/* HOMEWORK 05 — Numerical Integration & Normal CDF */
+.hw5-duo,.hw5-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.hw5-concept{background:#f0f6ff;border:1px solid #d6e2f2;border-radius:13px;padding:23px;min-width:0}
+.hw5-concept h3,.hw5-concept h4{margin:6px 0 13px;color:#172640}
+.hw5-concept p{margin:0 0 12px;line-height:1.7}
+.hw5-overline{color:#2563eb;font-size:.76rem;font-weight:800;letter-spacing:1px}
+.hw5-muted{color:#64748b;font-size:.88rem;line-height:1.8}
+.hw5-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;margin:20px 0 23px}
+.hw5-field{display:flex;flex-direction:column;gap:9px;min-width:0}
+.hw5-field label{color:#172640;font-size:.88rem;font-weight:700}
+.hw5-wide{grid-column:span 1}
+.hw5-input{width:100%;min-width:0;padding:12px 14px;font:inherit;color:#172640;background:#f9fbff;border:1px solid #bfd0e4;border-radius:10px}
+.hw5-input:focus-visible,.hw5-button:focus-visible{outline:3px solid #55d6e9;outline-offset:2px}
+.hw5-button{border:0;background:#2563eb;color:#fff;font:inherit;font-weight:700;padding:13px 21px;border-radius:10px;cursor:pointer;transition:background .2s,transform .2s}
+.hw5-button:hover{background:#1d4ed8;transform:translateY(-2px)}
+.hw5-status{min-height:1.5em;margin:17px 0 0;color:#087248;font-size:.9rem;font-weight:650}
+.hw5-status.hw5-error{color:#ad2727}
+.hw5-spaced{margin-top:22px}
+.hw5-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:23px 0}
+.hw5-metrics-three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hw5-metrics>div{display:flex;flex-direction:column;min-width:0;gap:10px;padding:16px;background:#eff6ff;border:1px solid #d6e2f2;border-radius:12px}
+.hw5-metrics span{color:#64748b;font-size:.78rem;font-weight:700}
+.hw5-metrics strong{font-size:clamp(.99rem,1.8vw,1.28rem);color:#1d4ed8;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.hw5-metrics small{color:#64748b;font-size:.74rem;overflow-wrap:anywhere}
+.hw5-chart{display:block;width:100%;height:285px;margin:20px 0 0;border:1px solid #d7e2f1;border-radius:11px;background:#fcfdff}
+.hw5-chart-grid>.assignment-panel{min-width:0}
+.hw5-chart-grid>.assignment-panel p{min-height:42px;font-size:.88rem}
+.hw5-insight{background:#eff6ff;border-left:4px solid #2563eb;padding:17px 19px;border-radius:9px;color:#1e3a5f!important;line-height:1.8}
+.hw5-table-scroll{max-width:100%;overflow-x:auto;margin:19px 0 6px}
+.hw5-table{width:100%;border-collapse:collapse;min-width:650px;text-align:left}
+.hw5-table th,.hw5-table td{padding:12px;border-bottom:1px solid #dce5f0;font-size:.83rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hw5-table th{background:#e8f0fc;color:#172640;font-weight:750}
+.hw5-table tr:nth-child(even) td{background:#f7faff}
+.hw5-legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:15px;font-size:.82rem;color:#64748b;font-weight:700}
+.hw5-legend span::before{content:"";display:inline-block;width:21px;height:4px;border-radius:4px;vertical-align:middle;margin-right:7px;background:var(--line-color)}
+.hw5-blue{--line-color:#2563eb}.hw5-orange{--line-color:#ea580c}.hw5-green{--line-color:#059669}
+.hw5-equation{overflow-x:auto;text-align:center;margin:19px 0;padding:20px 12px;border-radius:10px;border:1px solid #c8daf4;background:#ecf4ff;color:#172640;font:700 clamp(.9rem,2vw,1.3rem) Consolas,monospace;white-space:nowrap}
+.hw5-source-links{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 0}
+.hw5-source-links a,.assignment-panel p a{color:#1d4ed8;text-decoration:underline;text-underline-offset:3px}
+.hw5-source-links a{display:inline-block;padding:9px 12px;background:#eef5ff;border:1px solid #d7e4fa;border-radius:8px;font-size:.85rem}
+[hidden]{display:none!important}
+@media(max-width:980px){.hw5-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.hw5-chart-grid{grid-template-columns:1fr;gap:0}}
+@media(max-width:690px){.hw5-controls,.hw5-duo{grid-template-columns:1fr}.hw5-metrics,.hw5-metrics-three{grid-template-columns:repeat(2,minmax(0,1fr))}.hw5-chart{height:250px}.hw5-equation{font-size:.9rem}}
+@media(max-width:420px){.hw5-metrics,.hw5-metrics-three{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.hw5-button{transition:none}}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homework 05 | Statistics</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/homework.css">
+  <link rel="stylesheet" href="../../assets/css/chart-motion.css">
+  <link rel="stylesheet" href="hw5.css">
+</head>
+<body>
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="container nav-content">
+      <a href="../../index.html" class="nav-logo"><span class="logo-icon">S.</span><span>Statistics</span></a>
+      <div class="nav-links"><a href="../../index.html">Home</a><a href="../../index.html#homeworks">Homeworks</a></div>
+    </div>
+  </nav>
+  <header class="assignment-header">
+    <div class="container">
+      <a href="../../index.html#homeworks" class="back-link">&larr; Back to Homeworks</a>
+      <span class="assignment-label">HOMEWORK 05 · EXERCISES 1 &amp; 2</span>
+      <h1>Numerical Integration &amp; the Normal CDF</h1>
+      <p class="assignment-subtitle">Riemann, Lebesgue and Gaussian Probability</p>
+      <p class="assignment-description">Explore domain-based and range-based integration, investigate pathological functions, and compare numerical algorithms for the standard normal cumulative distribution function.</p>
+    </div>
+  </header>
+  <main class="assignment-main"><div class="container">
+    <section class="assignment-section" id="intro">
+      <div class="section-heading"><span class="section-label">01 / INTRODUCTION</span><h2>Two Views of Integration</h2><p>One page, two connected exercises, numerical experiments and explicit mathematical limitations.</p></div>
+      <div class="assignment-panel">
+        <div class="hw5-duo">
+          <div class="hw5-concept"><span class="hw5-overline">EXERCISE 1</span><h3>Riemann vs. Lebesgue</h3><p><strong>Riemann:</strong> partition the x-domain into subintervals and sum rectangular areas.</p><p><strong>Lebesgue-inspired:</strong> partition the output values into levels, measure their preimages in the domain, and add the layer areas.</p></div>
+          <div class="hw5-concept"><span class="hw5-overline">EXERCISE 2</span><h3>The Normal CDF</h3><p>Estimate the Gaussian cumulative probability using <strong>Simpson's rule</strong>, a <strong>power series for erf</strong> and an <strong>efficient erf approximation</strong>.</p><p>Compare accuracy, operation counts and browser timing against numerical reference values.</p></div>
+        </div>
+        <p class="hw5-muted">All charts are created <strong>only after you press a button</strong> and animate progressively. No external plotting libraries or internet connection are required to run this page.</p>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="integration">
+      <div class="section-heading"><span class="section-label">02 / EXERCISE 1 · NUMERICAL INTEGRATION</span><h2>Domain Slices and Value Layers</h2><p>Run both approaches on the same function and inspect where their accuracy comes from.</p></div>
+      <div class="assignment-panel">
+        <h3>Choose an Integrand</h3>
+        <form id="hw5-integral-form">
+          <div class="hw5-controls">
+            <div class="hw5-field hw5-wide"><label for="hw5-function">Function f(x)</label><select id="hw5-function" class="hw5-input">
+              <option value="sin">sin(x), x ∈ [0, π]</option>
+              <option value="square">x², x ∈ [0, 1]</option>
+              <option value="step13">1 if x &lt; 0.5, else 3</option>
+              <option value="absolute">|x − 0.5|, x ∈ [0, 1]</option>
+              <option value="inverse">1 / √x, x ∈ (0, 1]</option>
+              <option value="step10">1 if x &lt; 0.5, else 0</option>
+              <option value="sinc">sin(x) / x, x ∈ [0, π]</option>
+              <option value="thomae">Thomae's function (popcorn)</option>
+              <option value="dirichlet">Dirichlet's rational indicator</option>
+            </select></div>
+            <div class="hw5-field"><label for="hw5-n">Riemann subintervals (N)</label><input class="hw5-input" id="hw5-n" type="number" min="8" max="2048" step="1" value="80" required></div>
+            <div class="hw5-field"><label for="hw5-levels">Range levels (B)</label><input class="hw5-input" id="hw5-levels" type="number" min="8" max="512" step="1" value="64" required></div>
+          </div>
+          <button type="submit" class="hw5-button">Compare Integrals</button>
+        </form>
+        <p class="hw5-muted">The midpoint rule uses N function evaluations. The level-set estimate uses M = max(256, 4N) evenly spaced domain samples plus B range bins; it is an approximation of preimage measures, <strong>not</strong> a rigorous Lebesgue construction.</p>
+        <p id="hw5-integral-status" class="hw5-status" role="status" aria-live="polite"></p>
+      </div>
+      <div id="hw5-integral-results" hidden>
+        <div class="assignment-panel hw5-spaced">
+          <h3>Integral Comparison</h3>
+          <div class="hw5-metrics">
+            <div><span>Reference value</span><strong id="hw5-reference">—</strong><small id="hw5-reference-label"></small></div>
+            <div><span>Riemann midpoint</span><strong id="hw5-r-value">—</strong><small id="hw5-r-error"></small></div>
+            <div><span id="hw5-l-label">Lebesgue level-set</span><strong id="hw5-l-value">—</strong><small id="hw5-l-error"></small></div>
+            <div><span>Level-set sample</span><strong id="hw5-sample-value">—</strong><small id="hw5-sampling-count"></small></div>
+          </div>
+          <p id="hw5-integral-insight" class="hw5-insight"></p>
+          <div class="hw5-table-scroll"><table class="hw5-table"><thead><tr><th>Method</th><th>Function evaluations</th><th>Measured runtime*</th><th>Interpretation</th></tr></thead><tbody id="hw5-runtime-rows"></tbody></table></div>
+          <p class="hw5-muted">*Local browser measurement, averaged over repeated runs. Times depend on the device; evaluation counts offer a more reproducible efficiency comparison.</p>
+        </div>
+        <div class="hw5-chart-grid">
+          <div class="assignment-panel hw5-spaced"><h3>Riemann: Partition the Domain</h3><p>Midpoint rectangles approximate the area under f.</p><canvas class="hw5-chart" id="hw5-riemann-chart" role="img" aria-label="Function curve and Riemann midpoint rectangles"></canvas></div>
+          <div class="assignment-panel hw5-spaced"><h3>Lebesgue: Partition the Range</h3><p>Colored horizontal layers represent estimated preimage measures.</p><canvas class="hw5-chart" id="hw5-lebesgue-chart" role="img" aria-label="Function values grouped into horizontal layers"></canvas></div>
+        </div>
+        <div class="assignment-panel hw5-spaced">
+          <h3>Estimated Measures of Value-Level Sets</h3>
+          <p>For each threshold t, the table estimates the domain measure of {x : f(x) ≥ t} from M midpoint samples.</p>
+          <div class="hw5-table-scroll"><table class="hw5-table"><thead><tr><th>Threshold t</th><th>Estimated preimage measure</th><th>Share of sampled domain</th></tr></thead><tbody id="hw5-preimage-rows"></tbody></table></div>
+          <p id="hw5-pathology-note" class="hw5-muted"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="convergence">
+      <div class="section-heading"><span class="section-label">03 / CONVERGENCE &amp; PATHOLOGICAL CASES</span><h2>What Happens as Resolution Increases?</h2><p>Compare absolute errors, work counts and non-standard behavior across increasing partition sizes.</p></div>
+      <div class="assignment-panel">
+        <h3>Resolution Experiment</h3><p>The current function is evaluated with N = 16, 32, 64, 128, 256, 512, 1024. For each N, B = max(8, N/4) range levels are used.</p>
+        <button type="button" id="hw5-convergence-button" class="hw5-button">Run Convergence Experiment</button>
+        <p class="hw5-status" id="hw5-convergence-status" role="status"></p>
+      </div>
+      <div id="hw5-convergence-results" hidden>
+        <div class="assignment-panel hw5-spaced"><h3>Absolute Error Against the Reference</h3><p>Logarithmic vertical scale; smaller error means a more accurate approximation.</p><canvas class="hw5-chart" id="hw5-error-chart" role="img" aria-label="Numerical integration error versus resolution"></canvas><div class="hw5-legend"><span class="hw5-blue">Riemann midpoint</span><span class="hw5-orange">Sampled value layers</span></div></div>
+        <div class="assignment-panel hw5-spaced"><h3>Convergence and Computational Work</h3><div class="hw5-table-scroll"><table class="hw5-table"><thead><tr><th>N</th><th>B</th><th>Riemann</th><th>Value layers</th><th>|error R|</th><th>|error L|</th><th>Evaluations R / L</th></tr></thead><tbody id="hw5-convergence-rows"></tbody></table></div><p id="hw5-convergence-note" class="hw5-insight"></p></div>
+      </div>
+      <div class="assignment-panel hw5-spaced">
+        <h3>Why Pathological Functions Matter</h3>
+        <div class="hw5-duo">
+          <div class="hw5-concept"><h4>Dirichlet function</h4><p>1 on rationals, 0 on irrationals. Every interval contains both: lower Riemann sums are 0, upper sums are 1, so it is <strong>not Riemann-integrable</strong>. The rationals have Lebesgue measure zero, giving a <strong>Lebesgue integral of 0</strong>.</p></div>
+          <div class="hw5-concept"><h4>Thomae's function</h4><p>1/q at a reduced rational p/q, 0 at irrationals. Discontinuous only at rationals (a measure-zero set); <strong>Riemann-integrable with integral 0</strong>, also Lebesgue-integrable with integral 0.</p></div>
+        </div>
+        <p class="hw5-muted"><strong>Sampling warning:</strong> every finite-precision grid point is rational by construction. It is mathematically invalid to infer the measure of the rationals from their frequency on a rational grid. This page deliberately shows that failure rather than hiding it.</p>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="cdf-theory">
+      <div class="section-heading"><span class="section-label">04 / EXERCISE 2 · MATHEMATICAL BACKGROUND</span><h2>The Standard Normal CDF</h2><p>From an integral with no elementary antiderivative to a computable special function.</p></div>
+      <div class="assignment-panel">
+        <div class="hw5-equation">Φ(x) = (1/√(2π)) ∫<sub>−∞</sub><sup>x</sup> exp(−t²/2) dt</div>
+        <p>The Gaussian density integrates to 1 over the real line. Symmetry lets us evaluate the CDF using a finite integral from 0 to |x|, rather than approximating −∞ with an arbitrary cutoff.</p>
+        <div class="hw5-equation">Φ(x) = ½ [1 + erf(x/√2)]</div>
+        <p><strong>Liouville's theorem on elementary integration</strong> establishes that the Gaussian integrand has no elementary antiderivative. This does <em>not</em> mean the CDF is undefined: the error function <strong>erf</strong> gives an exact expression using a special function.</p>
+        <div class="hw5-equation">erf(z) = (2/√π) ∫<sub>0</sub><sup>z</sup> exp(−t²) dt</div>
+        <p>Practical software still needs a numerical algorithm to evaluate erf or Φ(x). Our three implementations use composite Simpson integration, a truncated Taylor series for erf, and a fast polynomial approximation of erf.</p>
+        <div class="hw5-source-links"><a href="https://faculty.etsu.edu/gardnerr/4047/notes-Hogg-McKean-Craig/Hogg-McKean-Craig-3-4.pdf" target="_blank" rel="noopener noreferrer">Professor's PDF — normal distribution</a><a href="https://dlmf.nist.gov/7.20" target="_blank" rel="noopener noreferrer">NIST DLMF — normal probability functions</a><a href="https://math.stanford.edu/~conrad/papers/elemint.pdf" target="_blank" rel="noopener noreferrer">B. Conrad — Liouville's theorem</a></div>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="cdf-calculator">
+      <div class="section-heading"><span class="section-label">05 / NORMAL CDF · INTERACTIVE CALCULATOR</span><h2>Compute Φ(x) Three Ways</h2><p>Use several numerical methods, then inspect their errors and effort.</p></div>
+      <div class="assignment-panel">
+        <form id="hw5-cdf-form"><div class="hw5-controls">
+          <div class="hw5-field"><label for="hw5-x">Evaluation point x</label><input class="hw5-input" id="hw5-x" type="number" min="-5" max="5" step="0.1" value="1.5" required></div>
+          <div class="hw5-field"><label for="hw5-simpson-n">Simpson subintervals (even)</label><input class="hw5-input" id="hw5-simpson-n" type="number" min="8" max="2000" step="2" value="100" required></div>
+          <div class="hw5-field"><label for="hw5-series-terms">erf series terms</label><input class="hw5-input" id="hw5-series-terms" type="number" min="4" max="100" step="1" value="48" required></div>
+        </div><button type="submit" class="hw5-button">Calculate Normal CDF</button></form>
+        <p id="hw5-cdf-status" class="hw5-status" role="status" aria-live="polite"></p>
+      </div>
+      <div id="hw5-cdf-results" hidden>
+        <div class="assignment-panel hw5-spaced">
+          <h3>Calculated Probability and Numerical Error</h3>
+          <div class="hw5-metrics hw5-metrics-three">
+            <div><span>Trusted reference / internal baseline</span><strong id="hw5-cdf-reference">—</strong><small id="hw5-cdf-reference-source"></small></div>
+            <div><span>Fast erf approximation</span><strong id="hw5-cdf-fast">—</strong><small id="hw5-cdf-fast-error"></small></div>
+            <div><span>Composite Simpson</span><strong id="hw5-cdf-simpson">—</strong><small id="hw5-cdf-simpson-error"></small></div>
+          </div>
+          <div class="hw5-table-scroll"><table class="hw5-table"><thead><tr><th>Numerical method</th><th>Φ(x)</th><th>Absolute error</th><th>Effort</th><th>Average runtime*</th></tr></thead><tbody id="hw5-cdf-rows"></tbody></table></div>
+          <p class="hw5-muted">*Browser timing measured by repeated evaluations; not a universal speed ranking. The polynomial approximation is fast but has a finite accuracy ceiling. Alternating-series cancellation can affect large |x|.</p>
+        </div>
+        <div class="assignment-panel hw5-spaced"><h3>Gaussian Density and Cumulative Probability</h3><p>The shaded region represents the probability P(Z ≤ x), with Z ~ N(0,1).</p><canvas class="hw5-chart" id="hw5-gaussian-chart" role="img" aria-label="Normal distribution density and accumulated area"></canvas></div>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="cdf-benchmark">
+      <div class="section-heading"><span class="section-label">06 / ACCURACY, EFFICIENCY &amp; CONCLUSIONS</span><h2>Numerical Validation</h2><p>Compare numerical CDF values with high-precision SciPy references and study convergence.</p></div>
+      <div class="assignment-panel">
+        <h3>Benchmark Against SciPy's ndtr</h3>
+        <p>We compare points from x = −5 to +5 against values computed with <strong>SciPy's standard normal CDF</strong>, checked against the <a href="https://itl.nist.gov/div898/handbook/eda/section3/eda3671.htm" target="_blank" rel="noopener noreferrer">NIST standard-normal probability table</a>. <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.ndtr.html" target="_blank" rel="noopener noreferrer">Reference function: scipy.special.ndtr</a>.</p>
+        <button id="hw5-benchmark-button" class="hw5-button" type="button">Run Accuracy Benchmark</button>
+        <p id="hw5-benchmark-status" class="hw5-status" role="status"></p>
+      </div>
+      <div id="hw5-benchmark-results" hidden>
+        <div class="assignment-panel hw5-spaced"><h3>Reference Values and Errors</h3><div class="hw5-table-scroll"><table class="hw5-table"><thead><tr><th>x</th><th>SciPy ndtr</th><th>Simpson</th><th>erf series</th><th>Fast erf</th><th>Max. absolute error</th></tr></thead><tbody id="hw5-benchmark-rows"></tbody></table></div></div>
+        <div class="assignment-panel hw5-spaced"><h3>Convergence of Numerical CDF Methods</h3><p>At x = 2, compare errors as the Simpson resolution and the number of series terms increase. The fast approximation provides a constant-error benchmark.</p><canvas class="hw5-chart" id="hw5-cdf-error-chart" role="img" aria-label="Normal CDF numerical error versus computational effort"></canvas><div class="hw5-legend"><span class="hw5-blue">Simpson error</span><span class="hw5-orange">erf series error</span><span class="hw5-green">Fast erf error</span></div><p id="hw5-benchmark-note" class="hw5-insight"></p></div>
+      </div>
+      <div class="assignment-panel hw5-spaced"><h3>Conclusions</h3><p><strong>Exercise 1:</strong> for Riemann-integrable functions, both correctly refined approaches target the same integral. The level-set simulation additionally requires accurate measurement of preimages; it fails dramatically on dense countable exceptional sets when naïvely sampled.</p><p><strong>Exercise 2:</strong> Simpson integration and erf power series trade computation for accuracy, while a compact erf approximation offers a fast result with a small, nonzero approximation error. The error function provides an exact mathematical representation, not a way to avoid numerical evaluation.</p></div>
+    </section>
+  </div></main>
+  <footer class="footer"><div class="container footer-content"><p>&copy; 2026 Giuseppe Sciarrone &middot; Student ID 2116081</p><p>Statistics | Sapienza University of Rome</p></div></footer>
+  <script src="../../assets/js/chart-motion.js"></script>
+  <script src="hw5.js"></script>
+</body>
+</html>
