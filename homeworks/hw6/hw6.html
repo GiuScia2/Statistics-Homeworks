@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework 06 | Statistics</title>
+
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/homework.css">
+    <link rel="stylesheet" href="../../assets/css/chart-motion.css">
+    <link rel="stylesheet" href="hw6.css">
+</head>
+
+<body>
+
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="container nav-content">
+            <a href="../../index.html" class="nav-logo">
+                <span class="logo-icon">S.</span>
+                <span>Statistics</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="../../index.html">Home</a>
+                <a href="../../index.html#homeworks">Homeworks</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="assignment-header">
+        <div class="container">
+
+            <a href="../../index.html#homeworks" class="back-link">
+                &larr; Back to Homeworks
+            </a>
+
+            <span class="assignment-label">
+                HOMEWORK 06 · BIVARIATE DATA
+            </span>
+
+            <h1>Contingency Tables &amp; Statistical Independence</h1>
+
+            <p class="assignment-subtitle">
+                Marginal and Conditional Frequencies · Pearson's Chi-Square Test
+            </p>
+
+            <p class="assignment-description">
+                Build a contingency table from paired observations,
+                compare observed and expected frequencies, and investigate
+                whether two categorical variables are statistically associated.
+            </p>
+
+        </div>
+    </header>
+
+    <main class="assignment-main">
+        <div class="container">
+
+            <!-- 01 - THEORY -->
+
+            <section class="assignment-section" id="theory">
+
+                <div class="section-heading">
+                    <span class="section-label">01 / THEORY</span>
+                    <h2>From Joint Frequencies to Independence</h2>
+
+                    <p>
+                        Two categorical variables X and F describe each
+                        observation. A contingency table counts every
+                        combination of categories.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <div class="hw6-duo">
+
+                        <div class="hw6-concept">
+                            <span class="hw6-overline">PROBABILITY</span>
+                            <h3>Independence</h3>
+
+                            <p>
+                                X and F are independent if, for every category
+                                pair, the joint probability equals the product
+                                of the marginal probabilities.
+                            </p>
+
+                            <div class="hw6-equation">
+                                P(X = x, F = f) = P(X = x) P(F = f)
+                            </div>
+
+                            <p>
+                                Equivalently, P(F = f | X = x) = P(F = f)
+                                for each x with positive probability.
+                                Knowing X does not change the distribution of F.
+                            </p>
+                        </div>
+
+                        <div class="hw6-concept">
+                            <span class="hw6-overline">STATISTICAL INFERENCE</span>
+                            <h3>Independence in a Population</h3>
+
+                            <p>
+                                Sample frequencies estimate population
+                                probabilities. Even if the population is
+                                independent, a finite sample need not
+                                factorize exactly.
+                            </p>
+
+                            <p>
+                                <strong>H<sub>0</sub>:</strong>
+                                X and F are independent.
+                            </p>
+
+                            <p>
+                                <strong>H<sub>1</sub>:</strong>
+                                At least one joint probability differs
+                                from the product of its marginals.
+                            </p>
+
+                            <p>
+                                Pearson's chi-square test measures the
+                                discrepancy between observed counts and
+                                counts predicted by H<sub>0</sub>.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="hw6-equation">
+                        E<sub>ij</sub> = R<sub>i</sub>C<sub>j</sub>/N
+                        &nbsp; | &nbsp;
+                        χ² = Σ (O<sub>ij</sub> − E<sub>ij</sub>)²/E<sub>ij</sub>
+                        &nbsp; | &nbsp;
+                        df = (r − 1)(c − 1)
+                    </div>
+
+                    <p class="hw6-muted">
+                        The p-value is the right-tail probability of a
+                        chi-square distribution with df degrees of freedom.
+                        A small p-value is evidence against H<sub>0</sub>,
+                        not the probability that H<sub>0</sub> is true.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- 02 - DATASET -->
+
+            <section class="assignment-section" id="dataset">
+
+                <div class="section-heading">
+                    <span class="section-label">02 / INTERACTIVE DATASET</span>
+                    <h2>Choose or Enter Paired Observations</h2>
+
+                    <p>
+                        Use a teaching example or enter your own
+                        bivariate categorical dataset. All calculations
+                        run locally in your browser.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <form id="hw6-form">
+
+                        <div class="hw6-controls">
+
+                            <div class="hw6-field">
+                                <label for="hw6-preset">Dataset</label>
+
+                                <select class="hw6-input" id="hw6-preset">
+                                    <option value="auth">
+                                        Authentication &amp; incidents (associated)
+                                    </option>
+                                    <option value="independent">
+                                        Exact sample independence
+                                    </option>
+                                    <option value="weak">
+                                        Weak association
+                                    </option>
+                                    <option value="sparse">
+                                        Sparse sample
+                                    </option>
+                                    <option value="custom">
+                                        Custom CSV
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="hw6-field">
+                                <label for="hw6-alpha">
+                                    Significance level α
+                                </label>
+
+                                <select class="hw6-input" id="hw6-alpha">
+                                    <option value="0.05">0.05 (5%)</option>
+                                    <option value="0.01">0.01 (1%)</option>
+                                    <option value="0.10">0.10 (10%)</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <p class="hw6-insight" id="hw6-description"></p>
+
+                        <label for="hw6-data" class="hw6-label">
+                            CSV dataset (header required)
+                        </label>
+
+                        <textarea id="hw6-data" class="hw6-input hw6-textarea" rows="9" spellcheck="false"
+                            required></textarea>
+
+                        <p class="hw6-muted">
+                            Enter two columns for individual observations,
+                            or three columns (X,F,Count) for aggregated counts.
+                            The first two headers name the variables.
+                            Use non-negative integer counts, comma separators
+                            and double quotes for labels containing commas.
+                            Numeric values are treated as categories;
+                            group continuous data into meaningful bins
+                            before using this test.
+                            Maximum: 20 observed categories per variable,
+                            100,000 records, 10 million observations.
+                        </p>
+
+                        <button class="hw6-button" type="submit">
+                            Analyze Dataset
+                        </button>
+
+                        <button class="hw6-button hw6-secondary" type="button" id="hw6-download">
+                            Download CSV
+                        </button>
+
+                        <p id="hw6-status" class="hw6-status" role="status" aria-live="polite"></p>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+            <!-- RESULTS: HIDDEN UNTIL ANALYSIS -->
+
+            <div id="hw6-results" hidden>
+
+                <!-- 03 - FREQUENCIES -->
+
+                <section class="assignment-section" id="frequencies">
+
+                    <div class="section-heading">
+                        <span class="section-label">
+                            03 / DESCRIPTIVE STATISTICS
+                        </span>
+
+                        <h2>Contingency Table and Frequencies</h2>
+
+                        <p>
+                            The program discovers categories, aggregates
+                            the paired observations and computes every
+                            frequency from the resulting counts.
+                        </p>
+                    </div>
+
+                    <div class="assignment-panel">
+
+                        <h3>Observed Counts and Marginal Totals</h3>
+
+                        <p>
+                            O<sub>ij</sub> is the cell count;
+                            R<sub>i</sub> and C<sub>j</sub> are row and
+                            column totals; N is the grand total.
+                        </p>
+
+                        <div id="hw6-observed" class="hw6-table-scroll"></div>
+
+                        <h3 class="hw6-spaced">
+                            Joint and Marginal Relative Frequencies
+                        </h3>
+
+                        <p>
+                            Divide each cell or margin by N.
+                            The row and column margins estimate
+                            P(X = x) and P(F = f).
+                        </p>
+
+                        <div id="hw6-joint" class="hw6-table-scroll"></div>
+
+                        <h3 class="hw6-spaced" id="hw6-row-title">
+                            Conditional Frequencies
+                        </h3>
+
+                        <p>
+                            Divide each cell by its row total:
+                            O<sub>ij</sub>/R<sub>i</sub>.
+                            Each row sums to 100%.
+                        </p>
+
+                        <div id="hw6-row" class="hw6-table-scroll"></div>
+
+                        <h3 class="hw6-spaced" id="hw6-col-title">
+                            Reverse Conditional Frequencies
+                        </h3>
+
+                        <p>
+                            Divide each cell by its column total:
+                            O<sub>ij</sub>/C<sub>j</sub>.
+                            Each column sums to 100%.
+                        </p>
+
+                        <div id="hw6-col" class="hw6-table-scroll"></div>
+
+                        <p class="hw6-muted">
+                            Displayed percentages are rounded;
+                            computations use unrounded counts
+                            and probabilities.
+                        </p>
+
+                    </div>
+
+                    <div class="assignment-panel hw6-spaced">
+
+                        <h3>Conditional Distributions</h3>
+
+                        <p>
+                            Each bar represents a row distribution.
+                            Compare the colored proportions across
+                            groups and against the overall marginal
+                            distribution. Similar proportions indicate
+                            weaker sample association.
+                        </p>
+
+                        <div id="hw6-conditional-chart" class="hw6-chart" role="img"
+                            aria-label="Conditional distributions and marginal distribution"></div>
+
+                        <div id="hw6-legend" class="hw6-legend"></div>
+
+                    </div>
+
+                </section>
+
+                <!-- 04 - CHI-SQUARE TEST -->
+
+                <section class="assignment-section" id="test">
+
+                    <div class="section-heading">
+                        <span class="section-label">
+                            04 / INFERENTIAL STATISTICS
+                        </span>
+
+                        <h2>Expected Frequencies and the Chi-Square Test</h2>
+
+                        <p>
+                            Under independence, expected counts reproduce
+                            the observed margins. Compare observed and
+                            expected cells and identify which combinations
+                            contribute most to the statistic.
+                        </p>
+                    </div>
+
+                    <div class="assignment-panel">
+
+                        <h3>Expected Counts Under H<sub>0</sub></h3>
+
+                        <div id="hw6-expected" class="hw6-table-scroll"></div>
+
+                        <p id="hw6-example" class="hw6-insight"></p>
+
+                        <h3 class="hw6-spaced">
+                            Cell Contributions to χ²
+                        </h3>
+
+                        <p>
+                            Each cell contributes (O − E)²/E.
+                            All contributions are non-negative;
+                            their sum is the test statistic.
+                        </p>
+
+                        <div id="hw6-contributions" class="hw6-table-scroll"></div>
+
+                    </div>
+
+                    <div class="assignment-panel hw6-spaced">
+
+                        <h3>Observed vs. Expected Counts</h3>
+
+                        <p>
+                            Compare the two counts for each combination.
+                            Blue = observed; amber = expected.
+                            The scale is shared by all cells.
+                        </p>
+
+                        <div id="hw6-comparison" class="hw6-chart" role="img"
+                            aria-label="Observed and expected counts for each category pair"></div>
+
+                        <div class="hw6-legend">
+                            <span>
+                                <i style="background:#2563eb"></i>
+                                Observed
+                            </span>
+
+                            <span>
+                                <i style="background:#d97706"></i>
+                                Expected
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="assignment-panel hw6-spaced">
+
+                        <h3>Test Results</h3>
+
+                        <div class="hw6-metrics">
+
+                            <div>
+                                <span>Sample size N</span>
+                                <strong id="hw6-n"></strong>
+                            </div>
+
+                            <div>
+                                <span>Pearson χ²</span>
+                                <strong id="hw6-chi"></strong>
+                            </div>
+
+                            <div>
+                                <span>Degrees of freedom</span>
+                                <strong id="hw6-df"></strong>
+                            </div>
+
+                            <div>
+                                <span>p-value</span>
+                                <strong id="hw6-p"></strong>
+                            </div>
+
+                            <div>
+                                <span>Cramér's V</span>
+                                <strong id="hw6-v"></strong>
+                            </div>
+
+                        </div>
+
+                        <p class="hw6-muted">
+                            Cramér's V = √[χ²/(N min(r−1,c−1))],
+                            from 0 to 1, measures sample association strength.
+                            It is descriptive, not a causal effect.
+                            Pearson's test is uncorrected
+                            (no Yates correction).
+                        </p>
+
+                        <p id="hw6-warning" class="hw6-insight"></p>
+
+                        <p id="hw6-decision" class="hw6-decision"></p>
+
+                        <p id="hw6-interpretation"></p>
+
+                        <p id="hw6-largest" class="hw6-muted"></p>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <!-- 05 - CONCLUSIONS -->
+
+            <section class="assignment-section" id="conclusions">
+
+                <div class="section-heading">
+                    <span class="section-label">05 / DISCUSSION</span>
+
+                    <h2>Association Is Not Causation</h2>
+
+                    <p>
+                        Interpret a statistical result in the context
+                        of the data-generating process.
+                    </p>
+                </div>
+
+                <div class="assignment-panel">
+
+                    <p>
+                        <strong>Statistical association:</strong>
+                        a difference between conditional distributions
+                        can provide evidence against independence.
+                        A non-significant result is insufficient evidence
+                        to reject independence, not proof of it.
+                        Sample size affects the test's power.
+                    </p>
+
+                    <p>
+                        <strong>Causality:</strong>
+                        an association between authentication method
+                        and incidents does not establish that the method
+                        causes the difference. User behavior, system
+                        exposure, organizational policies and other
+                        confounders could explain it. A controlled study
+                        or an appropriate causal design would be needed.
+                    </p>
+
+                    <p>
+                        <strong>Assumptions:</strong>
+                        observations should be independently sampled,
+                        with mutually exclusive category counts and
+                        adequate expected frequencies. Repeated events
+                        from the same account can violate independence
+                        of observations. This demo flags any expected
+                        count below 5 as a conservative warning.
+                        For sparse 2 × 2 tables consider Fisher's exact
+                        test. The chi-square p-value is asymptotic,
+                        not exact.
+                    </p>
+
+                    <p class="hw6-muted">
+                        All presets are synthetic teaching datasets.
+
+                        References:
+
+                        <a href="https://www.itl.nist.gov/div898/software/dataplot/refman1/auxillar/chistest.htm"
+                            target="_blank" rel="noopener">
+                            NIST — Chi-square independence test
+                        </a>
+
+                        ·
+
+                        <a href="https://online.stat.psu.edu/stat200/Lesson11" target="_blank" rel="noopener">
+                            Penn State STAT 200 — Chi-square tests
+                        </a>
+                    </p>
+
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>
+                &copy; 2026 Giuseppe Sciarrone
+                &middot; Student ID 2116081
+            </p>
+
+            <p>Statistics | Sapienza University of Rome</p>
+        </div>
+    </footer>
+
+    <script src="../../assets/js/chart-motion.js"></script>
+    <script src="hw6.js"></script>
+
+</body>
+
+</html>

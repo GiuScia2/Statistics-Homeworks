@@ -1,0 +1,440 @@
+/* HOMEWORK 06 — Contingency Tables & Independence */
+
+.hw6-duo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.hw6-concept {
+    background: #f0f6ff;
+    border: 1px solid #d6e2f2;
+    border-radius: 13px;
+    padding: 23px;
+    min-width: 0;
+}
+
+.hw6-concept h3 {
+    margin: 6px 0 13px;
+    color: #172640;
+}
+
+.hw6-concept p {
+    margin: 0 0 12px;
+    line-height: 1.7;
+}
+
+.hw6-overline {
+    color: #2563eb;
+    font-size: .76rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.hw6-muted {
+    color: #64748b;
+    font-size: .88rem;
+    line-height: 1.8;
+}
+
+/* INPUTS AND CONTROLS */
+
+.hw6-controls {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 17px;
+    margin: 20px 0 23px;
+}
+
+.hw6-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+}
+
+.hw6-field label {
+    color: #172640;
+    font-size: .88rem;
+    font-weight: 700;
+}
+
+.hw6-label {
+    display: block;
+    font-weight: 700;
+    margin: 18px 0 8px;
+    color: #172640;
+}
+
+.hw6-input {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 14px;
+    font: inherit;
+    color: #172640;
+    background: #f9fbff;
+    border: 1px solid #bfd0e4;
+    border-radius: 10px;
+}
+
+.hw6-textarea {
+    font-family: Consolas, monospace;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.hw6-input:focus-visible,
+.hw6-button:focus-visible {
+    outline: 3px solid #55d6e9;
+    outline-offset: 2px;
+}
+
+/* BUTTONS */
+
+.hw6-button {
+    border: 0;
+    background: #2563eb;
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    padding: 13px 21px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+}
+
+.hw6-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.hw6-secondary {
+    background: #e6eefc;
+    color: #1d4ed8;
+    margin-left: 8px;
+}
+
+.hw6-secondary:hover {
+    background: #d4e3fc;
+}
+
+.hw6-status {
+    min-height: 1.5em;
+    margin: 17px 0 0;
+    color: #087248;
+    font-size: .9rem;
+    font-weight: 650;
+}
+
+.hw6-status.hw6-error {
+    color: #ad2727;
+}
+
+.hw6-spaced {
+    margin-top: 22px;
+}
+
+/* STATISTICAL METRICS */
+
+.hw6-metrics {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+    margin: 23px 0;
+}
+
+.hw6-metrics>div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 10px;
+    padding: 16px;
+    background: #eff6ff;
+    border: 1px solid #d6e2f2;
+    border-radius: 12px;
+}
+
+.hw6-metrics span {
+    color: #64748b;
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+.hw6-metrics strong {
+    font-size: clamp(.99rem, 1.8vw, 1.28rem);
+    color: #1d4ed8;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+/* FORMULAS AND EXPLANATIONS */
+
+.hw6-equation {
+    overflow-x: auto;
+    text-align: center;
+    margin: 19px 0;
+    padding: 20px 12px;
+    border-radius: 10px;
+    border: 1px solid #c8daf4;
+    background: #ecf4ff;
+    color: #172640;
+    font: 700 clamp(.9rem, 2vw, 1.3rem) Consolas, monospace;
+    white-space: nowrap;
+}
+
+.hw6-insight {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    padding: 17px 19px;
+    border-radius: 9px;
+    color: #1e3a5f !important;
+    line-height: 1.8;
+}
+
+.hw6-decision {
+    font-weight: 750;
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: #e7f0fe;
+    color: #183b76 !important;
+    margin: 15px 0;
+}
+
+.hw6-decision.caution {
+    background: #fff3d7;
+    color: #7b4d00 !important;
+}
+
+.hw6-warning {
+    color: #8a4a00 !important;
+}
+
+/* CONTINGENCY TABLES */
+
+.hw6-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 19px 0 6px;
+}
+
+.hw6-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 360px;
+    text-align: left;
+}
+
+.hw6-table th,
+.hw6-table td {
+    padding: 12px;
+    border-bottom: 1px solid #dce5f0;
+    font-size: .83rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.hw6-table th {
+    background: #e8f0fc;
+    color: #172640;
+    font-weight: 750;
+}
+
+.hw6-table th[scope="row"] {
+    background: #f0f5fb;
+}
+
+.hw6-table tr:nth-child(even) td {
+    background: #f7faff;
+}
+
+.hw6-total {
+    font-weight: 750;
+}
+
+/* CHARTS */
+
+.hw6-chart {
+    width: 100%;
+    height: auto;
+    margin: 20px 0 0;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border: 1px solid #d7e2f1;
+    border-radius: 11px;
+    background: #fcfdff;
+}
+
+.hw6-chart-row {
+    display: grid;
+    grid-template-columns: minmax(95px, 23%) 1fr;
+    align-items: center;
+    gap: 12px;
+}
+
+.hw6-chart-label {
+    font-size: .82rem;
+    font-weight: 650;
+    overflow-wrap: anywhere;
+    color: #263b58;
+}
+
+.hw6-bar-track {
+    display: flex;
+    overflow: hidden;
+    min-height: 24px;
+    background: #e9eef5;
+    border-radius: 5px;
+}
+
+.hw6-stack-fill {
+    display: flex;
+    min-width: 0;
+    height: 24px;
+    transform-origin: left center;
+}
+
+.hw6-segment {
+    height: 24px;
+}
+
+.hw6-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.hw6-single {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hw6-single .hw6-bar-track {
+    flex: 1;
+    min-height: 12px;
+}
+
+.hw6-fill {
+    height: 12px;
+    transform-origin: left center;
+}
+
+.hw6-bar-number {
+    width: 65px;
+    text-align: right;
+    font-size: .78rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.hw6-chart-compact {
+    max-height: 650px;
+    overflow: auto;
+}
+
+/* CHART LEGENDS */
+
+.hw6-legend {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    font-size: .82rem;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.hw6-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    overflow-wrap: anywhere;
+}
+
+.hw6-legend i {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex: none;
+}
+
+.assignment-panel {
+    min-width: 0;
+}
+
+.assignment-panel p a {
+    color: #1d4ed8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* HIDE RESULTS BEFORE THE ANALYSIS */
+
+[hidden] {
+    display: none !important;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 980px) {
+    .hw6-metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 690px) {
+
+    .hw6-controls,
+    .hw6-duo {
+        grid-template-columns: 1fr;
+    }
+
+    .hw6-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hw6-chart {
+        padding: 12px;
+        height: auto;
+    }
+
+    .hw6-chart-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+
+    .hw6-equation {
+        font-size: .9rem;
+    }
+
+    .hw6-secondary {
+        margin: 8px 0 0;
+    }
+
+    .hw6-table {
+        min-width: 310px;
+    }
+
+    .hw6-table th,
+    .hw6-table td {
+        padding: 9px;
+    }
+}
+
+@media (max-width: 420px) {
+    .hw6-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .hw6-button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hw6-button {
+        transition: none;
+    }
+}
