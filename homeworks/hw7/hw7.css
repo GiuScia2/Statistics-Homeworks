@@ -1,0 +1,54 @@
+/* Homework 07 — complements the project's shared design. */
+.hw7-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.hw7-steps{margin-bottom:22px}
+.hw7-step,.hw7-four article,.hw7-cases>div{background:#f2f7ff;border:1px solid #d6e4f5;border-radius:13px;padding:19px;min-width:0}
+.hw7-step span,.hw7-four article>span{font-size:.73rem;font-weight:800;letter-spacing:.07em;color:#2563eb}
+.hw7-step h3,.hw7-four h3{margin:8px 0 5px!important;color:#1b3050;font-size:1.05rem!important}
+.hw7-step p,.hw7-four p,.hw7-cases p{font-size:.91rem;line-height:1.72;margin:7px 0 0}
+.hw7-equation,.hw7-implications{background:#eaf3ff;border:1px solid #c9dcf6;border-radius:12px;padding:18px;text-align:center;color:#1a3153;overflow-wrap:anywhere;margin:18px 0;font-family:Consolas,monospace;font-weight:700;font-size:clamp(.89rem,1.8vw,1.14rem);line-height:2}
+.hw7-note,.hw7-explanation{background:#eef5ff;border-left:4px solid #2563eb;border-radius:7px;padding:13px 17px;line-height:1.8;margin:16px 0}
+.hw7-small{font-size:.86rem;color:#64748b}
+.hw7-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;align-items:end}
+.hw7-controls-short{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hw7-controls label{font-size:.84rem;font-weight:700;display:flex;flex-direction:column;gap:8px;min-width:0;color:#233b58}
+.hw7-controls input,.hw7-controls select{width:100%;border:1px solid #bccde4;border-radius:9px;padding:12px;font:inherit;color:#172640;background:#fcfdff}
+.hw7-controls input:focus,.hw7-controls select:focus{outline:2px solid #55d6e9;outline-offset:2px}
+.hw7-unit{font-weight:500}
+.hw7-actions{grid-column:1/-1}
+.hw7-btn{background:#2563eb;color:#fff;border:0;border-radius:9px;padding:13px 20px;font:inherit;font-weight:750;cursor:pointer;transition:background .2s,transform .2s}
+.hw7-btn:hover{background:#1d4ed8;transform:translateY(-1px)}
+.hw7-results{margin-top:24px;border-top:1px solid #dce5f0;padding-top:23px;animation:hw7-enter .45s ease both}
+.hw7-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:17px}
+.hw7-metric{background:#f4f8fd;border:1px solid #dce7f3;border-radius:11px;padding:16px;display:flex;flex-direction:column;gap:9px}
+.hw7-metric span{font-size:.79rem;font-weight:700;color:#60718a}
+.hw7-metric strong{font-size:clamp(1.1rem,2.7vw,1.65rem);font-variant-numeric:tabular-nums;color:#1e40af;overflow-wrap:anywhere}
+.hw7-emphasis{background:#e8f4f1;border-color:#b9e0d4}
+.hw7-emphasis strong{color:#08765c}
+.hw7-comparison{display:grid;gap:13px;margin:20px 0}
+.hw7-comparison>div{display:grid;grid-template-columns:90px 1fr;gap:15px;align-items:center;font-size:.85rem;font-weight:700}
+.hw7-track{height:19px;background:#e5edf5;border-radius:6px;overflow:hidden}
+.hw7-fill{background:#2563eb;height:100%;width:0;transition:width .85s cubic-bezier(.22,1,.36,1)}
+.hw7-green{background:#059669}
+.hw7-table-wrap{overflow-x:auto}
+.hw7-table{width:100%;border-collapse:collapse;margin:15px 0}
+.hw7-table th,.hw7-table td{padding:12px;border-bottom:1px solid #dce5f0;text-align:left;font-size:.87rem}
+.hw7-table th{background:#edf4ff;color:#172640}
+.hw7-four{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-bottom:23px}
+.hw7-math{font-family:Consolas,monospace;font-weight:750;color:#163e78;background:white;padding:11px;border-radius:7px;margin:13px 0;white-space:normal}
+.hw7-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}
+.hw7-cases h3{font-size:1rem!important;margin:0!important}
+.hw7-plot{border:1px solid #d9e5f4;background:#fcfdff;border-radius:12px;padding:15px;margin:14px 0 24px}
+.hw7-plot svg{width:100%;height:auto;display:block}
+.hw7-plot .hw7-gridline{stroke:#dce4ef;stroke-width:1}
+.hw7-plot .hw7-axis{stroke:#74849b;stroke-width:1.2}
+.hw7-plot text{font-family:Segoe UI,Arial,sans-serif;font-size:13px;fill:#62758e}
+.hw7-plot .hw7-animated{animation:hw7-path 1.35s ease both}
+.hw7-plot .hw7-bar{animation:hw7-bar .65s ease both;transform-box:fill-box;transform-origin:bottom}
+.hw7-results h3{margin:24px 0 10px}
+[hidden]{display:none!important}
+@keyframes hw7-enter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@keyframes hw7-bar{from{transform:scaleY(.03)}to{transform:scaleY(1)}}
+@keyframes hw7-path{from{stroke-dashoffset:var(--path-length,1200)}to{stroke-dashoffset:0}}
+@media(max-width:900px){.hw7-grid,.hw7-cases{grid-template-columns:1fr 1fr}.hw7-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.hw7-grid,.hw7-four,.hw7-cases,.hw7-controls,.hw7-controls-short,.hw7-metrics{grid-template-columns:1fr}.hw7-comparison>div{grid-template-columns:70px 1fr}.assignment-panel{overflow-wrap:anywhere}.hw7-equation{font-size:.83rem}}
+@media(prefers-reduced-motion:reduce){.hw7-results,.hw7-btn,.hw7-plot .hw7-bar,.hw7-plot .hw7-animated{animation:none;transition:none}.hw7-fill{transition:none}}

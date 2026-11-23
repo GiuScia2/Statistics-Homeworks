@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bayesian inference, modes of convergence, LLN and CLT — interactive Statistics Homework 7">
+  <title>Homework 07 | Bayes &amp; Convergence</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/homework.css">
+  <link rel="stylesheet" href="hw7.css">
+</head>
+<body>
+  <nav class="navbar"><div class="container nav-content">
+    <a href="../../index.html" class="nav-logo"><span class="logo-icon">S.</span><span>Statistics</span></a>
+    <div class="nav-links"><a href="../../index.html">Home</a><a href="../../index.html#homeworks">Homeworks</a></div>
+  </div></nav>
+  <header class="assignment-header"><div class="container">
+    <a class="back-link" href="../../index.html#homeworks">&larr; Back to Homeworks</a>
+    <span class="assignment-label">HOMEWORK 07 · PROBABILITY THEORY</span>
+    <h1>Bayesian Inference &amp;<br>Modes of Convergence</h1>
+    <p class="assignment-subtitle">Prior · Likelihood · Posterior · LLN · CLT</p>
+    <p class="assignment-description">Two connected investigations: how Bayes' theorem updates beliefs using evidence, and how random variables converge under different mathematical criteria.</p>
+  </div></header>
+  <main class="assignment-main"><div class="container">
+    <section class="assignment-section" id="bayes-theory">
+      <div class="section-heading"><span class="section-label">01 / BAYESIAN THEORY</span><h2>Learning from Evidence</h2>
+        <p>Bayes' theorem follows from conditional probability. In statistical inference, it combines what was believed before seeing observations with how plausible those observations are under different hypotheses.</p></div>
+      <div class="assignment-panel">
+        <div class="hw7-grid hw7-steps">
+          <div class="hw7-step"><span>01 · PRIOR</span><h3>P(H)</h3><p>Belief about hypothesis H before observing new evidence. Its choice matters most when data are scarce.</p></div>
+          <div class="hw7-step"><span>02 · LIKELIHOOD</span><h3>P(E | H)</h3><p>Probability of observing evidence E if H were true. As a function of a parameter, it is not a probability distribution over that parameter.</p></div>
+          <div class="hw7-step"><span>03 · POSTERIOR</span><h3>P(H | E)</h3><p>Updated belief after combining the prior and likelihood, normalized by the evidence probability P(E).</p></div>
+        </div>
+        <div class="hw7-equation">P(H | E) = P(E | H) · P(H) / P(E)</div>
+        <p>Here <strong>P(E) = P(E|H)P(H) + P(E|¬H)P(¬H)</strong>. The denominator ensures that posterior probabilities sum to one. When H is a model parameter θ, the same principle becomes <strong>posterior density ∝ likelihood × prior density</strong>.</p>
+        <p class="hw7-note">Conditional probability describes events inside a probability model; Bayesian statistical inference also treats unknown hypotheses or parameters probabilistically and updates their distributions using data.</p>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="alert-demo">
+      <div class="section-heading"><span class="section-label">02 / INTERACTIVE BAYES EXAMPLE</span><h2>Is a Security Alert Evidence of an Attack?</h2>
+        <p>An alert is not the same as a confirmed incident. Change the attack base rate, true-positive rate and false-positive rate to examine the <em>base-rate effect</em>.</p></div>
+      <div class="assignment-panel">
+        <form id="hw7-alert-form" class="hw7-controls">
+          <label>Prior attack probability <span class="hw7-unit">%</span><input id="hw7-prior" type="number" min="0.01" max="99.99" step="0.01" value="1" required></label>
+          <label>True-positive rate P(alert|attack) <span class="hw7-unit">%</span><input id="hw7-tpr" type="number" min="0" max="100" step="0.1" value="90" required></label>
+          <label>False-positive rate P(alert|no attack) <span class="hw7-unit">%</span><input id="hw7-fpr" type="number" min="0" max="100" step="0.1" value="5" required></label>
+          <label>Evidence observed<select id="hw7-evidence"><option value="positive">Positive alert</option><option value="negative">No alert</option></select></label>
+          <div class="hw7-actions"><button class="hw7-btn" type="submit">Update Posterior</button></div>
+        </form>
+        <div id="hw7-alert-result" class="hw7-results" hidden aria-live="polite">
+          <div class="hw7-metrics">
+            <div class="hw7-metric"><span>Prior P(attack)</span><strong id="hw7-prior-out">—</strong></div>
+            <div class="hw7-metric"><span>Evidence P(E)</span><strong id="hw7-evidence-out">—</strong></div>
+            <div class="hw7-metric hw7-emphasis"><span>Posterior P(attack|E)</span><strong id="hw7-posterior-out">—</strong></div>
+          </div>
+          <div class="hw7-comparison"><div><span>Prior</span><div class="hw7-track"><div id="hw7-prior-bar" class="hw7-fill"></div></div></div><div><span>Posterior</span><div class="hw7-track"><div id="hw7-posterior-bar" class="hw7-fill hw7-green"></div></div></div></div>
+          <div class="hw7-explanation" id="hw7-alert-math"></div>
+          <h3>Expected counts per 10,000 independent cases</h3>
+          <p class="hw7-small">These are mathematical expectations, not simulated or observed cases; decimal counts are intentional.</p>
+          <div class="hw7-table-wrap"><table class="hw7-table"><thead><tr><th>Actual state</th><th>Alert</th><th>No alert</th></tr></thead><tbody id="hw7-confusion"></tbody></table></div>
+          <p id="hw7-alert-takeaway" class="hw7-note"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="beta-demo">
+      <div class="section-heading"><span class="section-label">03 / BAYESIAN PARAMETER ESTIMATION</span><h2>Beta Prior + Binomial Likelihood</h2>
+        <p>Instead of choosing between two hypotheses, estimate an unknown success probability θ (for example, the chance that an authentication attempt fails). Compare a prior distribution and its posterior after observing data.</p></div>
+      <div class="assignment-panel">
+        <div class="hw7-equation">θ ~ Beta(a, b) &nbsp; + &nbsp; k successes out of n &nbsp; ⇒ &nbsp; θ | data ~ Beta(a + k, b + n − k)</div>
+        <form id="hw7-beta-form" class="hw7-controls">
+          <label>Prior parameter a<input id="hw7-a" type="number" min="0.2" max="100" step="0.2" value="2" required></label>
+          <label>Prior parameter b<input id="hw7-b" type="number" min="0.2" max="100" step="0.2" value="8" required></label>
+          <label>Observed successes k<input id="hw7-k" type="number" min="0" max="500" step="1" value="8" required></label>
+          <label>Total trials n<input id="hw7-trials" type="number" min="1" max="500" step="1" value="20" required></label>
+          <div class="hw7-actions"><button class="hw7-btn" type="submit">Update Distribution</button></div>
+        </form>
+        <div id="hw7-beta-result" class="hw7-results" hidden aria-live="polite">
+          <div class="hw7-metrics">
+            <div class="hw7-metric"><span>Prior mean</span><strong id="hw7-beta-prior">—</strong></div>
+            <div class="hw7-metric"><span>Sample proportion k/n</span><strong id="hw7-mle">—</strong></div>
+            <div class="hw7-metric hw7-emphasis"><span>Posterior mean</span><strong id="hw7-beta-post">—</strong></div>
+          </div>
+          <div class="hw7-plot"><svg id="hw7-beta-svg" role="img" aria-label="Prior and posterior Beta probability density curves" viewBox="0 0 800 310" preserveAspectRatio="xMidYMid meet"></svg></div>
+          <p id="hw7-beta-explain" class="hw7-note"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="convergence-theory">
+      <div class="section-heading"><span class="section-label">04 / FOUR MODES OF CONVERGENCE</span><h2>What Does It Mean for Random Variables to Converge?</h2>
+        <p>These concepts examine different aspects of a sequence X<sub>n</sub> and a candidate limit X. They are not interchangeable.</p></div>
+      <div class="assignment-panel">
+        <div class="hw7-four">
+          <article><span>01 · WEAK LLN</span><h3>In probability</h3><div class="hw7-math">P(|Xₙ − X| &gt; ε) → 0</div><p>For every ε &gt; 0, the chance of a noticeable error goes to zero. It does <em>not</em> require almost every sample path to converge.</p></article>
+          <article><span>02 · STRONG LLN</span><h3>Almost surely</h3><div class="hw7-math">P(lim Xₙ = X) = 1</div><p>Outside a probability-zero exceptional set, the entire numerical sequence converges along each sample path.</p></article>
+          <article><span>03 · MEAN SQUARE</span><h3>In L²</h3><div class="hw7-math">E[(Xₙ − X)²] → 0</div><p>The expected squared error tends to zero. This is particularly useful for mean-square error, variance and estimation.</p></article>
+          <article><span>04 · CLT</span><h3>In distribution</h3><div class="hw7-math">Fₓₙ(t) → Fₓ(t)</div><p>The distributions approach one another at continuity points of the limit CDF. Individual outcomes need not become close.</p></article>
+        </div>
+        <div class="hw7-implications"><strong>L² convergence ⇒ convergence in probability ⇒ convergence in distribution</strong><br><strong>Almost-sure convergence ⇒ convergence in probability ⇒ convergence in distribution</strong></div>
+        <p><strong>Important:</strong> almost-sure and L² convergence do not imply each other without extra assumptions. Reverse implications usually fail. Convergence in distribution alone does not imply convergence in probability to a nonconstant random variable.</p>
+        <div class="hw7-cases">
+          <div><h3>L², but not almost surely</h3><p><strong>Moving intervals:</strong> X<sub>n</sub> indicates a dyadic interval of width 2<sup>−k</sup>. Every point is hit once per level, but P(X<sub>n</sub>=1) → 0. Thus X<sub>n</sub> → 0 in L² and probability, not almost surely.</p></div>
+          <div><h3>Almost surely, but not L²</h3><p>If U ~ Uniform(0,1) and X<sub>n</sub> = n·1{U ≤ 1/n}, then X<sub>n</sub> → 0 almost surely, but E[X<sub>n</sub>²] = n → ∞.</p></div>
+          <div><h3>In distribution, but not in probability</h3><p>Let X be equally likely −1 or +1 and define X<sub>n</sub> = −X. Every X<sub>n</sub> has the same distribution as X, but |X<sub>n</sub> − X| = 2 always.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="typewriter-demo">
+      <div class="section-heading"><span class="section-label">05 / COUNTEREXAMPLE VISUALIZATION</span><h2>Why Probability Convergence Need Not Be Almost Sure</h2>
+        <p>Choose a point ω in [0,1). At dyadic level k, divide [0,1) into 2<sup>k</sup> intervals, then visit each interval once. The indicator is 1 when the moving interval contains ω. The event becomes rarer for a random ω, yet each fixed ω is hit once at every level.</p></div>
+      <div class="assignment-panel">
+        <form id="hw7-typewriter-form" class="hw7-controls hw7-controls-short">
+          <label>Sample point ω<input id="hw7-omega" type="number" min="0.001" max="0.999" value="0.37" step="0.001" required></label>
+          <label>Highest dyadic level<input id="hw7-level" type="number" min="2" max="8" value="7" step="1" required></label>
+          <div class="hw7-actions"><button class="hw7-btn" type="submit">Show Sample Path</button></div>
+        </form>
+        <div id="hw7-typewriter-result" class="hw7-results" hidden>
+          <div class="hw7-plot"><svg id="hw7-typewriter-svg" role="img" aria-label="Sample path with persistent spikes and decreasing event probabilities" viewBox="0 0 800 310" preserveAspectRatio="xMidYMid meet"></svg></div>
+          <p class="hw7-note" id="hw7-typewriter-explain"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="lln-clt">
+      <div class="section-heading"><span class="section-label">06 / LLN AND CLT SIMULATION</span><h2>The Mean Stabilizes; Its Rescaled Error Remains Random</h2>
+        <p>Simulate independent Bernoulli(p) outcomes. The LLN concerns the sample mean approaching p; the CLT concerns the <strong>distribution</strong> of its standardized fluctuations.</p></div>
+      <div class="assignment-panel">
+        <div class="hw7-grid hw7-steps">
+          <div class="hw7-step"><span>WEAK LAW</span><h3>Convergence in probability</h3><p>The sample mean approaches p; for independent observations, its L² error is p(1−p)/n.</p></div>
+          <div class="hw7-step"><span>STRONG LAW</span><h3>Almost-sure convergence</h3><p>For an infinite iid Bernoulli sequence, the sample mean converges to p with probability one.</p></div>
+          <div class="hw7-step"><span>CENTRAL LIMIT THEOREM</span><h3>Convergence in distribution</h3><p>For 0 &lt; p &lt; 1, Zₙ = √n( X̄ₙ − p ) / √[p(1−p)] approaches N(0,1) in distribution.</p></div>
+        </div>
+        <form id="hw7-clt-form" class="hw7-controls">
+          <label>Bernoulli probability p<input id="hw7-bernoulli" type="number" min="0.05" max="0.95" step="0.05" value="0.35" required></label>
+          <label>Number of observations n<input id="hw7-n" type="number" min="20" max="1500" step="10" value="300" required></label>
+          <label>Independent replications<input id="hw7-reps" type="number" min="100" max="2500" step="100" value="1000" required></label>
+          <label>Random seed<input id="hw7-seed" type="number" min="1" max="999999999" step="1" value="2026" required></label>
+          <div class="hw7-actions"><button class="hw7-btn" type="submit">Run LLN / CLT Simulation</button></div>
+        </form>
+        <div id="hw7-clt-result" class="hw7-results" hidden>
+          <div class="hw7-metrics">
+            <div class="hw7-metric"><span>Final sample mean</span><strong id="hw7-finalmean">—</strong></div>
+            <div class="hw7-metric"><span>Theoretical standard error</span><strong id="hw7-se">—</strong></div>
+            <div class="hw7-metric hw7-emphasis"><span>Mean-square error (theory)</span><strong id="hw7-mse">—</strong></div>
+          </div>
+          <h3>One sample path: law of large numbers</h3><div class="hw7-plot"><svg id="hw7-lln-svg" role="img" aria-label="Cumulative sample mean approaching the Bernoulli probability" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet"></svg></div>
+          <h3>Across replications: central limit theorem</h3><p class="hw7-small">Histogram: simulated standardized means. Blue line: standard normal density. Density is shown, rather than counts, to use a comparable vertical scale.</p>
+          <div class="hw7-plot"><svg id="hw7-clt-svg" role="img" aria-label="Histogram of standardized sample means and standard normal density" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet"></svg></div>
+          <p id="hw7-clt-explain" class="hw7-note"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="root-n">
+      <div class="section-heading"><span class="section-label">07 / WHY √n APPEARS</span><h2>Variance Additivity Explains the Scaling</h2>
+        <p>For independent, identically distributed variables with finite variance σ², the variance of a sum is nσ² while the variance of an average is σ²/n. Standard deviations therefore scale as √n and 1/√n.</p></div>
+      <div class="assignment-panel">
+        <div class="hw7-equation">Var(Σ Xᵢ) = nσ² &nbsp; ⇒ &nbsp; SD(Σ Xᵢ) = σ√n</div>
+        <div class="hw7-equation">Var(X̄ₙ) = σ²/n &nbsp; ⇒ &nbsp; SD(X̄ₙ) = σ/√n</div>
+        <p>Multiplying the error X̄<sub>n</sub> − μ by √n prevents its variance from collapsing to zero. After dividing by σ, the classical iid finite-variance CLT gives convergence in distribution to the standard normal. This explains the characteristic √n in confidence intervals, standard errors and asymptotic inference.</p>
+        <p><strong>Independence matters:</strong> in general Var(Σ X<sub>i</sub>) = Σ Var(X<sub>i</sub>) + 2Σ<sub>i&lt;j</sub> Cov(X<sub>i</sub>,X<sub>j</sub>). If all observations are the same random variable, there are n² covariance terms in total and the variance of the average need not decrease at all.</p>
+        <p class="hw7-note"><strong>Weak LLN:</strong> Chebyshev's inequality gives P(|X̄<sub>n</sub> − μ| ≥ ε) ≤ σ²/(nε²) for iid observations with finite variance. <strong>Strong LLN:</strong> iid variables with E|X<sub>1</sub>| &lt; ∞ satisfy almost-sure convergence. <strong>CLT:</strong> iid variables with 0 &lt; σ² &lt; ∞ satisfy √n(X̄<sub>n</sub> − μ)/σ ⇒ N(0,1). The CLT does not claim that the unscaled mean converges to a normal distribution.</p>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="discussion">
+      <div class="section-heading"><span class="section-label">08 / CRITICAL DISCUSSION</span><h2>What These Results Do — and Do Not — Tell Us</h2></div>
+      <div class="assignment-panel">
+        <p><strong>Bayesian advantages:</strong> prior knowledge can be represented explicitly, evidence can be incorporated sequentially, and posterior probabilities are directly interpretable under the model. <strong>Limitations:</strong> poorly calibrated likelihoods, subjective or weakly supported priors, selection bias and dependent evidence can distort conclusions. With scarce data, different priors can generate very different posteriors.</p>
+        <p><strong>Convergence and inference:</strong> consistency of an estimator can be established through LLN-type reasoning; the CLT instead describes approximate uncertainty at finite sample sizes. The four modes answer different questions and should not be substituted for one another. A simulation can illustrate a theorem but cannot prove an almost-sure statement, which concerns an infinite sequence.</p>
+        <p><strong>Cybersecurity relevance:</strong> a rare attack can have a low posterior probability even after an alert, when false positives are common. Meanwhile, LLN and CLT can support the estimation and uncertainty analysis of incident rates, provided the underlying assumptions are appropriate.</p>
+        <p class="hw7-small"><strong>Reading:</strong> <a href="https://online.stat.psu.edu/stat414/" target="_blank" rel="noopener">Penn State — Probability Theory</a> · <a href="https://stats-web.quarto.pub/stat_415_q_dev/Lesson11.html" target="_blank" rel="noopener">Penn State — Bayesian Methods</a> · <a href="https://www.math.ucdavis.edu/~romik/data/uploads/notes/lecturenotes235b.pdf" target="_blank" rel="noopener">UC Davis — Probability Theory Lecture Notes</a> · <a href="https://www.stat.berkeley.edu/~ryantibs/statlearn-s24/lectures/review.pdf" target="_blank" rel="noopener">UC Berkeley — LLN and CLT Review</a>.</p>
+      </div>
+    </section>
+  </div></main>
+  <footer class="footer"><div class="container footer-content"><p>&copy; 2026 Giuseppe Sciarrone · Student ID 2116081</p><p>Statistics | Sapienza University of Rome</p></div></footer>
+  <script src="hw7.js"></script>
+</body>
+</html>
