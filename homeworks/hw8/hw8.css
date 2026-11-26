@@ -1,0 +1,55 @@
+/* Homework 08 — integrated with the shared Statistics website. */
+.hw8-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.hw8-concept,.hw8-result-box{background:#f1f7ff;border:1px solid #d5e5f7;border-radius:12px;padding:22px;min-width:0}
+.hw8-overline{display:block;color:#2563eb;letter-spacing:.07em;font-size:.73rem;font-weight:800;margin-bottom:8px}
+.hw8-concept h3,.hw8-result-box h3{margin:0 0 9px!important;font-size:1.13rem!important;color:#163152}
+.hw8-concept p,.hw8-result-box p{font-size:.92rem;line-height:1.75}
+.hw8-theory-block{margin-top:24px;padding-top:22px;border-top:1px solid #dce5f2}
+.hw8-formula{background:#e8f2ff;border:1px solid #c8dbf4;border-radius:9px;padding:13px 15px;margin:12px 0;color:#18385e;text-align:center;font-family:Consolas,"Courier New",monospace;font-size:clamp(.85rem,1.7vw,1.02rem);font-weight:700;line-height:1.8;overflow-wrap:anywhere}
+.hw8-theory-block p{margin:13px 0;line-height:1.8}
+.hw8-form{display:grid;gap:14px}.hw8-form label{color:#1f3655;font-size:.9rem;font-weight:750;display:grid;gap:8px}
+.hw8-input{width:100%;border:1px solid #bbcee3;background:#fbfdff;border-radius:10px;padding:13px 15px;color:#183152;font:inherit;min-width:0}
+.hw8-input:focus-visible,.hw8-btn:focus-visible,.hw8-checkbox input:focus-visible{outline:3px solid #65d6eb;outline-offset:2px}
+.hw8-editor{font-family:Consolas,"Courier New",monospace;line-height:1.65;resize:vertical;min-height:180px}
+.hw8-hint{padding:14px 16px;background:#edf5ff;border-left:4px solid #2563eb;border-radius:8px;margin:0!important;color:#315478!important;line-height:1.65}
+.hw8-small{font-size:.86rem;color:#687b93!important;line-height:1.75}
+.hw8-actions{display:flex;flex-wrap:wrap;gap:11px}
+.hw8-btn{border:0;border-radius:10px;padding:13px 20px;background:#2563eb;color:#fff;font:inherit;font-weight:750;cursor:pointer;transition:background .2s,transform .2s}
+.hw8-btn:hover{background:#1d4ed8;transform:translateY(-1px)}
+.hw8-btn-secondary{background:#e4edfc;color:#1d4ed8}.hw8-btn-secondary:hover{background:#d6e5fc}
+.hw8-status{min-height:22px;margin:0!important;color:#047857!important;font-weight:700}.hw8-status.hw8-error{color:#b91c1c!important}
+.hw8-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:8px 0 18px}
+.hw8-metrics>div,.hw8-stat-grid>div,.hw8-verify>div,.hw8-two-metrics>div{background:#f4f8ff;border:1px solid #dce8f6;padding:17px;border-radius:11px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.hw8-metrics span,.hw8-stat-grid span,.hw8-verify span,.hw8-two-metrics span{font-size:.79rem;font-weight:750;color:#64748b}
+.hw8-metrics strong{color:#1d4ed8;font-size:clamp(1.05rem,2.4vw,1.8rem);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.hw8-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:12px 0}
+.hw8-stat-grid strong,.hw8-verify strong,.hw8-two-metrics strong{color:#19385d;font-size:1.1rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.hw8-line-results{margin-top:21px}.hw8-result-box{background:#edf5ff}.hw8-result-box.hw8-orange{background:#fff7ed;border-color:#fed7aa}.hw8-orange .hw8-overline{color:#c15b09}
+.hw8-result-formula{font:700 clamp(.98rem,2.1vw,1.3rem) Consolas,monospace;padding:13px;border-radius:8px;color:#1544aa;background:#fff;overflow-wrap:anywhere}
+.hw8-orange .hw8-result-formula{color:#b45309}
+.hw8-spaced{margin-top:27px!important}
+.hw8-table-wrap{overflow:auto;max-width:100%}.hw8-table{width:100%;border-collapse:collapse;min-width:580px;font-variant-numeric:tabular-nums;font-size:.85rem}
+.hw8-table th,.hw8-table td{border-bottom:1px solid #dbe5f1;padding:11px;text-align:right}.hw8-table th{background:#e8f1ff;color:#183352}.hw8-table th:first-child,.hw8-table td:first-child{text-align:left}
+.hw8-table tbody tr:nth-child(even){background:#f8fbff}
+.hw8-legend{display:flex;gap:18px;flex-wrap:wrap;margin:2px 0 17px;color:#475569;font-size:.84rem;font-weight:650}
+.hw8-legend span{display:inline-flex;align-items:center;gap:8px}.hw8-key{display:inline-block;width:13px;height:13px;border-radius:3px}.hw8-key-blue{background:#2563eb}.hw8-key-orange{background:#ea8b18}.hw8-key-green{background:#059669}
+.hw8-checkbox{display:flex;align-items:center;gap:9px;font-size:.87rem;font-weight:650;color:#243b58;margin:12px 0}
+.hw8-plot{background:#fbfdff;border:1px solid #d7e4f2;border-radius:12px;padding:13px;margin:15px 0 18px;overflow:hidden}
+.hw8-plot svg{display:block;width:100%;height:auto}.hw8-plot svg text{font:13px Segoe UI,Arial,sans-serif;fill:#506784}.hw8-plot svg .hw8-axis{stroke:#778a9f;stroke-width:1.4}.hw8-plot svg .hw8-gridline{stroke:#e0e8f2;stroke-width:1}
+.hw8-plot svg .hw8-line{fill:none;stroke-width:3.3;stroke-linecap:round;stroke-dasharray:1100;stroke-dashoffset:1100;animation:hw8-draw 1.15s ease forwards}
+.hw8-plot svg .hw8-line.second{animation-delay:.15s}
+.hw8-plot svg .hw8-point{animation:hw8-pop .55s both;transform-box:fill-box;transform-origin:center}
+.hw8-plot svg .hw8-residual{stroke:#a8bedb;stroke-width:1.6;stroke-dasharray:3 3;animation:hw8-fade .5s both}
+.hw8-two-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.hw8-verify{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0}
+.hw8-message{border-left:4px solid #059669;background:#ecfdf5;border-radius:8px;padding:15px 17px;color:#146e56!important;line-height:1.8}
+.hw8-proof{border-left:4px solid #2563eb;padding:3px 0 3px 21px}.hw8-proof .hw8-formula{max-width:720px}
+.hw8-proof p{line-height:1.85}
+[hidden]{display:none!important}
+@keyframes hw8-draw{to{stroke-dashoffset:0}}
+@keyframes hw8-pop{from{opacity:0;transform:scale(.1)}to{opacity:1;transform:scale(1)}}
+@keyframes hw8-fade{from{opacity:0}to{opacity:1}}
+@media(max-width:970px){.hw8-metrics,.hw8-stat-grid,.hw8-verify{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.hw8-grid2{grid-template-columns:1fr}.hw8-metrics,.hw8-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.assignment-panel{padding:21px}.hw8-verify{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:460px){.hw8-metrics,.hw8-stat-grid,.hw8-verify,.hw8-two-metrics{grid-template-columns:1fr}.hw8-btn{width:100%}}
+@media(prefers-reduced-motion:reduce){.hw8-btn{transition:none}.hw8-plot svg .hw8-line,.hw8-plot svg .hw8-point,.hw8-plot svg .hw8-residual{animation:none;stroke-dashoffset:0}}

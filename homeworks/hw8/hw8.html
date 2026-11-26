@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive exploration of Pearson correlation, both least-squares regression lines and independence versus uncorrelatedness.">
+  <title>Homework 8 | Correlation &amp; Regression</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/homework.css">
+  <link rel="stylesheet" href="hw8.css">
+</head>
+<body>
+  <nav class="navbar"><div class="container nav-content"><a class="nav-logo" href="../../index.html"><span class="logo-icon">S.</span><span>Statistics</span></a><div class="nav-links"><a href="../../index.html">Home</a><a href="../../index.html#homeworks">Homeworks</a></div></div></nav>
+  <header class="assignment-header"><div class="container"><a href="../../index.html#homeworks" class="back-link">&larr; Back to Homeworks</a><span class="assignment-label">HOMEWORK 08 · BIVARIATE STATISTICS</span><h1>Correlation &amp; Linear Regression</h1><p class="assignment-subtitle">Pearson's r · Two Regression Lines · Least Squares · Statistical Independence</p><p class="assignment-description">Load a paired numerical dataset, solve both regression problems, visualize their differences, and verify why the signed geometric mean of the regression coefficients equals Pearson's correlation.</p></div></header>
+  <main class="assignment-main"><div class="container">
+    <section class="assignment-section" id="concepts"><div class="section-heading"><span class="section-label">01 / CORE CONCEPTS</span><h2>Correlation Measures; Regression Predicts</h2><p>Correlation describes the direction and strength of a <strong>linear</strong> relationship. Regression provides a best-fitting prediction rule by minimizing squared errors.</p></div>
+      <div class="assignment-panel">
+        <div class="hw8-grid2">
+          <article class="hw8-concept"><span class="hw8-overline">PEARSON CORRELATION</span><h3>Symmetric and unitless</h3><div class="hw8-formula">r = Sxy / √(Sxx · Syy)</div><p>r ranges from −1 to +1. It is unchanged if X and Y are exchanged and detects linear association, not every type of dependence.</p></article>
+          <article class="hw8-concept"><span class="hw8-overline">ORDINARY LEAST SQUARES</span><h3>Two different optimization tasks</h3><div class="hw8-formula">Y on X:  ŷ = a<sub>yx</sub> + b<sub>yx</sub>x</div><div class="hw8-formula">X on Y:  x̂ = a<sub>xy</sub> + b<sub>xy</sub>y</div><p>The first minimizes <strong>vertical</strong> squared distances; the second minimizes <strong>horizontal</strong> squared distances. They are <em>not</em> generally inverse functions.</p></article>
+        </div>
+        <div class="hw8-theory-block"><h3>Solving for the intercept and slope</h3><p>For paired observations (xᵢ,yᵢ), define Sxx = Σ(xᵢ−x̄)², Syy = Σ(yᵢ−ȳ)², and Sxy = Σ(xᵢ−x̄)(yᵢ−ȳ). Minimizing Σ[yᵢ−(a+bxᵢ)]² gives the normal equations Σ(yᵢ−a−bxᵢ)=0 and Σxᵢ(yᵢ−a−bxᵢ)=0.</p><div class="hw8-formula">b<sub>yx</sub> = Sxy/Sxx; &nbsp; a<sub>yx</sub> = ȳ − b<sub>yx</sub>x̄</div><div class="hw8-formula">b<sub>xy</sub> = Sxy/Syy; &nbsp; a<sub>xy</sub> = x̄ − b<sub>xy</sub>ȳ</div><p>The two lines pass through the centroid (x̄,ȳ). Their slopes can have different units, whereas r is dimensionless.</p></div>
+      </div>
+    </section>
+
+    <section class="assignment-section" id="data"><div class="section-heading"><span class="section-label">02 / INTERACTIVE DATASET</span><h2>Choose or Enter Numeric Pairs</h2><p>Use a synthetic example or paste your own two-column CSV. The calculations are performed locally using plain JavaScript.</p></div><div class="assignment-panel">
+      <form id="hw8-form" class="hw8-form">
+        <label for="hw8-preset">Example dataset<select id="hw8-preset" class="hw8-input"><option value="positive">Security alerts: positive correlation</option><option value="negative">Detection thresholds: negative correlation</option><option value="nonlinear">Nonlinear dependence with r = 0</option><option value="factorized">Exactly uncorrelated / factorized sample</option><option value="custom">Custom CSV</option></select></label>
+        <p id="hw8-preset-description" class="hw8-hint"></p>
+        <label for="hw8-csv">Numeric dataset: two headers, followed by X,Y observations<textarea id="hw8-csv" class="hw8-input hw8-editor" rows="9" spellcheck="false" required></textarea></label>
+        <p class="hw8-small">Use comma-separated numeric values with a header, for example <code>Hours,Score</code>. At least 3 pairs and at most 500; each variable must vary. All examples are synthetic. Duplicate pairs are allowed.</p>
+        <div class="hw8-actions"><button class="hw8-btn" type="submit">Compute Both Regressions</button><button class="hw8-btn hw8-btn-secondary" id="hw8-download" type="button">Download CSV</button></div>
+        <p id="hw8-status" class="hw8-status" role="status" aria-live="polite"></p>
+      </form>
+    </div></section>
+
+    <div id="hw8-results" hidden>
+      <section class="assignment-section" id="results"><div class="section-heading"><span class="section-label">03 / COMPUTED STATISTICS</span><h2>From the Sample to the Two Lines</h2><p>The formulas above are evaluated from your dataset, including slopes and intercepts in both directions.</p></div><div class="assignment-panel">
+        <div class="hw8-metrics"><div><span>Sample size n</span><strong id="hw8-n"></strong></div><div><span>Pearson r</span><strong id="hw8-r"></strong></div><div><span>R²</span><strong id="hw8-r2"></strong></div><div><span>Sample covariance</span><strong id="hw8-cov"></strong></div></div>
+        <div class="hw8-stat-grid"><div><span>Mean of X</span><strong id="hw8-meanx"></strong></div><div><span>Mean of Y</span><strong id="hw8-meany"></strong></div><div><span>Sxx</span><strong id="hw8-sxx"></strong></div><div><span>Syy</span><strong id="hw8-syy"></strong></div><div><span>Sxy</span><strong id="hw8-sxy"></strong></div><div><span>SD(X)</span><strong id="hw8-sdx"></strong></div><div><span>SD(Y)</span><strong id="hw8-sdy"></strong></div><div><span>Σ residual² (Y on X)</span><strong id="hw8-ssey"></strong></div></div>
+        <div class="hw8-grid2 hw8-line-results"><div class="hw8-result-box"><span class="hw8-overline">REGRESSION OF Y ON X</span><h3>Predict Y from X</h3><div id="hw8-line-y" class="hw8-result-formula"></div><p id="hw8-slope-y"></p><p id="hw8-sse-y"></p></div><div class="hw8-result-box hw8-orange"><span class="hw8-overline">REGRESSION OF X ON Y</span><h3>Predict X from Y</h3><div id="hw8-line-x" class="hw8-result-formula"></div><p id="hw8-slope-x"></p><p id="hw8-sse-x"></p></div></div>
+        <h3 class="hw8-spaced">Intermediate calculations</h3><p>These centered sums determine every coefficient. Showing the first few rows makes the algorithm transparent rather than treating regression as a black box.</p><div class="hw8-table-wrap"><table class="hw8-table"><thead><tr><th>i</th><th>X</th><th>Y</th><th>X−x̄</th><th>Y−ȳ</th><th>Product</th></tr></thead><tbody id="hw8-rows"></tbody></table></div><p class="hw8-small" id="hw8-row-note"></p>
+      </div></section>
+
+      <section class="assignment-section" id="visual"><div class="section-heading"><span class="section-label">04 / VISUAL COMPARISON</span><h2>The Same Points, Two Different Regression Lines</h2><p>Both lines are drawn in the same X–Y plane. The orange line corresponds to X predicted by Y, rearranged only for display. It must not be confused with predicting Y from X.</p></div><div class="assignment-panel">
+        <div class="hw8-legend"><span><i class="hw8-key hw8-key-blue"></i> Y on X (vertical least squares)</span><span><i class="hw8-key hw8-key-orange"></i> X on Y (horizontal least squares)</span><span><i class="hw8-key hw8-key-green"></i> Centroid</span></div>
+        <label class="hw8-checkbox"><input type="checkbox" id="hw8-residual-toggle" checked> Show vertical residuals for Y on X</label>
+        <div class="hw8-plot"><svg id="hw8-plot" viewBox="0 0 820 440" role="img" aria-label="Scatterplot with both regression lines, centroid and optional vertical residuals" preserveAspectRatio="xMidYMid meet"></svg></div>
+        <p class="hw8-hint" id="hw8-plot-summary"></p>
+        <div class="hw8-two-metrics"><div><span>Vertical squared error</span><strong id="hw8-vertical"></strong></div><div><span>Horizontal squared error</span><strong id="hw8-horizontal"></strong></div></div>
+      </div></section>
+
+      <section class="assignment-section" id="identity"><div class="section-heading"><span class="section-label">05 / ALGEBRAIC VERIFICATION</span><h2>Why the Geometric Mean Gives |r|</h2><p>This is the exact relation required by the homework. The sign matters for negative correlations.</p></div><div class="assignment-panel">
+        <div class="hw8-formula">b<sub>yx</sub> · b<sub>xy</sub> = (Sxy/Sxx)(Sxy/Syy) = Sxy²/(Sxx·Syy) = r²</div>
+        <div class="hw8-formula">r = sign(Sxy) · √(b<sub>yx</sub>b<sub>xy</sub>)</div>
+        <div class="hw8-verify"><div><span>Product of slopes</span><strong id="hw8-product"></strong></div><div><span>r², computed independently</span><strong id="hw8-rsquare"></strong></div><div><span>Signed geometric mean</span><strong id="hw8-signedroot"></strong></div><div><span>Numerical discrepancy</span><strong id="hw8-difference"></strong></div></div><p id="hw8-verification-text" class="hw8-message"></p><p class="hw8-small">Both slopes always have the same sign (or are zero), so their product is nonnegative. Taking only the positive square root returns |r|, not r when the association is negative.</p>
+      </div></section>
+    </div>
+
+    <section class="assignment-section" id="proof"><div class="section-heading"><span class="section-label">06 / FORMAL PROOF</span><h2>Independence Implies Zero Correlation</h2><p>The implication holds whenever the second moments are finite and both variances are positive, so Pearson correlation is defined.</p></div><div class="assignment-panel"><div class="hw8-proof"><p><strong>Assume X and Y are independent.</strong> Independence implies factorization of expectations:</p><div class="hw8-formula">E[XY] = E[X]E[Y]</div><p>By the definition of covariance,</p><div class="hw8-formula">Cov(X,Y) = E[XY] − E[X]E[Y] = 0.</div><p>Since the standard deviations are positive,</p><div class="hw8-formula">ρ(X,Y) = Cov(X,Y)/(σ<sub>X</sub>σ<sub>Y</sub>) = 0. &nbsp; ∎</div></div>
+        <h3 class="hw8-spaced">Why the converse is false</h3><p>Let X be uniformly distributed on {−3,−2,−1,0,1,2,3}, and define Y = X². By symmetry E[X] = 0 and E[XY] = E[X³] = 0, so Cov(X,Y) = 0. Nevertheless Y is completely determined by X, hence they are dependent: for example P(Y=0 | X=0)=1, but P(Y=0)=1/7.</p>
+        <p class="hw8-message">Try the <strong>Nonlinear dependence with r = 0</strong> dataset above. Both computed slopes and r are zero although the points lie exactly on a parabola. A zero Pearson correlation rules out linear association, not nonlinear dependence.</p>
+        <p class="hw8-small"><strong>Important distinction:</strong> The proof concerns population random variables; sample r can be nonzero even when the generating variables are independent, due to sampling variability. Conversely, zero sample r never proves independence.</p>
+      </div></section>
+
+    <section class="assignment-section" id="conclusion"><div class="section-heading"><span class="section-label">07 / DISCUSSION</span><h2>Interpretation and Limits</h2></div><div class="assignment-panel"><p><strong>Correlation vs regression:</strong> correlation is symmetric and dimensionless; regression is directional and minimizes errors in the variable being predicted. With an intercept and one predictor, R² = r² for either of the two simple least-squares models, but the two prediction rules are not generally interchangeable.</p><p><strong>Association vs causality:</strong> even a strong correlation is not proof of a causal link. Confounding variables, selection effects, time trends and outliers can generate misleading associations. A scatterplot and subject-matter knowledge are essential.</p><p><strong>Mathematical conditions:</strong> both variables must have positive variation for Pearson's r and both slopes to be defined. An ordinary regression line is not a suitable model for every nonlinear pattern.</p><p class="hw8-small"><strong>References:</strong> <a href="https://online.stat.psu.edu/stat501/Lesson01" target="_blank" rel="noopener">Penn State STAT 501 — Simple Linear Regression</a> · <a href="https://openstax.org/books/statistics/pages/12-2-the-regression-equation" target="_blank" rel="noopener">OpenStax — The Regression Equation</a>.</p></div></section>
+  </div></main>
+  <footer class="footer"><div class="container footer-content"><p>&copy; 2026 Giuseppe Sciarrone · Student ID 2116081</p><p>Statistics | Sapienza University of Rome</p></div></footer>
+  <script src="hw8.js"></script>
+</body>
+</html>
